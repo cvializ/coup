@@ -87,19 +87,27 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
     });
 
     socket.on('move succeeded', function (data) {
+      var messages = document.querySelector('.messages');
       if (boardModel.username === data.user) {
-        document.querySelector('.messages').innerHTML = "Your move was accepted.";
+        messages.innerHTML = "Your move was accepted.";
       } else {
-        document.querySelector('.messages').innerHTML = data.user + "'s move was accepted.";
+        messages.innerHTML = data.user + "'s move was accepted.";
       }
+
+      document.querySelector('.initial').style.display = 'block';
+      document.querySelector('.challenge').style.display = 'none';
     });
 
     socket.on('move failed', function (data) {
+      var messages = document.querySelector('.messages');
       if (boardModel.username === data.user) {
-        document.querySelector('.messages').innerHTML = "Your move was rejected.";
+        messages.innerHTML = "Your move was rejected.";
       } else {
-        document.querySelector('.messages').innerHTML = data.user + "'s move was rejected.";
+        messages.innerHTML = data.user + "'s move was rejected.";
       }
+
+      document.querySelector('.initial').style.display = 'block';
+      document.querySelector('.challenge').style.display = 'none';
     });
   }
 });

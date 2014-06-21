@@ -28,7 +28,6 @@ function userCount() {
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/config'));
 
-
 // usernames which are currently connected to the chat
 var usernames = {}
   , currentMove = {
@@ -62,11 +61,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('remove user', function () {
-    var username = socket.username;
     logout();
-    socket.broadcast.emit('user left', {
-      username: username
-    })
   });
 
   // when the user disconnects.. perform this
@@ -75,9 +70,13 @@ io.on('connection', function (socket) {
   });
 
   function logout() {
-        // remove the username from global usernames list
+    // remove the username from global usernames list
     if (addedUser) {
       delete usernames[socket.username];
+
+      if (userCount() === 1) {
+        socket.broadcast.emit('you are alone');
+      }
 
       // echo globally that this client has left
       socket.broadcast.emit('user left', {

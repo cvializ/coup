@@ -82,6 +82,11 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       boardModel.users.remove(data.username);
     });
 
+    socket.on('you are alone', function () {
+      boardModel.removeUser();
+      socket.emit('remove user', boardModel.username());
+    });
+
     socket.on('move attempted', function (data) {
       document.querySelector('.challenge').style.display = 'block';
     });

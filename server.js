@@ -11,37 +11,44 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-function userCount() {
-  var count = 0
-    , i;
+function GameState() {
+  this.usernames = {};
+  this.userCount = 0;
+  this.currentMove = {
+      player: null
+    , responsesRemaining: 0
+    , success: true
+  };
+}
 
-  for (i in usernames) {
-    if (usernames.hasOwnProperty(i)) {
-      count++;
-    }
-  }
+GameState.prototype.addUser = function (username) {
+  this.usernames[username] = username;
+  this.userCount++;
+};
 
-  return count;
+GameState.prototype.removeUser = function (username) {
+  delete this.usernames[username];
+  this.userCount--;
+};
+
+function Move() {
+  this.responsesRemaining = 0;
+  this.player = null;
+  success = true;
 }
 
 // Routing
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/config'));
 
-// usernames which are currently connected to the chat
-var usernames = {}
-  , currentMove = {
-      player: null
-    , responsesRemaining: 0
-    , success: true
-  };
+var game = new GameState();
 
 io.on('connection', function (socket) {
   var addedUser = false;
 
   socket.on('ready', function () {
     var data = {};
-    data.usernames = usernames;
+    data.usernames = game.usernames;
     socket.emit('initialize', data);
   });
 
@@ -51,7 +58,8 @@ io.on('connection', function (socket) {
     // we store the username in the socket session for this client
     socket.username = username;
     // add the client's username to the global list
-    usernames[username] = username;
+    game.addUser(username);
+
     addedUser = true;
     
     // echo globally (all clients) that a person has connected
@@ -60,21 +68,16 @@ io.on('connection', function (socket) {
     });
   });
 
-  socket.on('remove user', function () {
-    logout();
-  });
-
   // when the user disconnects.. perform this
-  socket.on('disconnect', function () {
-    logout();
-  });
+  socket.on('remove user', logout);
+  socket.on('disconnect', logout);
 
   function logout() {
     // remove the username from global usernames list
     if (addedUser) {
-      delete usernames[socket.username];
+      game.removeUser(socket.username);
 
-      if (userCount() === 1) {
+      if (game.userCount === 1) {
         socket.broadcast.emit('you are alone');
       }
 
@@ -86,19 +89,22 @@ io.on('connection', function (socket) {
   }
 
   socket.on('make move', function () {
+    var currentMove = game.currentMove;
+
     currentMove.player = socket.username;
-    currentMove.responsesRemaining = userCount() - 1;
+    currentMove.responsesRemaining = game.userCount - 1;
     currentMove.success = true;
 
     socket.broadcast.emit('move attempted');
   });
 
-  socket.on('deny move', function (moveFailureCb) {
-    currentMoveSuccess = false;
-    io.sockets.emit('move failed', { user: currentMove.player });
+  socket.on('deny move', function () {
+    io.sockets.emit('move failed', { user: game.currentMove.player });
   });
 
-  socket.on('allow move', function (moveSuccessCb) {
+  socket.on('allow move', function () {
+    var currentMove = game.currentMove;
+
     currentMove.responsesRemaining--;
     if (currentMove.responsesRemaining === 0) {
       io.sockets.emit('move succeeded', { user: currentMove.player });

@@ -15,7 +15,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       //this.activeUser = ko.observable('');
       this.username = ko.observable('');
 
-      this.addUser = function () {
+      this.addMyUser = function () {
         if ((this.username() != "") && (this.users.indexOf(this.username()) < 0)) // Prevent blanks and duplicates
             this.users.push(this.username());
         //this.username(); // Clear the text box
@@ -23,7 +23,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
         document.querySelector('.main').style.display = 'block';
       };
 
-      this.removeUser = function () {
+      this.removeMyUser = function () {
         this.users.remove(this.username());
         document.querySelector('.login').style.display = 'block';
         document.querySelector('.main').style.display = 'none';
@@ -34,12 +34,12 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
     ko.applyBindings(boardModel);
 
     document.getElementById('join').onclick = function () {
-      boardModel.addUser();
+      boardModel.addMyUser();
       socket.emit('add user', boardModel.username());
     };
 
     document.getElementById('quit').onclick = function () {
-      boardModel.removeUser();
+      boardModel.removeMyUser();
       socket.emit('remove user', boardModel.username());
     };
 
@@ -83,7 +83,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
     });
 
     socket.on('you are alone', function () {
-      boardModel.removeUser();
+      boardModel.removeMyUser();
       socket.emit('remove user', boardModel.username());
     });
 

@@ -11,6 +11,11 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
+function Client(socket) {
+  this.socket = socket;
+  this.data = {};
+}
+
 function GameState() {
   this.usernames = {};
   this.userCount = 0;
@@ -41,7 +46,8 @@ function Move() {
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/config'));
 
-var game = new GameState();
+var game = new GameState(),
+    clients = {};
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -55,6 +61,8 @@ io.on('connection', function (socket) {
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username) {
     
+    clients[username] = new Client(socket);
+
     // we store the username in the socket session for this client
     socket.username = username;
     // add the client's username to the global list
@@ -76,6 +84,7 @@ io.on('connection', function (socket) {
     // remove the username from global usernames list
     if (addedUser) {
       game.removeUser(socket.username);
+      delete clients[socket.username];
 
       if (game.userCount === 1) {
         socket.broadcast.emit('you are alone');
@@ -98,7 +107,12 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('move attempted');
   });
 
-  socket.on('deny move', function () {
+  socket.on('block move', function (data) {
+    var target = clients[game.currentMove.player];
+    target.socket.emit('move blocked', data)
+  });
+
+  socket.on('doubt move', function () {
     io.sockets.emit('move failed', { user: game.currentMove.player });
   });
 

@@ -58,9 +58,13 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       socket.emit('allow move');
     };
 
-    document.getElementById('challengeDeny').onclick = function () {
-      socket.emit('deny move');
+    document.getElementById('challengeDoubt').onclick = function () {
+      socket.emit('doubt move');
     };
+
+    document.getElementById('challengeBlock').onclick = function () {
+      socket.emit('block move', { influence: '' , blocker: boardModel.username() });
+    }
 
     var socket = io.connect('http://' + config.host + ':' + config.port);
 
@@ -112,6 +116,10 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
 
       document.querySelector('.initial').style.display = 'block';
       document.querySelector('.challenge').style.display = 'none';
+    });
+
+    socket.on('move blocked', function (data) {
+      alert('Your move was blocked by ' + data.blocker + '!');
     });
   }
 });

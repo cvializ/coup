@@ -18,7 +18,6 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       this.addMyUser = function () {
         if ((this.username() != "") && (this.users.indexOf(this.username()) < 0)) // Prevent blanks and duplicates
             this.users.push(this.username());
-        //this.username(); // Clear the text box
         document.querySelector('.login').style.display = 'none';
         document.querySelector('.main').style.display = 'block';
       };
@@ -93,7 +92,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
 
     socket.on('move succeeded', function (data) {
       var messages = document.querySelector('.messages');
-      if (boardModel.username === data.user) {
+      if (boardModel.username() === data.user) {
         messages.innerHTML = "Your move was accepted.";
       } else {
         messages.innerHTML = data.user + "'s move was accepted.";
@@ -105,7 +104,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
 
     socket.on('move failed', function (data) {
       var messages = document.querySelector('.messages');
-      if (boardModel.username === data.user) {
+      if (boardModel.username() === data.user) {
         messages.innerHTML = "Your move was rejected.";
       } else {
         messages.innerHTML = data.user + "'s move was rejected.";

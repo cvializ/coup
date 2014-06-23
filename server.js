@@ -97,7 +97,7 @@ io.on('connection', function (socket) {
     }
   }
 
-  socket.on('make move', function () {
+  socket.on('make move', function (data) {
     var currentMove = game.currentMove;
 
     currentMove.player = socket.username;
@@ -113,7 +113,13 @@ io.on('connection', function (socket) {
   });
 
   socket.on('doubt move', function (data) {
-    io.sockets.emit('move failed', { user: game.currentMove.player });
+    // if the current player was telling the truth, the doubter loses a card
+    // if the current player was lying, he loses a card
+    if (Math.random() > .5) {
+      io.sockets.emit('move doubter failed');
+    } else {
+      io.sockets.emit('move doubter succeeded');
+    }
   });
 
   socket.on('allow move', function (data) {

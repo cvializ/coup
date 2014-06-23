@@ -85,7 +85,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       boardModel.users.remove(data.username);
     });
 
-    socket.on('you are alone', function () {
+    socket.on('you are alone', function (data) {
       boardModel.removeMyUser();
       socket.emit('remove user', boardModel.username());
     });
@@ -106,14 +106,14 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       document.querySelector('.initial').style.display = 'block';
     });
 
-    socket.on('move failed', function (data) {
-      var messages = document.querySelector('.messages');
-      if (boardModel.username() === data.user) {
-        messages.innerHTML = "Your move was rejected.";
-      } else {
-        messages.innerHTML = data.user + "'s move was rejected.";
-      }
+    socket.on('move doubter succeeded', function () {
+      document.querySelector('.messages').innerHTML = 'The player was doubted, and was lying!';
+      hidePhaseBlocks();
+      document.querySelector('.initial').style.display = 'block';
+    });
 
+    socket.on('move doubter failed', function () {
+      document.querySelector('.messages').innerHTML = 'The player was doubted, but was telling the truth!';
       hidePhaseBlocks();
       document.querySelector('.initial').style.display = 'block';
     });
@@ -130,19 +130,19 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       socket.emit('blocker doubt');
     }
 
-    socket.on('block doubter succeeded', function () {
+    socket.on('block doubter succeeded', function (data) {
       hidePhaseBlocks();
       document.querySelector('.messages').innerHTML = "The blocker was lying!";
       document.querySelector('.initial').style.display = 'block';
     });
 
-    socket.on('block doubter failed', function () {
+    socket.on('block doubter failed', function (data) {
       hidePhaseBlocks();
       document.querySelector('.messages').innerHTML = "The blocker was truthful! Player blocked!";
       document.querySelector('.initial').style.display = 'block';
     });
 
-    socket.on('block succeeded', function () {
+    socket.on('block succeeded', function (data) {
       hidePhaseBlocks();
       document.querySelector('.messages').innerHTML = "The player allowed the blocker to block.";
       document.querySelector('.initial').style.display = 'block';

@@ -102,8 +102,8 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
         messages.innerHTML = data.user + "'s move was accepted.";
       }
 
+      hidePhaseBlocks();
       document.querySelector('.initial').style.display = 'block';
-      document.querySelector('.challenge').style.display = 'none';
     });
 
     socket.on('move failed', function (data) {
@@ -114,12 +114,44 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
         messages.innerHTML = data.user + "'s move was rejected.";
       }
 
+      hidePhaseBlocks();
       document.querySelector('.initial').style.display = 'block';
-      document.querySelector('.challenge').style.display = 'none';
     });
 
     socket.on('move blocked', function (data) {
-      alert('Your move was blocked by ' + data.blocker + '!');
+      document.querySelector('.challenged').style.display = 'block';
     });
+
+    document.getElementById('challengedSubmit').onclick = function () {
+      socket.emit('blocker success'); // the block was successful
+    };
+
+    document.getElementById('challengedDoubt').onclick = function () {
+      socket.emit('blocker doubt');
+    }
+
+    socket.on('block doubter succeeded', function () {
+      hidePhaseBlocks();
+      document.querySelector('.messages').innerHTML = "The blocker was lying!";
+      document.querySelector('.initial').style.display = 'block';
+    });
+
+    socket.on('block doubter failed', function () {
+      hidePhaseBlocks();
+      document.querySelector('.messages').innerHTML = "The blocker was truthful! Player blocked!";
+      document.querySelector('.initial').style.display = 'block';
+    });
+
+    socket.on('block succeeded', function () {
+      hidePhaseBlocks();
+      document.querySelector('.messages').innerHTML = "The player allowed the blocker to block.";
+      document.querySelector('.initial').style.display = 'block';
+    });
+
+    function hidePhaseBlocks() {
+      Array.prototype.forEach.call(document.querySelectorAll('.phaseblock'), function (d) {
+        d.style.display = 'none';
+      });
+    }
   }
 });

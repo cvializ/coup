@@ -112,16 +112,33 @@ io.on('connection', function (socket) {
     target.socket.emit('move blocked', data)
   });
 
-  socket.on('doubt move', function () {
+  socket.on('doubt move', function (data) {
     io.sockets.emit('move failed', { user: game.currentMove.player });
   });
 
-  socket.on('allow move', function () {
+  socket.on('allow move', function (data) {
     var currentMove = game.currentMove;
 
     currentMove.responsesRemaining--;
     if (currentMove.responsesRemaining === 0) {
       io.sockets.emit('move succeeded', { user: currentMove.player });
     }
+  });
+
+  socket.on('blocker doubt', function (data) {
+    if (Math.random() > .5) {
+      io.sockets.emit('block doubter succeeded');
+    } else {
+      io.sockets.emit('block doubter failed');
+    }
+    // check if the blocker has the card they block with.
+    // if so, the doubter loses a card
+    // if not, the blocker loses a card
+    //io.sockets.emit('block over');
+  });
+
+  socket.on('blocker success', function (data) {
+    // the blocker succeeds in blocking the action.
+    io.sockets.emit('block succeeded')
   });
 });

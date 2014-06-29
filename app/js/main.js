@@ -12,7 +12,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
 
     var BoardModel = function () {
       this.users = ko.observableArray([]);
-      //this.activeUser = ko.observable('');
+      this.activeUser = ko.observable('');
       this.username = ko.observable('');
 
       this.addMyUser = function () {
@@ -51,7 +51,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       var messages = document.querySelector('.messages');
       messages.appendChild(p);
 
-      socket.emit('make move');
+      socket.emit('make move', { ability: 'move' });
     };
 
     document.getElementById('challengeAllow').onclick = function () {
@@ -90,8 +90,11 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       socket.emit('remove user', boardModel.username());
     });
 
-    socket.on('move attempted', function (data) {
+    socket.on('move attempted', function (moveData) {
+      boardModel.activeUser = moveData.player;
+      
       document.querySelector('.challenge').style.display = 'block';
+      document.querySelector('.messages').innerHTML = moveData.player + ' has attempted to ' + moveData.ability + '.';
     });
 
     socket.on('move succeeded', function (data) {

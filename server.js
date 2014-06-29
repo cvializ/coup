@@ -36,14 +36,30 @@ GameState.prototype.removeUser = function (username) {
   this.userCount--;
 };
 
-function Move() {
+function Move(moveData) {
+  moveData = moveData || {};
+
+  this.influence = moveData.influence || '';
+  this.ability = moveData.ability || '';
+  this.player = moveData.player || null;
+
   this.responsesRemaining = 0;
-  this.player = null;
-  success = true;
+}
+
+Move.prototype.getClientMove = function () {
+  return new ClientMove(player, influence, ability);
+};
+
+function ClientMove(moveData) {
+  moveData = moveData || {};
+
+  this.influence = moveData.influence || '';
+  this.ability = moveData.ability || '';
+  this.player = moveData.player || null;
 }
 
 // Routing
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/app'));
 app.use(express.static(__dirname + '/config'));
 
 var game = new GameState(),
@@ -60,7 +76,7 @@ io.on('connection', function (socket) {
 
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username) {
-    
+
     clients[username] = new Client(socket);
 
     // we store the username in the socket session for this client
@@ -69,7 +85,7 @@ io.on('connection', function (socket) {
     game.addUser(username);
 
     addedUser = true;
-    
+
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username
@@ -97,14 +113,13 @@ io.on('connection', function (socket) {
     }
   }
 
-  socket.on('make move', function (data) {
-    var currentMove = game.currentMove;
+  socket.on('make move', function (moveData) {
+    var currentMove = game.currentMove = new Move(moveData);
 
     currentMove.player = socket.username;
     currentMove.responsesRemaining = game.userCount - 1;
-    currentMove.success = true;
 
-    socket.broadcast.emit('move attempted');
+    socket.broadcast.emit('move attempted', new ClientMove(currentMove));
   });
 
   socket.on('block move', function (data) {

@@ -1,4 +1,4 @@
-define(['Marionette'], function (Marionette) {
+define(['marionette'], function (Marionette) {
   CoupController = Marionette.Controller.extend({
 
     initialize: function(options){

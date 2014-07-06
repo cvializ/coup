@@ -7,7 +7,7 @@ require.config({
   }
 });
 
-define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
+define(['config', 'socket', 'knockout',], function(config, socket, ko) {
   window.onload = function() {
 
     var BoardModel = function () {
@@ -66,10 +66,6 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
       socket.emit('block move', { influence: '' , blocker: boardModel.username() });
     }
 
-    var socket = io.connect('http://' + config.host + ':' + config.port);
-
-    socket.emit('ready');
-
     socket.on('initialize', function (data) {
       var usernames = data.usernames;
       for (var name in usernames) {
@@ -92,7 +88,7 @@ define(['config', 'socket.io', 'knockout'], function(config, io, ko) {
 
     socket.on('move attempted', function (moveData) {
       boardModel.activeUser = moveData.player;
-      
+
       document.querySelector('.challenge').style.display = 'block';
       document.querySelector('.messages').innerHTML = moveData.player + ' has attempted to ' + moveData.ability + '.';
     });

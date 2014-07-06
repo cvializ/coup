@@ -6,7 +6,9 @@ require.config({
     marionette : 'ext/backbone.marionette',
     handlebars: 'ext/handlebars-v1.3.0',
     hbs: 'ext/require-handlebars-plugin/hbs',
-    knockout: 'ext/knockout-3.1.0'
+    knockout: 'ext/knockout-3.1.0',
+    config: '/config',
+    'socket.io': '/socket.io/socket.io'
   },
   shim : {
     jquery : {
@@ -29,7 +31,8 @@ require.config({
   }
 });
 
-define(['jquery', 'CoupApp', 'models/Player', 'views/Player'], function ($, CoupApp, PlayerModel, PlayerView) {
+define(['jquery', 'CoupApp', 'models/Player', 'views/Player', 'views/SecondaryAction'],
+function ($, CoupApp, PlayerModel, PlayerView, SecondaryAction) {
 
   var players = [
     {name: 'Carlos', coins: 5},
@@ -41,6 +44,9 @@ define(['jquery', 'CoupApp', 'models/Player', 'views/Player'], function ($, Coup
     var view = new PlayerView({ model: new PlayerModel(players[i]) });
     $('#c-player-area').append(view.render().el);
   }
+
+  var act = new SecondaryAction();
+  $('#c-action-area').append(act.render().el);
 /*
   var controller = new CoupController({
     mainRegion: MyApp.mainRegion

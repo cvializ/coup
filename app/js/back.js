@@ -31,22 +31,36 @@ require.config({
   }
 });
 
-define(['jquery', 'CoupApp', 'models/Player', 'views/Player', 'views/SecondaryAction'],
-function ($, CoupApp, PlayerModel, PlayerView, SecondaryAction) {
+define([
+  'jquery',
+  'views/SecondaryAction',
+  'views/TertiaryAction',
+  'models/PlayerCollection',
+  'views/PlayerCollection',
+  'models/Play',
+  'views/Play'
+], function ($, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayModel, PlayView) {
 
-  var players = [
+  var playerCollection = new PlayerCollection([
     {name: 'Carlos', coins: 5},
     {name: 'Erik', coins: 6},
-    {name: 'Caleb', coins: 2}
-  ];
+    {name: 'Caleb', coins: 2},
+    {name: 'Laura', coins: 7}
+  ]);
 
-  for (var i = 0; i < players.length; i++) {
-    var view = new PlayerView({ model: new PlayerModel(players[i]) });
-    $('#c-player-area').append(view.render().el);
-  }
+  var playModel = new PlayModel({
+    playerView: new PlayerCollectionView({ collection: playerCollection }),
+    actionView: new TertiaryAction()
+  });
 
-  var act = new SecondaryAction();
-  $('#c-action-area').append(act.render().el);
+  var playView = new PlayView({
+    model: playModel
+  });
+
+  $('#coup-main').append(playView.render().el);
+
+  playModel.set('actionView', new SecondaryAction());
+
 /*
   var controller = new CoupController({
     mainRegion: MyApp.mainRegion

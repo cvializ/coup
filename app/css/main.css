@@ -1,0 +1,9 @@
+#c-player-area > div {
+  display: inline-block;
+  margin: 5px;
+  padding: 5px;
+  height: 160px;
+  width: 100px;
+  background-color: gray;
+  vertical-align: middle;
+}

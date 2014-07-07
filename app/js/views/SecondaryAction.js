@@ -2,9 +2,7 @@ define(
 ['views/Action', 'models/SecondaryAction', 'socket'],
 function (ActionView, SecondaryActionModel, socket) {
   var SecondaryAction = ActionView.extend({
-    initialize: function () {
-      this.model = this.model || new SecondaryActionModel();
-    },
+    actionModel: SecondaryActionModel,
 
     events: {
       'click #secondary-allow': function allow() {

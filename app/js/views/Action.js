@@ -1,14 +1,9 @@
-define(['backbone', 'models/Action', 'hbs!templates/action'], function (Backbone, ActionModel, actionTemplate) {
-  var ActionView = Backbone.View.extend({
+define(['views/Base', 'models/Action', 'hbs!templates/action'], function (BaseView, ActionModel, actionTemplate) {
+  var ActionView = BaseView.extend({
     template: actionTemplate,
 
     initialize: function () {
       this.model = this.model || new this.actionModel();
-    },
-
-    render: function () {
-      this.$el.html(this.template(this.model.attributes));
-      return this;
     }
   });
 

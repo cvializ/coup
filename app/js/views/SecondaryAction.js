@@ -4,10 +4,6 @@ function (ActionView, SecondaryActionModel, socket) {
   var SecondaryAction = ActionView.extend({
     actionModel: SecondaryActionModel,
 
-    initialize: function () {
-      this.model = this.model || new SecondaryActionModel();
-    },
-    
     events: {
       'click #secondary-allow': function allow() {
         console.log('allow');

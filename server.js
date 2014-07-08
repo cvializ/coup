@@ -1,4 +1,3 @@
-// Setup basic express server
 var express = require('express')
   , app = express()
   , server = require('http').createServer(app)
@@ -9,6 +8,20 @@ var express = require('express')
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
+});
+
+app.get('/play/:gameName', function (req, res) {
+  res.sendfile('./app/index.html');
+});
+
+app.get('/create/:gameName', function (req, res) {
+  var nsp = io.of('/' + req.params.gameName);
+  if (!nsp.isInitialized) {
+    setupIo(nsp);
+    res.send('Created game "/' + req.params.gameName + '."');
+  } else {
+    res.send('Game "/' + req.params.gameName + '" already exists.');
+  }
 });
 
 function Client(socket) {
@@ -62,104 +75,107 @@ function ClientMove(moveData) {
 app.use(express.static(__dirname + '/app'));
 app.use(express.static(__dirname + '/config'));
 
-var game = new GameState(),
-    clients = {};
+function setupIo(nsp) {
+  nsp.isInitialized = true;
 
-io.on('connection', function (socket) {
-  var addedUser = false;
+  var game = new GameState(),
+      clients = {};
 
-  socket.on('ready', function () {
-    var data = {};
-    data.usernames = game.usernames;
-    socket.emit('initialize', data);
-  });
+  nsp.on('connection', function (socket) {
+    var addedUser = false;
 
-  // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
-
-    clients[username] = new Client(socket);
-
-    // we store the username in the socket session for this client
-    socket.username = username;
-    // add the client's username to the global list
-    game.addUser(username);
-
-    addedUser = true;
-
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username
+    socket.on('ready', function () {
+      var data = {};
+      data.usernames = game.usernames;
+      socket.emit('initialize', data);
     });
-  });
 
-  // when the user disconnects.. perform this
-  socket.on('remove user', logout);
-  socket.on('disconnect', logout);
+    // when the client emits 'add user', this listens and executes
+    socket.on('add user', function (username) {
+      clients[username] = new Client(socket);
 
-  function logout() {
-    // remove the username from global usernames list
-    if (addedUser) {
-      game.removeUser(socket.username);
-      delete clients[socket.username];
+      // we store the username in the socket session for this client
+      socket.username = username;
+      // add the client's username to the global list
+      game.addUser(username);
 
-      if (game.userCount === 1) {
-        socket.broadcast.emit('you are alone');
-      }
+      addedUser = true;
 
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
+      // echo globally (all clients) that a person has connected
+      socket.broadcast.emit('user joined', {
         username: socket.username
       });
+    });
+
+    // when the user disconnects.. perform this
+    socket.on('remove user', logout);
+    socket.on('disconnect', logout);
+
+    function logout() {
+      // remove the username from global usernames list
+      if (addedUser) {
+        game.removeUser(socket.username);
+        delete clients[socket.username];
+
+        if (game.userCount === 1) {
+          socket.broadcast.emit('you are alone');
+        }
+
+        // echo globally that this client has left
+        socket.broadcast.emit('user left', {
+          username: socket.username
+        });
+      }
     }
-  }
 
-  socket.on('make move', function (moveData) {
-    var currentMove = game.currentMove = new Move(moveData);
+    socket.on('make move', function (moveData) {
+      var currentMove = game.currentMove = new Move(moveData);
 
-    currentMove.player = socket.username;
-    currentMove.responsesRemaining = game.userCount - 1;
+      currentMove.player = socket.username;
+      currentMove.responsesRemaining = game.userCount - 1;
 
-    socket.broadcast.emit('move attempted', new ClientMove(currentMove));
+      socket.broadcast.emit('move attempted', new ClientMove(currentMove));
+    });
+
+    socket.on('block move', function (data) {
+      var target = clients[game.currentMove.player];
+      target.socket.emit('move blocked', data)
+    });
+
+    socket.on('doubt move', function (data) {
+      // if the current player was telling the truth, the doubter loses a card
+      // if the current player was lying, he loses a card
+      if (Math.random() > .5) {
+        nsp.emit('move doubter failed');
+      } else {
+        nsp.emit('move doubter succeeded');
+      }
+    });
+
+    socket.on('allow move', function (data) {
+      var currentMove = game.currentMove;
+
+      currentMove.responsesRemaining--;
+      if (currentMove.responsesRemaining === 0) {
+        nsp.emit('move succeeded', { user: currentMove.player });
+      }
+    });
+
+    socket.on('blocker doubt', function (data) {
+      if (Math.random() > .5) {
+        nsp.emit('block doubter succeeded');
+      } else {
+        nsp.emit('block doubter failed');
+      }
+      // check if the blocker has the card they block with.
+      // if so, the doubter loses a card
+      // if not, the blocker loses a card
+      //nsp.emit('block over');
+    });
+
+    socket.on('blocker success', function (data) {
+      // the blocker succeeds in blocking the action.
+      nsp.emit('block succeeded')
+    });
   });
-
-  socket.on('block move', function (data) {
-    var target = clients[game.currentMove.player];
-    target.socket.emit('move blocked', data)
-  });
-
-  socket.on('doubt move', function (data) {
-    // if the current player was telling the truth, the doubter loses a card
-    // if the current player was lying, he loses a card
-    if (Math.random() > .5) {
-      io.sockets.emit('move doubter failed');
-    } else {
-      io.sockets.emit('move doubter succeeded');
-    }
-  });
-
-  socket.on('allow move', function (data) {
-    var currentMove = game.currentMove;
-
-    currentMove.responsesRemaining--;
-    if (currentMove.responsesRemaining === 0) {
-      io.sockets.emit('move succeeded', { user: currentMove.player });
-    }
-  });
-
-  socket.on('blocker doubt', function (data) {
-    if (Math.random() > .5) {
-      io.sockets.emit('block doubter succeeded');
-    } else {
-      io.sockets.emit('block doubter failed');
-    }
-    // check if the blocker has the card they block with.
-    // if so, the doubter loses a card
-    // if not, the blocker loses a card
-    //io.sockets.emit('block over');
-  });
-
-  socket.on('blocker success', function (data) {
-    // the blocker succeeds in blocking the action.
-    io.sockets.emit('block succeeded')
-  });
-});
+}

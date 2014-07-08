@@ -1,6 +1,10 @@
 define(['socket.io', 'config'], function (io, config) {
 
-  var socket = io.connect('http://' + config.host + ':' + config.port);
+  var urlPath = window.location.pathname,
+      gameId = urlPath.substring(urlPath.lastIndexOf('/')),
+      // gameId contains the leading /
+      // e.g. if the namespace is "coupGame", the gameId is "/coupGame"
+      socket = io.connect('http://' + config.host + ':' + config.port + gameId);
 
   socket.emit('ready');
 

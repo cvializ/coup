@@ -1,0 +1,17 @@
+<div id="c-login-container">
+  <div class="c-login-form">
+    <form>
+      <label for="c-login-form-username">Choose your username</label>
+      <input type="text" id="c-login-form-username" />
+      <input type="button" value="Join" />
+    </form>
+  </div>
+  <div class="c-login-users">
+  <h3>Users<h3>
+    <ul>
+    {#each users}
+      <li>{{name}}</li>
+    {/each}
+    </ul>
+  </div>
+</div>

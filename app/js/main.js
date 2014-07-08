@@ -8,149 +8,146 @@ require.config({
 });
 
 define(['config', 'socket', 'knockout',], function(config, socket, ko) {
-  window.onload = function() {
+  var BoardModel = function () {
+    this.users = ko.observableArray([]);
+    this.activeUser = ko.observable('');
+    this.username = ko.observable('');
 
-    var BoardModel = function () {
-      this.users = ko.observableArray([]);
-      this.activeUser = ko.observable('');
-      this.username = ko.observable('');
+    this.addMyUser = function () {
+      if ((this.username() != "") && (this.users.indexOf(this.username()) < 0)) // Prevent blanks and duplicates
+          this.users.push(this.username());
+      document.querySelector('.login').style.display = 'none';
+      document.querySelector('.main').style.display = 'block';
+    };
 
-      this.addMyUser = function () {
-        if ((this.username() != "") && (this.users.indexOf(this.username()) < 0)) // Prevent blanks and duplicates
-            this.users.push(this.username());
-        document.querySelector('.login').style.display = 'none';
-        document.querySelector('.main').style.display = 'block';
-      };
+    this.removeMyUser = function () {
+      this.users.remove(this.username());
+      document.querySelector('.login').style.display = 'block';
+      document.querySelector('.main').style.display = 'none';
+    };
+  }
 
-      this.removeMyUser = function () {
-        this.users.remove(this.username());
-        document.querySelector('.login').style.display = 'block';
-        document.querySelector('.main').style.display = 'none';
-      };
+  var boardModel = new BoardModel();
+  ko.applyBindings(boardModel);
+
+  document.getElementById('join').onclick = function () {
+    boardModel.addMyUser();
+    socket.emit('add user', boardModel.username());
+  };
+
+  document.getElementById('quit').onclick = function () {
+    boardModel.removeMyUser();
+    socket.emit('remove user', boardModel.username());
+  };
+
+  document.getElementById('move').onclick = function () {
+    document.querySelector('.initial').display = 'none';
+
+    var p = document.createElement('p');
+    p.appendChild(document.createTextNode('Waiting for challenges...'));
+
+    var messages = document.querySelector('.messages');
+    messages.appendChild(p);
+
+    socket.emit('make move', { ability: 'move' });
+  };
+
+  document.getElementById('challengeAllow').onclick = function () {
+    socket.emit('allow move');
+  };
+
+  document.getElementById('challengeDoubt').onclick = function () {
+    socket.emit('doubt move');
+  };
+
+  document.getElementById('challengeBlock').onclick = function () {
+    socket.emit('block move', { influence: '' , blocker: boardModel.username() });
+  }
+
+  socket.on('initialize', function (data) {
+    var usernames = data.usernames;
+    for (var name in usernames) {
+      if (usernames.hasOwnProperty(name)) { boardModel.users.push(name); }
+    }
+  });
+
+  socket.on('user joined', function (data) {
+    boardModel.users.push(data.username);
+  });
+
+  socket.on('user left', function (data) {
+    boardModel.users.remove(data.username);
+  });
+
+  socket.on('you are alone', function (data) {
+    boardModel.removeMyUser();
+    socket.emit('remove user', boardModel.username());
+  });
+
+  socket.on('move attempted', function (moveData) {
+    boardModel.activeUser = moveData.player;
+
+    document.querySelector('.challenge').style.display = 'block';
+    document.querySelector('.messages').innerHTML = moveData.player + ' has attempted to ' + moveData.ability + '.';
+  });
+
+  socket.on('move succeeded', function (data) {
+    var messages = document.querySelector('.messages');
+    if (boardModel.username() === data.user) {
+      messages.innerHTML = "Your move was accepted.";
+    } else {
+      messages.innerHTML = data.user + "'s move was accepted.";
     }
 
-    var boardModel = new BoardModel();
-    ko.applyBindings(boardModel);
+    hidePhaseBlocks();
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('join').onclick = function () {
-      boardModel.addMyUser();
-      socket.emit('add user', boardModel.username());
-    };
+  socket.on('move doubter succeeded', function () {
+    document.querySelector('.messages').innerHTML = 'The player was doubted, and was lying!';
+    hidePhaseBlocks();
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('quit').onclick = function () {
-      boardModel.removeMyUser();
-      socket.emit('remove user', boardModel.username());
-    };
+  socket.on('move doubter failed', function () {
+    document.querySelector('.messages').innerHTML = 'The player was doubted, but was telling the truth!';
+    hidePhaseBlocks();
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('move').onclick = function () {
-      document.querySelector('.initial').display = 'none';
+  socket.on('move blocked', function (data) {
+    document.querySelector('.challenged').style.display = 'block';
+  });
 
-      var p = document.createElement('p');
-      p.appendChild(document.createTextNode('Waiting for challenges...'));
+  document.getElementById('challengedSubmit').onclick = function () {
+    socket.emit('blocker success'); // the block was successful
+  };
 
-      var messages = document.querySelector('.messages');
-      messages.appendChild(p);
+  document.getElementById('challengedDoubt').onclick = function () {
+    socket.emit('blocker doubt');
+  }
 
-      socket.emit('make move', { ability: 'move' });
-    };
+  socket.on('block doubter succeeded', function (data) {
+    hidePhaseBlocks();
+    document.querySelector('.messages').innerHTML = "The blocker was lying!";
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('challengeAllow').onclick = function () {
-      socket.emit('allow move');
-    };
+  socket.on('block doubter failed', function (data) {
+    hidePhaseBlocks();
+    document.querySelector('.messages').innerHTML = "The blocker was truthful! Player blocked!";
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('challengeDoubt').onclick = function () {
-      socket.emit('doubt move');
-    };
+  socket.on('block succeeded', function (data) {
+    hidePhaseBlocks();
+    document.querySelector('.messages').innerHTML = "The player allowed the blocker to block.";
+    document.querySelector('.initial').style.display = 'block';
+  });
 
-    document.getElementById('challengeBlock').onclick = function () {
-      socket.emit('block move', { influence: '' , blocker: boardModel.username() });
-    }
-
-    socket.on('initialize', function (data) {
-      var usernames = data.usernames;
-      for (var name in usernames) {
-        if (usernames.hasOwnProperty(name)) { boardModel.users.push(name); }
-      }
+  function hidePhaseBlocks() {
+    Array.prototype.forEach.call(document.querySelectorAll('.phaseblock'), function (d) {
+      d.style.display = 'none';
     });
-
-    socket.on('user joined', function (data) {
-      boardModel.users.push(data.username);
-    });
-
-    socket.on('user left', function (data) {
-      boardModel.users.remove(data.username);
-    });
-
-    socket.on('you are alone', function (data) {
-      boardModel.removeMyUser();
-      socket.emit('remove user', boardModel.username());
-    });
-
-    socket.on('move attempted', function (moveData) {
-      boardModel.activeUser = moveData.player;
-
-      document.querySelector('.challenge').style.display = 'block';
-      document.querySelector('.messages').innerHTML = moveData.player + ' has attempted to ' + moveData.ability + '.';
-    });
-
-    socket.on('move succeeded', function (data) {
-      var messages = document.querySelector('.messages');
-      if (boardModel.username() === data.user) {
-        messages.innerHTML = "Your move was accepted.";
-      } else {
-        messages.innerHTML = data.user + "'s move was accepted.";
-      }
-
-      hidePhaseBlocks();
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    socket.on('move doubter succeeded', function () {
-      document.querySelector('.messages').innerHTML = 'The player was doubted, and was lying!';
-      hidePhaseBlocks();
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    socket.on('move doubter failed', function () {
-      document.querySelector('.messages').innerHTML = 'The player was doubted, but was telling the truth!';
-      hidePhaseBlocks();
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    socket.on('move blocked', function (data) {
-      document.querySelector('.challenged').style.display = 'block';
-    });
-
-    document.getElementById('challengedSubmit').onclick = function () {
-      socket.emit('blocker success'); // the block was successful
-    };
-
-    document.getElementById('challengedDoubt').onclick = function () {
-      socket.emit('blocker doubt');
-    }
-
-    socket.on('block doubter succeeded', function (data) {
-      hidePhaseBlocks();
-      document.querySelector('.messages').innerHTML = "The blocker was lying!";
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    socket.on('block doubter failed', function (data) {
-      hidePhaseBlocks();
-      document.querySelector('.messages').innerHTML = "The blocker was truthful! Player blocked!";
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    socket.on('block succeeded', function (data) {
-      hidePhaseBlocks();
-      document.querySelector('.messages').innerHTML = "The player allowed the blocker to block.";
-      document.querySelector('.initial').style.display = 'block';
-    });
-
-    function hidePhaseBlocks() {
-      Array.prototype.forEach.call(document.querySelectorAll('.phaseblock'), function (d) {
-        d.style.display = 'none';
-      });
-    }
   }
 });

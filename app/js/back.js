@@ -33,8 +33,8 @@ require.config({
 
 define([
   'jquery',
-  'views/SecondaryAction',
-  'views/TertiaryAction',
+  'views/action/SecondaryAction',
+  'views/action/TertiaryAction',
   'models/PlayerCollection',
   'views/PlayerCollection',
   'models/Play',

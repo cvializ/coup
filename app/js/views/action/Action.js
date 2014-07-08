@@ -1,4 +1,4 @@
-define(['views/Base', 'models/Action', 'hbs!templates/action'], function (BaseView, ActionModel, actionTemplate) {
+define(['views/Base', 'models/action/Action', 'hbs!templates/action'], function (BaseView, ActionModel, actionTemplate) {
   var ActionView = BaseView.extend({
     template: actionTemplate,
 

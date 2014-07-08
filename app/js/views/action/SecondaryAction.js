@@ -1,5 +1,5 @@
 define(
-['views/Action', 'models/SecondaryAction', 'socket'],
+['views/action/Action', 'models/action/SecondaryAction', 'socket'],
 function (ActionView, SecondaryActionModel, socket) {
   var SecondaryAction = ActionView.extend({
     actionModel: SecondaryActionModel,

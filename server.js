@@ -139,13 +139,13 @@ function setupIo(nsp) {
 
     socket.on('block move', function (data) {
       var target = clients[game.currentMove.player];
-      target.socket.emit('move blocked', data)
+      target.socket.emit('move blocked', data);
     });
 
     socket.on('doubt move', function (data) {
       // if the current player was telling the truth, the doubter loses a card
       // if the current player was lying, he loses a card
-      if (Math.random() > .5) {
+      if (Math.random() > 0.5) {
         nsp.emit('move doubter failed');
       } else {
         nsp.emit('move doubter succeeded');
@@ -162,7 +162,7 @@ function setupIo(nsp) {
     });
 
     socket.on('blocker doubt', function (data) {
-      if (Math.random() > .5) {
+      if (Math.random() > 0.5) {
         nsp.emit('block doubter succeeded');
       } else {
         nsp.emit('block doubter failed');
@@ -175,7 +175,7 @@ function setupIo(nsp) {
 
     socket.on('blocker success', function (data) {
       // the blocker succeeds in blocking the action.
-      nsp.emit('block succeeded')
+      nsp.emit('block succeeded');
     });
   });
 }

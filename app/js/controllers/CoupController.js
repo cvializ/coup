@@ -4,8 +4,9 @@ define([
   'CoupApp',
   'models/landing/Login',
   'views/landing/Login',
-  'views/landing/Landing'
-], function (Marionette, socket, CoupApp, LoginCollectionModel, LoginView, LandingView) {
+  'views/landing/Landing',
+  'views/landing/Create'
+], function (Marionette, socket, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView) {
 
   CoupController = Marionette.Controller.extend({
 
@@ -16,6 +17,7 @@ define([
         CoupApp.main.show(landingView);
 
         landingView.login.show(loginView);
+        landingView.create.show(new CreateView());
       });
     }
   });

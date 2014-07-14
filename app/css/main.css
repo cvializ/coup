@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #c-player-area .c-player-view {
   display: inline-block;
   margin: 5px;
@@ -6,4 +10,22 @@
   width: 100px;
   background-color: gray;
   vertical-align: middle;
+}
+
+.c-landing-view {
+  width: 100%;
+}
+
+.c-landing-view > div {
+  vertical-align: top;
+}
+
+#c-login-area {
+  width: 50%;
+  float: left;
+}
+
+#c-create-game-area {
+  width: 50%;
+  float: left;
 }

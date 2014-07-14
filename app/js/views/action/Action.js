@@ -1,5 +1,8 @@
-define(['marionette', 'models/action/Action', 'hbs!templates/action'],
-function (Marionette, ActionModel, actionTemplate) {
+define([
+  'marionette',
+  'models/action/Action',
+  'hbs!templates/action'
+], function (Marionette, ActionModel, actionTemplate) {
   var ActionView = Marionette.ItemView.extend({
     className: 'c-action-container',
 

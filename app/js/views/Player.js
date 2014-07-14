@@ -1,5 +1,6 @@
-define(['views/Base', 'hbs!templates/player'], function (BaseView, playerTemplate) {
-  var PlayerView = BaseView.extend({
+define(['marionette', 'hbs!templates/player'], function (Marionette, playerTemplate) {
+  var PlayerView = Marionette.ItemView.extend({
+    className: 'c-player-container',
     template: playerTemplate
   });
 

@@ -1,6 +1,6 @@
-define(['views/BaseCollection', 'views/Player'], function (BaseCollection, PlayerView) {
-  var PlayerCollectionView = BaseCollection.extend({
-    itemView: PlayerView
+define(['marionette', 'views/Player'], function (Marionette, PlayerView) {
+  var PlayerCollectionView = Marionette.CollectionView.extend({
+    childView: PlayerView
   });
 
   return PlayerCollectionView;

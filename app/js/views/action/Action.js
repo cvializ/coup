@@ -1,5 +1,8 @@
-define(['views/Base', 'models/action/Action', 'hbs!templates/action'], function (BaseView, ActionModel, actionTemplate) {
-  var ActionView = BaseView.extend({
+define(['marionette', 'models/action/Action', 'hbs!templates/action'],
+function (Marionette, ActionModel, actionTemplate) {
+  var ActionView = Marionette.ItemView.extend({
+    className: 'c-action-container',
+
     template: actionTemplate,
 
     initialize: function () {

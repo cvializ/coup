@@ -37,9 +37,8 @@ define([
   'views/action/TertiaryAction',
   'models/PlayerCollection',
   'views/PlayerCollection',
-  'models/Play',
   'views/Play'
-], function ($, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayModel, PlayView) {
+], function ($, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayView) {
 
   var playerCollection = new PlayerCollection([
     {name: 'Carlos', coins: 5},
@@ -48,24 +47,12 @@ define([
     {name: 'Laura', coins: 7}
   ]);
 
-  var playModel = new PlayModel({
-    playerView: new PlayerCollectionView({ collection: playerCollection }),
-    actionView: new TertiaryAction()
-  });
-
-  var playView = new PlayView({
-    model: playModel
-  });
+  var playView = new PlayView();
 
   $('#coup-main').append(playView.render().el);
 
-  playModel.set('actionView', new SecondaryAction());
+  playView.player.show(new PlayerCollectionView({ collection: playerCollection }));
+  playView.action.show(new TertiaryAction());
 
-/*
-  var controller = new CoupController({
-    mainRegion: MyApp.mainRegion
-  });
-
-  controller.show();*/
-
+  playerCollection.add({ name: 'Frank', coins: 2});
 });

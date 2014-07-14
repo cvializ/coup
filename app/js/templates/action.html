@@ -1,9 +1,7 @@
-<div class="c-action-container">
-  <h2>{{ title }}</h2>
-  <p>{{ text }}</p>
-  <div class="c-action-button-list">
-    {{#each choices}}
-      <button id="{{ id }}">{{ title }}</button>
-    {{/each}}
-  </div>
+<h2>{{ title }}</h2>
+<p>{{ text }}</p>
+<div class="c-action-button-list">
+  {{#each choices}}
+    <button id="{{ id }}">{{ title }}</button>
+  {{/each}}
 </div>

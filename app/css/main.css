@@ -1,4 +1,4 @@
-#c-player-area > div {
+#c-player-area .c-player-container {
   display: inline-block;
   margin: 5px;
   padding: 5px;

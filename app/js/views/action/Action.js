@@ -4,7 +4,7 @@ define([
   'hbs!templates/action'
 ], function (Marionette, ActionModel, actionTemplate) {
   var ActionView = Marionette.ItemView.extend({
-    className: 'c-action-container',
+    className: 'c-action-view',
 
     template: actionTemplate,
 

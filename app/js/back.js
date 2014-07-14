@@ -33,26 +33,10 @@ require.config({
 
 define([
   'jquery',
-  'views/action/SecondaryAction',
-  'views/action/TertiaryAction',
-  'models/PlayerCollection',
-  'views/PlayerCollection',
-  'views/Play'
-], function ($, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayView) {
+  'CoupApp',
+  'controllers/CoupController'
+], function ($, CoupApp, CoupController, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayView) {
+  var controller = new CoupController();
 
-  var playerCollection = new PlayerCollection([
-    {name: 'Carlos', coins: 5},
-    {name: 'Erik', coins: 6},
-    {name: 'Caleb', coins: 2},
-    {name: 'Laura', coins: 7}
-  ]);
-
-  var playView = new PlayView();
-
-  $('#coup-main').append(playView.render().el);
-
-  playView.player.show(new PlayerCollectionView({ collection: playerCollection }));
-  playView.action.show(new TertiaryAction());
-
-  playerCollection.add({ name: 'Frank', coins: 2});
+  CoupApp.start({ controller: controller });
 });

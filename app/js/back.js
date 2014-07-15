@@ -38,5 +38,5 @@ define([
 ], function ($, CoupApp, CoupController, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayView) {
   var controller = new CoupController();
 
-  CoupApp.start({ controller: controller });
+  CoupApp.start({ LandingController: controller });
 });

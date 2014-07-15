@@ -1,12 +1,14 @@
 define([
   'marionette',
   'socket',
+  'socket.io',
+  'config',
   'CoupApp',
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
   'views/landing/Create'
-], function (Marionette, socket, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView) {
+], function (Marionette, socket, io, config, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView) {
 
   CoupController = Marionette.Controller.extend({
 
@@ -19,7 +21,15 @@ define([
         landingView.login.show(loginView);
         landingView.create.show(new CreateView());
       });
+
+      this.listenTo(this, 'game:create', function (data) {
+        socket.emit('create game', data);
+      });
     }
+  });
+
+  socket.on('initialize', function (data) {
+    console.log(data);
   });
 
   var games = new LoginCollectionModel([

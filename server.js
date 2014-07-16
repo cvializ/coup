@@ -76,9 +76,7 @@ io.on('connection', function (socket) {
     if (!games[data.title]) {
       console.log('CREATED GAME!');
       games[data.title] = new GameState(data.title);
-      socket.game = games[data.title];
     }
-    socket.join(data.title);
   });
 
   socket.on('ready', function () {
@@ -88,13 +86,18 @@ io.on('connection', function (socket) {
   });
 
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
-    clients[username] = new Client(socket);
-
+  socket.on('join user', function (data) {
     // we store the username in the socket session for this client
-    socket.username = username;
+    socket.username = data.username;
+
+    clients[socket.username] = new Client(socket);
+
+    socket.game = games[data.title];
+    socket.join(data.title);
+
+    
     // add the client's username to the global list
-    socket.game.addUser(username);
+    socket.game.addUser(socket.username);
 
     addedUser = true;
 
@@ -115,7 +118,7 @@ io.on('connection', function (socket) {
       delete clients[socket.username];
 
       if (socket.game.userCount <= 1) {
-        socket.broadcast.to(socket.socket.game.title).emit('you are alone');
+        socket.broadcast.to(socket.game.title).emit('you are alone');
         delete games[socket.game.title];
       }
 

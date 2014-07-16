@@ -24,6 +24,12 @@ define([
 
       this.listenTo(this, 'game:create', function (data) {
         socket.emit('create game', data);
+        this.trigger('game:join', data);
+      });
+
+      this.listenTo(this, 'game:join', function (data) {
+        console.log('joining game');
+        socket.emit('join user', data);
       });
     }
   });

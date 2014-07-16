@@ -7,8 +7,9 @@ define([
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
-  'views/landing/Create'
-], function (Marionette, socket, io, config, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView) {
+  'views/landing/Create',
+  'views/Play'
+], function (Marionette, socket, io, config, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
 
   CoupController = Marionette.Controller.extend({
 
@@ -22,14 +23,15 @@ define([
         landingView.create.show(new CreateView());
       });
 
-      this.listenTo(this, 'game:create', function (data) {
+      CoupApp.vent.on('game:create', function (data) {
         socket.emit('create game', data);
         this.trigger('game:join', data);
       });
 
-      this.listenTo(this, 'game:join', function (data) {
+      CoupApp.vent.on('game:join', function (data) {
         console.log('joining game');
         socket.emit('join user', data);
+        socket.emit('ready');
       });
     }
   });
@@ -38,24 +40,14 @@ define([
     console.log(data);
   });
 
-  var games = new LoginCollectionModel([
-    {
-      name: 'My Coupl Game',
-      players: [
-          {name: 'Carlos', coins: 5},
-          {name: 'Erik', coins: 6},
-          {name: 'Caleb', coins: 2},
-          {name: 'Laura', coins: 7}
-      ]
-    },
-    {
-      name: 'New Game',
-      players: [
-        {name: 'JWOWW', coins: 1},
-        {name: 'Frank', coins: 6}
-      ]
-    }
-  ]);
+  socket.on('gamejoiner', function (data) {
+    console.log('Game joined.');
+    CoupApp.main.show(new PlayView());
+  });
+
+  socket.on('push:games', function (data) { games.set(data); });
+
+  var games = new LoginCollectionModel();
 
   var loginView = new LoginView({ collection: games });
   var landingView = new LandingView();

@@ -19,9 +19,17 @@ function Client(socket) {
   this.data = {};
 }
 
+function Player(options) {
+  options = options || {};
+
+  this.name = options.name || 'Unnamed User';
+  this.coins = options.coins || 2;
+}
+
+
 function GameState(title) {
   this.title = title;
-  this.usernames = {};
+  this.players = {};
   this.userCount = 0;
   this.currentMove = {
       player: null
@@ -31,8 +39,21 @@ function GameState(title) {
 }
 
 GameState.prototype.addUser = function (username) {
-  this.usernames[username] = username;
+  this.players[username] = new Player({ name: username });
   this.userCount++;
+};
+
+GameState.prototype.getClientObject = function () {
+  var clientObject = {
+    title: this.title,
+    players: []
+  };
+
+  for (var key in this.players) {
+    clientObject.players.push(this.players[key]);
+  }
+
+  return clientObject;
 };
 
 GameState.prototype.removeUser = function (username) {
@@ -76,6 +97,8 @@ io.on('connection', function (socket) {
     if (!games[data.title]) {
       console.log('CREATED GAME!');
       games[data.title] = new GameState(data.title);
+
+      pushGames();
     }
   });
 
@@ -89,13 +112,12 @@ io.on('connection', function (socket) {
   socket.on('join user', function (data) {
     // we store the username in the socket session for this client
     socket.username = data.username;
-
+    console.log(data);
     clients[socket.username] = new Client(socket);
 
     socket.game = games[data.title];
     socket.join(data.title);
 
-    
     // add the client's username to the global list
     socket.game.addUser(socket.username);
 
@@ -105,6 +127,11 @@ io.on('connection', function (socket) {
     socket.broadcast.to(socket.game.title).emit('user joined', {
       username: socket.username
     });
+
+    pushGames();
+
+    // console.log('Telling user he joined a game.');
+    // socket.emit('gamejoiner', { title: socket.game.title });
   });
 
   // when the user disconnects.. perform this
@@ -180,4 +207,15 @@ io.on('connection', function (socket) {
     // the blocker succeeds in blocking the action.
     io.sockets.in(socket.game.title).emit('block succeeded');
   });
+
+  socket.on('pull:games', pushGames);
+
+  function pushGames() {
+    var gameList = [];
+    for (var key in games) {
+      gameList.push(games[key].getClientObject());
+    }
+    socket.emit('push:games', gameList);
+  }
+
 });

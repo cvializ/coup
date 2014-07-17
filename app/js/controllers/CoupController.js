@@ -1,23 +1,20 @@
 define([
   'marionette',
   'socket',
-  'socket.io',
-  'config',
   'CoupApp',
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
   'views/landing/Create',
   'views/Play'
-], function (Marionette, socket, io, config, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
+], function (Marionette, socket, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
 
   CoupController = Marionette.Controller.extend({
 
     initialize: function (options) {
       this.socket = options.socket;
 
-
-      this.listenTo(this, 'landing:init', function () {
+      CoupApp.vent.on('landing:init', function () {
         CoupApp.main.show(landingView);
 
         landingView.login.show(loginView);
@@ -34,6 +31,7 @@ define([
       CoupApp.vent.on('landing:game:join', function (data) {
         console.log('joining game');
         socket.emit('join user', data);
+        CoupApp.vent.trigger('play:init', data);
       });
     }
   });

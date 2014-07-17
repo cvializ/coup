@@ -118,6 +118,8 @@ io.on('connection', function (socket) {
     socket.game = games[data.title];
     socket.join(data.title);
 
+    socket.broadcast.to(socket.game.title).emit('push:game', socket.game);
+
     // add the client's username to the global list
     socket.game.addUser(socket.username);
 
@@ -206,6 +208,13 @@ io.on('connection', function (socket) {
   socket.on('blocker success', function (data) {
     // the blocker succeeds in blocking the action.
     io.sockets.in(socket.game.title).emit('block succeeded');
+  });
+
+  socket.on('pull:game', function (data) {
+    data = data || {};
+    data.title = data.title || '';
+
+    socket.emit('push:game', games[data.title].getClientObject());
   });
 
   socket.on('pull:games', pushGames);

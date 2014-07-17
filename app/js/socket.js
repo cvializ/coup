@@ -7,8 +7,6 @@ define(['socket.io', 'config'], function (io, config) {
       // socket = io.connect('http://' + config.host + ':' + config.port + gameId);
       socket = io.connect('http://' + config.host + ':' + config.port);
 
-  //socket.emit('ready');
-
   return socket;
 
 });

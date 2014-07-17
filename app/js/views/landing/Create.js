@@ -10,7 +10,7 @@ define(['marionette', 'CoupApp', 'hbs!templates/landing/create'], function (Mari
     },
     events: {
       'click @ui.create': function createButton() {
-        CoupApp.vent.trigger('game:create', {
+        CoupApp.vent.trigger('landing:game:create', {
           username: this.ui.username.val(),
           title: this.ui.title.val(),
           capacity: this.ui.capacity.val()

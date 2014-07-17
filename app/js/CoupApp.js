@@ -6,7 +6,7 @@ define(['marionette'], function (Marionette, PlayView) {
   });
 
   CoupApp.addInitializer(function (options) {
-    options.LandingController.trigger('init');
+    options.LandingController.trigger('landing:init');
     this.LandingController = options.LandingController;
   });
 

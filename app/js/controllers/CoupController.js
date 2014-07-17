@@ -16,22 +16,24 @@ define([
     initialize: function (options) {
       this.socket = options.socket;
 
-      this.listenTo(this, 'init', function () {
+
+      this.listenTo(this, 'landing:init', function () {
         CoupApp.main.show(landingView);
 
         landingView.login.show(loginView);
         landingView.create.show(new CreateView());
+
+        socket.emit('ready');
       });
 
-      CoupApp.vent.on('game:create', function (data) {
+      CoupApp.vent.on('landing:game:create', function (data) {
         socket.emit('create game', data);
-        this.trigger('game:join', data);
+        this.trigger('landing:game:join', data);
       });
 
-      CoupApp.vent.on('game:join', function (data) {
+      CoupApp.vent.on('landing:game:join', function (data) {
         console.log('joining game');
         socket.emit('join user', data);
-        socket.emit('ready');
       });
     }
   });

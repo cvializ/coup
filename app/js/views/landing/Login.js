@@ -17,7 +17,7 @@ define(['marionette', 'CoupApp', 'views/landing/Game', 'hbs!templates/landing/lo
     },
     events: {
       'click @ui.join': function clickJoin() {
-        CoupApp.vent.trigger('game:join', {
+        CoupApp.vent.trigger('landing:game:join', {
           username: this.ui.username.val(),
           title: $('input[type="radio"]:checked', this.$el).val()
         });

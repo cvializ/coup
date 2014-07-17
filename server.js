@@ -93,6 +93,8 @@ var games = {},
 io.on('connection', function (socket) {
   var addedUser = false;
 
+  socket.join('landing');
+
   socket.on('create game', function (data) {
     if (!games[data.title]) {
       console.log('CREATED GAME!');
@@ -103,9 +105,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('ready', function () {
-    var data = {};
-    data.usernames = socket.game.usernames;
-    socket.emit('initialize', data);
+    pushGames({ broadcast: false });
   });
 
   // when the client emits 'add user', this listens and executes
@@ -210,12 +210,26 @@ io.on('connection', function (socket) {
 
   socket.on('pull:games', pushGames);
 
-  function pushGames() {
+  function pushGames(options) {
+    options = options || {};
+    options.broadcast = options.broadcast || true;
+
+    var destination;
+
+    if (options.broadcast) {
+      console.log('to all users');
+      destination = io.sockets.to('landing');
+    } else {
+      console.log('to 1 new user');
+      destination = socket;
+    }
+
     var gameList = [];
     for (var key in games) {
       gameList.push(games[key].getClientObject());
     }
-    socket.emit('push:games', gameList);
+
+    destination.emit('push:games', gameList);
   }
 
 });

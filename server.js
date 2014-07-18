@@ -57,7 +57,7 @@ GameState.prototype.getClientObject = function () {
 };
 
 GameState.prototype.removeUser = function (username) {
-  delete this.usernames[username];
+  delete this.players[username];
   this.userCount--;
 };
 

@@ -1,4 +1,4 @@
-define(['marionette', 'views/Play'], function (Marionette, PlayView) {
+define(['marionette'], function (Marionette) {
   CoupApp = new Marionette.Application();
 
   CoupApp.addRegions({
@@ -6,7 +6,7 @@ define(['marionette', 'views/Play'], function (Marionette, PlayView) {
   });
 
   CoupApp.addInitializer(function (options) {
-    options.controller.trigger('init');
+    CoupApp.vent.trigger('landing:init');
   });
 
   return CoupApp;

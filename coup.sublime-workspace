@@ -1,0 +1,712 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"landing",
+				"landingView"
+			],
+			[
+				"PlayerColle",
+				"PlayerCollectionView"
+			],
+			[
+				"challe",
+				"challengeBlock"
+			],
+			[
+				"pop",
+				"populationExtent"
+			],
+			[
+				"requ",
+				"requestify"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"i",
+				"inline-block"
+			],
+			[
+				"Fore",
+				"ForeignAid"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/js/views/landing/Create.js",
+			"settings":
+			{
+				"buffer_size": 591,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/js/controllers/CoupController.js",
+			"settings":
+			{
+				"buffer_size": 1329,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 50,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/js/CoupApp.js",
+			"settings":
+			{
+				"buffer_size": 330,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/js/back.js",
+			"settings":
+			{
+				"buffer_size": 1003,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "server.js",
+			"settings":
+			{
+				"buffer_size": 5043,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/js/templates/landing/create.html",
+			"settings":
+			{
+				"buffer_size": 418,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/js/socket.js",
+			"settings":
+			{
+				"buffer_size": 476,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 180.0,
+		"selected_items":
+		[
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"lint thi",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"error",
+				"SublimeLinter: Next Error"
+			],
+			[
+				"javasci",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control:instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/cv/coup/app/js/views/landing/Game.js",
+		"/home/cv/coup/app/js/views/landing/Login.js",
+		"/home/cv/coup/server.js",
+		"/home/cv/coup/app/js/views/landing/Landing.js",
+		"/home/cv/coup/app/js/controllers/CoupController.js",
+		"/home/cv/coup/app/js/controllers/LayoutController.js",
+		"/home/cv/coup/app/js/models/landing/Login.js",
+		"/home/cv/coup/app/js/models/PlayerCollection.js",
+		"/home/cv/coup/app/js/models/landing/Game.js",
+		"/home/cv/coup/app/js/views/action/Action.js",
+		"/home/cv/coup/app/css/main.css",
+		"/home/cv/coup/app/js/back.js",
+		"/home/cv/coup/app/js/views/Player.js",
+		"/home/cv/coup/app/js/templates/landing/game.html",
+		"/home/cv/coup/app/js/templates/landing/landing.html",
+		"/home/cv/coup/app/js/templates/login.html",
+		"/home/cv/coup/app/js/views/LandingLayout.js",
+		"/home/cv/coup/app/js/views/Login.js",
+		"/home/cv/coup/app/js/templates/player.html",
+		"/home/cv/coup/app/js/templates/action.html",
+		"/home/cv/coup/app/js/templates/create-game.html",
+		"/home/cv/coup/app/js/CoupApp.js",
+		"/home/cv/coup/app/js/views/action/PrimaryAction.js",
+		"/home/cv/coup/app/js/views/action/SecondaryAction.js",
+		"/home/cv/coup/app/js/views/action/TertiaryAction.js",
+		"/home/cv/coup/app/js/views/Play.js",
+		"/home/cv/coup/app/js/views/PlayerCollection.js",
+		"/home/cv/coup/app/backbone.html",
+		"/home/cv/coup/app/js/socket.js",
+		"/home/cv/coup/app/js/models/Login.js",
+		"/home/cv/coup/app/js/views/BaseCollection.js",
+		"/home/cv/coup/app/js/models/Play.js",
+		"/home/cv/coup/app/js/views/Base.js",
+		"/home/cv/coup/app/js/models/Base.js",
+		"/home/cv/coup/app/js/templates/play.html",
+		"/home/cv/coup/app/js/models/Action.js",
+		"/home/cv/coup/app/js/views/Action.js",
+		"/home/cv/coup/app/js/views/SecondaryAction.js",
+		"/home/cv/coup/app/js/main.js",
+		"/home/cv/coup/app/js/views/PrimaryAction.js",
+		"/home/cv/coup/app/js/views/TertiaryAction.js",
+		"/home/cv/coup/app/js/models/SecondaryAction.js",
+		"/home/cv/coup/app/js/models/TertiaryAction.js",
+		"/home/cv/coup/app/js/templates/helpers/times.js",
+		"/home/cv/coup/app/js/models/Player.js",
+		"/home/cv/coup/app/js/models/PrimaryAction.js",
+		"/home/cv/coup/app/js/ext/require-handlebars-plugin/hbs/handlebars.js",
+		"/home/cv/coup/app/js/ext/require.js",
+		"/home/cv/coup/app/js/templates/player.js",
+		"/home/cv/coup/app/js/helpers/times.js",
+		"/home/cv/coup/app/index.html",
+		"/home/cv/coup/config/config.js",
+		"/home/cv/coup/coup.sublime-project",
+		"/home/cv/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/cv/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/cv/coup/public/backbone.html",
+		"/home/cv/coup/public/js/views/Player.js",
+		"/home/cv/coup/public/js/templates/player.html",
+		"/home/cv/coup/public/js/helpers/times.js",
+		"/home/cv/coup/public/js/models/Player.js",
+		"/home/cv/coup/public/js/controllers/LayoutController.js",
+		"/home/cv/coup/public/js/back.js",
+		"/home/cv/coup/public/js/views/PlayerView.js",
+		"/home/cv/coup/public/js/main.js",
+		"/home/cv/coup/public/index.html",
+		"/home/cv/coup/app.js",
+		"/home/cv/coup2/app.js",
+		"/home/cv/coup2/public/index.html",
+		"/home/cv/coup2/public/js/main.js",
+		"/home/cv/population/population.csv",
+		"/home/cv/population/cities.csv",
+		"/home/cv/.conky/.conkyrc",
+		"/home/cv/bin/metar/metar.js",
+		"/home/cv/coup/game.js",
+		"/home/cv/AllCities.txt",
+		"/home/cv/cities.csv",
+		"/home/cv/population/index.html",
+		"/home/cv/population.csv",
+		"/home/cv/bin/metar.js",
+		"/home/cv/coup/data.js",
+		"/home/cv/bin/metar/fileCacheTransporter.js",
+		"/home/cv/.conkyrc",
+		"/home/cv/coup/public/room.html"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/home/cv/coup/app/js/views",
+			"/home/cv/coup/app"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"clients",
+			"broadcast",
+			"Base",
+			",",
+			"emit",
+			"io.",
+			"templates/player",
+			"block move",
+			"game.currentMove",
+			"activeUser",
+			"this.username()",
+			"current",
+			"move failed",
+			"deny",
+			".username",
+			"removeUser",
+			"addUser",
+			"currentMoveSUcc",
+			"usernames",
+			"width",
+			"viewYear",
+			"scale",
+			"foci",
+			"popCities",
+			"foci",
+			"popCities =",
+			"projection",
+			"0: ",
+			"St ",
+			"Boston",
+			"Washington",
+			"Cinc",
+			"Cincnnati",
+			"Cincnn",
+			"Cincin",
+			",",
+			"'[A-Za-z]",
+			"'[A-z]",
+			"St Louis",
+			"Cincn",
+			"St",
+			"St ",
+			",itts",
+			"Phoerlix",
+			"([A-z])1([A-z])",
+			"Brook(1|l)",
+			"Phi(1|l)ade(1|l)phia",
+			"1",
+			" ",
+			"\\s",
+			" ([A-z]{1,3})(\\d)",
+			" ([A-z]+)(\\d)",
+			" ([A-z])(\\d)",
+			"([0-9]) ([0-9])",
+			"([A-z ]+)([0-9]+,)?([0-9]+)(,[0-9]+( )*)",
+			"([A-z ]+)([0-9]+,)?[0-9]+,[0-9]+",
+			"([A-z ]+)([0-9]+,)?([0-9]+)(,[0-9]+( )*)",
+			"([A-z ]+)[0-9]+,[0-9]+,[0-9]+",
+			"Top 10.*$",
+			"cinc",
+			"([1-9]|10)\\.",
+			"\\-",
+			"Pittsburah",
+			"Dalla5",
+			"\\+",
+			"\\d+$",
+			",\\d{4},",
+			"deseria",
+			"console.log",
+			"height",
+			"align",
+			"(\\w+):",
+			"\\w+:",
+			"state"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"labels",
+			", ",
+			"$1l$2",
+			"Brookl",
+			"Philadelphia",
+			"l",
+			"",
+			"$1 $2",
+			"$1$2",
+			"$1,$2$3$4",
+			"\\n$1.",
+			"Pittsburgh",
+			"Dallas",
+			",1800,",
+			"\"$1\" :",
+			"$1:",
+			"State"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/js/views/landing/Create.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 591,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								451,
+								451
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/js/controllers/CoupController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1329,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								754,
+								754
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 45.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "README.md",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 50,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/js/CoupApp.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 330,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								228,
+								228
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/js/back.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1003,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								983,
+								983
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 45.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "server.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5043,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1897,
+								1897
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 997.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/js/templates/landing/create.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 418,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "app/js/socket.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 476,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								358,
+								358
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "coup.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 268.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

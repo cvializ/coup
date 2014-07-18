@@ -29,3 +29,22 @@
   width: 50%;
   float: left;
 }
+
+.c-game-card {
+  float: left;
+}
+
+.c-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.c-game-view input[type='radio'] {
+  float: left;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  padding: 0;
+}

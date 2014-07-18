@@ -1,7 +1,7 @@
 define(['backbone'], function () {
   var GameModel = Backbone.Model.extend({
     defaults: {
-      name: 'Unnamed Game',
+      title: 'Unnamed Game',
       players: [],
       joinable: true
     }

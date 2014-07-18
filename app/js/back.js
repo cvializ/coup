@@ -34,9 +34,10 @@ require.config({
 define([
   'jquery',
   'CoupApp',
-  'controllers/CoupController'
-], function ($, CoupApp, CoupController, SecondaryAction, TertiaryAction, PlayerCollection, PlayerCollectionView, PlayView) {
-  var controller = new CoupController();
-
-  CoupApp.start({ controller: controller });
+  'controllers/CoupController',
+  'controllers/PlayController'
+], function ($, CoupApp, CoupController, PlayController) {
+  var landingController = new CoupController();
+  var playController = new PlayController();
+  CoupApp.start();
 });

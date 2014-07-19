@@ -1,21 +1,22 @@
 define([
   'marionette',
   'socket',
-  'CoupApp',
+  'MainRegion',
+  'Vent',
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
   'views/landing/Create',
   'views/Play'
-], function (Marionette, socket, CoupApp, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
+], function (Marionette, socket, mainRegion, vent, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
 
   CoupController = Marionette.Controller.extend({
 
     initialize: function (options) {
       this.socket = options.socket;
 
-      CoupApp.vent.on('landing:init', function () {
-        CoupApp.main.show(landingView);
+      vent.on('landing:init', function () {
+        mainRegion.show(landingView);
 
         landingView.login.show(loginView);
         landingView.create.show(new CreateView());
@@ -23,15 +24,15 @@ define([
         socket.emit('ready');
       });
 
-      CoupApp.vent.on('landing:game:create', function (data) {
+      vent.on('landing:game:create', function (data) {
         socket.emit('create game', data);
         this.trigger('landing:game:join', data);
       });
 
-      CoupApp.vent.on('landing:game:join', function (data) {
+      vent.on('landing:game:join', function (data) {
         console.log('joining game');
         socket.emit('join user', data);
-        CoupApp.vent.trigger('play:init', data);
+        vent.trigger('play:init', data);
       });
     }
   });
@@ -42,7 +43,7 @@ define([
 
   socket.on('gamejoiner', function (data) {
     console.log('Game joined.');
-    CoupApp.main.show(new PlayView());
+    mainRegion.show(new PlayView());
   });
 
   socket.on('push:games', function (data) { games.set(data); });

@@ -37,7 +37,5 @@ define([
   'controllers/CoupController',
   'controllers/PlayController'
 ], function ($, CoupApp, CoupController, PlayController) {
-  var landingController = new CoupController();
-  var playController = new PlayController();
   CoupApp.start();
 });

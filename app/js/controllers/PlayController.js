@@ -1,13 +1,14 @@
 define([
   'marionette',
   'socket',
-  'CoupApp',
+  'MainRegion',
+  'Vent',
   'views/Play',
   'models/Player',
   'models/PlayerCollection',
   'views/PlayerCollection',
   'views/action/PrimaryAction'
-], function (Marionette, socket, CoupApp, PlayView, PlayerModel, PlayerCollectionModel, PlayerCollectionView, PrimaryActionView) {
+], function (Marionette, socket, mainRegion, vent, PlayView, PlayerModel, PlayerCollectionModel, PlayerCollectionView, PrimaryActionView) {
 
   PlayController = Marionette.Controller.extend({
 
@@ -19,10 +20,10 @@ define([
       this.socket = options.socket || socket;
       this.game = null;
 
-      CoupApp.vent.on('play:init', function (data) {
+      vent.on('play:init', function (data) {
         data = data || {};
 
-        CoupApp.main.show(playView);
+        mainRegion.show(playView);
 
         playView.player.show(playersView);
         playView.action.show(new PrimaryActionView());

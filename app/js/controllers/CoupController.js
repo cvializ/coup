@@ -1,6 +1,5 @@
 define([
   'marionette',
-  'socket',
   'MainRegion',
   'Vent',
   'models/landing/Login',
@@ -8,50 +7,56 @@ define([
   'views/landing/Landing',
   'views/landing/Create',
   'views/Play'
-], function (Marionette, socket, mainRegion, vent, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
+], function (Marionette, mainRegion, vent, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
 
-  CoupController = Marionette.Controller.extend({
+  var CoupController = Marionette.Controller.extend({
 
-    initialize: function (options) {
-      this.socket = options.socket;
+    socket: null,
 
-      vent.on('landing:init', function () {
-        mainRegion.show(landingView);
+    games: null,
 
-        landingView.login.show(loginView);
-        landingView.create.show(new CreateView());
+    loginView: null,
 
-        socket.emit('ready');
+    landingView: null,
+
+    'initialize': function initialize(options) {
+      var self = this;
+
+      self.socket = options.socket;
+
+      vent.on('landing:init', function loadController() {
+        self.games = new LoginCollectionModel();
+
+        self.loginView = new LoginView({ collection: self.games });
+        self.landingView = new LandingView();
+
+        mainRegion.show(self.landingView);
+
+        self.landingView.login.show(self.loginView);
+        self.landingView.create.show(new CreateView());
+
+        self.socket.emit('ready');
       });
 
-      vent.on('landing:game:create', function (data) {
-        socket.emit('create game', data);
-        this.trigger('landing:game:join', data);
+      vent.on('landing:game:create', function createNewGame(data) {
+        self.socket.emit('create game', data);
+        vent.trigger('landing:game:join', data);
       });
 
-      vent.on('landing:game:join', function (data) {
-        console.log('joining game');
-        socket.emit('join user', data);
+      vent.on('landing:game:join', function joinExistingGame(data) {
+        self.socket.emit('join user', data);
         vent.trigger('play:init', data);
+      });
+
+      vent.on('play:end', function reloadController() {
+        vent.trigger('landing:init');
+      });
+
+      self.socket.on('push:games', function updateGameData(data) {
+        self.games.set(data);
       });
     }
   });
-
-  socket.on('initialize', function (data) {
-    console.log(data);
-  });
-
-  socket.on('gamejoiner', function (data) {
-    console.log('Game joined.');
-    mainRegion.show(new PlayView());
-  });
-
-  socket.on('push:games', function (data) { games.set(data); });
-
-  var games = new LoginCollectionModel();
-
-  var loginView = new LoginView({ collection: games });
-  var landingView = new LandingView();
 
   return CoupController;
 });

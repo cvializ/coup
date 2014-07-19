@@ -8,7 +8,7 @@ define([
 
     template: actionTemplate,
 
-    initialize: function () {
+    'initialize': function initialize() {
       this.model = this.model || new this.actionModel();
     }
   });

@@ -1,4 +1,4 @@
-define(['marionette', 'CoupApp', 'views/landing/Game', 'hbs!templates/landing/login'], function (Marionette, CoupApp, GameView, loginTemplate) {
+define(['marionette', 'Vent', 'views/landing/Game', 'hbs!templates/landing/login'], function (Marionette, vent, GameView, loginTemplate) {
   var LoginView = Marionette.CompositeView.extend({
     className: 'c-login-view',
     template: loginTemplate,
@@ -17,7 +17,7 @@ define(['marionette', 'CoupApp', 'views/landing/Game', 'hbs!templates/landing/lo
     },
     events: {
       'click @ui.join': function clickJoin() {
-        CoupApp.vent.trigger('landing:game:join', {
+        vent.trigger('landing:game:join', {
           username: this.ui.username.val(),
           title: $('input[type="radio"]:checked', this.$el).val()
         });

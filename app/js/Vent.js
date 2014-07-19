@@ -1,3 +1,3 @@
-define(['CoupApp'], function (CoupApp) {
-  return CoupApp.vent;
+define(['backbone.wreqr'], function (Wreqr) {
+  return Wreqr.radio.channel('global').vent;
 });

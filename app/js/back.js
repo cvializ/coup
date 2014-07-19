@@ -8,7 +8,8 @@ require.config({
     hbs: 'ext/require-handlebars-plugin/hbs',
     knockout: 'ext/knockout-3.1.0',
     config: '/config',
-    'socket.io': '/socket.io/socket.io'
+    'socket.io': '/socket.io/socket.io',
+    'backbone.wreqr' : 'ext/backbone.wreqr'
   },
   shim : {
     jquery : {
@@ -24,6 +25,9 @@ require.config({
     marionette : {
       deps : ['jquery', 'underscore', 'backbone'],
       exports : 'Marionette'
+    },
+    'backbone.wreqr' : {
+      deps : ['marionette', 'backbone']
     }
   },
   hbs: {
@@ -31,11 +35,8 @@ require.config({
   }
 });
 
-define([
-  'jquery',
-  'CoupApp',
-  'controllers/CoupController',
-  'controllers/PlayController'
-], function ($, CoupApp, CoupController, PlayController) {
-  CoupApp.start();
+define(['CoupApp', 'socket.io', 'config'], function (CoupApp, io, config) {
+  var socket = io.connect('http://' + config.host + ':' + config.port);
+
+  CoupApp.start({ socket: socket });
 });

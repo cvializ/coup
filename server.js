@@ -88,7 +88,7 @@ app.use(express.static(__dirname + '/app'));
 app.use(express.static(__dirname + '/config'));
 
 var games = {},
-    clients = [];
+    clients = {};
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -97,9 +97,7 @@ io.on('connection', function (socket) {
 
   socket.on('create game', function (data) {
     if (!games[data.title]) {
-      console.log('CREATED GAME!');
       games[data.title] = new GameState(data.title);
-
       pushGames();
     }
   });
@@ -112,13 +110,13 @@ io.on('connection', function (socket) {
   socket.on('join user', function (data) {
     // we store the username in the socket session for this client
     socket.username = data.username;
-    console.log(data);
+
     clients[socket.username] = new Client(socket);
 
     socket.game = games[data.title];
     socket.join(data.title);
 
-    socket.broadcast.to(socket.game.title).emit('push:game', socket.game);
+    socket.broadcast.to(socket.game.title).emit('push:game', socket.game.getClientObject());
 
     // add the client's username to the global list
     socket.game.addUser(socket.username);
@@ -131,9 +129,6 @@ io.on('connection', function (socket) {
     });
 
     pushGames();
-
-    // console.log('Telling user he joined a game.');
-    // socket.emit('gamejoiner', { title: socket.game.title });
   });
 
   // when the user disconnects.. perform this
@@ -210,11 +205,8 @@ io.on('connection', function (socket) {
     io.sockets.in(socket.game.title).emit('block succeeded');
   });
 
-  socket.on('pull:game', function (data) {
-    data = data || {};
-    data.title = data.title || '';
-
-    socket.emit('push:game', games[data.title].getClientObject());
+  socket.on('pull:game', function () {
+    socket.emit('push:game', games[socket.game.title].getClientObject());
   });
 
   socket.on('pull:games', pushGames);
@@ -226,10 +218,8 @@ io.on('connection', function (socket) {
     var destination;
 
     if (options.broadcast) {
-      console.log('to all users');
       destination = io.sockets.to('landing');
     } else {
-      console.log('to 1 new user');
       destination = socket;
     }
 

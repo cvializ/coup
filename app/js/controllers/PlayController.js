@@ -1,6 +1,5 @@
 define([
   'marionette',
-  'socket',
   'MainRegion',
   'Vent',
   'views/Play',
@@ -8,42 +7,63 @@ define([
   'models/PlayerCollection',
   'views/PlayerCollection',
   'views/action/PrimaryAction'
-], function (Marionette, socket, mainRegion, vent, PlayView, PlayerModel, PlayerCollectionModel, PlayerCollectionView, PrimaryActionView) {
+], function (Marionette, mainRegion, vent, PlayView, PlayerModel, PlayerCollectionModel, PlayerCollectionView, PrimaryActionView) {
 
-  PlayController = Marionette.Controller.extend({
+  var PlayController = Marionette.Controller.extend({
+    socket: null,
 
-    initialize: function (options) {
-      options = options || {};
+    game: null,
 
+    playView: null,
+
+    playersCollection: null,
+
+    playersView: null,
+
+    'initialize': function initialize(options) {
       var self = this;
 
-      this.socket = options.socket || socket;
-      this.game = null;
+      options = options || {};
+      options.socket = options.socket || null;
 
-      vent.on('play:init', function (data) {
+      self.socket = options.socket;
+
+      vent.on('play:init', function loadController(data) {
         data = data || {};
 
-        mainRegion.show(playView);
+        self.playView = new PlayView();
+        self.playersCollection = new PlayerCollectionModel();
+        self.playersView = new PlayerCollectionView({ collection: self.playersCollection});
 
-        playView.player.show(playersView);
-        playView.action.show(new PrimaryActionView());
+        mainRegion.show(self.playView);
 
-        self.socket.emit('pull:game', { title: data.title });
+        self.playView.player.show(self.playersView);
+        self.playView.action.show(new PrimaryActionView());
+
+        self.socket.emit('pull:game');
       });
 
-      this.socket.on('push:game', function (data) {
-        this.game = data;
+      self.socket.on('push:game', function updateGameData(data) {
+        self.game = data;
 
-        playersCollection.set(this.game.players);
+        self.playersCollection.set(self.game.players);
+      });
+
+      self.socket.on('user joined', function userJoined() {
+        self.socket.emit('pull:game');
+      });
+
+      self.socket.on('user left', function userLeft() {
+        if (self.game.players.length > 2) {
+          self.socket.emit('pull:game');
+        }
+      });
+
+      self.socket.on('you are alone', function gameAbandoned() {
+        vent.trigger('play:end');
       });
     }
   });
-
-  var playView = new PlayView();
-  var playersCollection = new PlayerCollectionModel([
-    {name: 'Carlos', coins: 2}
-  ]);
-  var playersView = new PlayerCollectionView({ collection: playersCollection});
 
   return PlayController;
 });

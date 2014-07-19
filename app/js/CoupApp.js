@@ -1,15 +1,17 @@
-define(['marionette'], function (Marionette) {
+define(['marionette', 'MainRegion', 'Vent', 'controllers/CoupController', 'controllers/PlayController'],
+function (Marionette, mainRegion, vent, CoupController, PlayController) {
   CoupApp = new Marionette.Application();
 
-  CoupApp.addRegions({
-    main: '#coup-main'
-  });
+  CoupApp.main = mainRegion;
 
-  CoupApp.addInitializer(function (options) {
-    var landingController = new CoupController();
-    var playController = new PlayController();
+  CoupApp.addInitializer(function initialize(options) {
+    options = options || {};
+    options.socket = options.socket || null;
 
-    CoupApp.vent.trigger('landing:init');
+    var landingController = new CoupController({ socket: options.socket });
+    var playController = new PlayController({ socket: options.socket });
+
+    vent.trigger('landing:init');
   });
 
   return CoupApp;

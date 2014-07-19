@@ -1,4 +1,4 @@
-define(['marionette', 'CoupApp', 'hbs!templates/landing/create'], function (Marionette, CoupApp, createTemplate) {
+define(['marionette', 'Vent', 'hbs!templates/landing/create'], function (Marionette, vent, createTemplate) {
   var CreateView = Marionette.ItemView.extend({
     className: 'c-create-view',
     template: createTemplate,
@@ -10,7 +10,7 @@ define(['marionette', 'CoupApp', 'hbs!templates/landing/create'], function (Mari
     },
     events: {
       'click @ui.create': function createButton() {
-        CoupApp.vent.trigger('landing:game:create', {
+        vent.trigger('landing:game:create', {
           username: this.ui.username.val(),
           title: this.ui.title.val(),
           capacity: this.ui.capacity.val()

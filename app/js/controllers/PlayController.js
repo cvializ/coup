@@ -134,6 +134,26 @@ define([
         self.showResult({ title: 'Success', message: 'A move was completed.' });
         self.playView.action.show(new PrimaryActionView());
       });
+
+      self.socket.on('move doubter succeeded', function moveDoubterSucceeded() {
+        self.showResult({ title: 'Move Doubted!', message: 'The player was doubted, and was lying!' });
+        self.playView.action.show(new PrimaryActionView());
+      });
+
+      self.socket.on('move doubter failed', function moveDoubterFailed() {
+        self.showResult({ title: 'Move Doubted!', message: 'The player was doubted, but was telling the truth!' });
+        self.playView.action.show(new PrimaryActionView());
+      });
+
+      self.socket.on('block doubter succeeded', function blockDoubterSucceeded() {
+        self.showResult({ title: 'Block Doubted!', message: 'The blocker was lying!' });
+        self.playView.action.show(new PrimaryActionView());
+      });
+
+      self.socket.on('block doubter failed', function blockDoubterFailed() {
+        self.showResult({ title: 'Block Doubted!', message: 'The blocker was truthful! Player blocked!' });
+        self.playView.action.show(new PrimaryActionView());
+      });
     },
 
     showResult: function showResult(options) {

@@ -1,17 +1,13 @@
-var express = require('express')
-  , app = express()
-  , server = require('http').createServer(app)
-  , io = require('socket.io')(server)
-  , requirejs = require('requirejs')
-  , config = requirejs('config/config')
-  , port = process.env.PORT || config.port || 3000;
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app),
+    io = require('socket.io')(server),
+    requirejs = require('requirejs'),
+    config = requirejs('config/config'),
+    port = process.env.PORT || config.port || 3000;
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
-});
-
-app.get('/play/:gameName', function (req, res) {
-  res.sendfile('./app/index.html');
 });
 
 function Player(options) {
@@ -21,16 +17,15 @@ function Player(options) {
   this.coins = options.coins || 2;
 }
 
-
 function GameState(title) {
   this.title = title;
   this.clients = {}; // for sockets
   this.players = {};
   this.userCount = 0;
   this.currentMove = {
-      player: null
-    , responsesRemaining: 0
-    , success: true
+      player: null,
+      responsesRemaining: 0,
+      success: true
   };
 }
 
@@ -118,6 +113,7 @@ io.on('connection', function (socket) {
 
     socket.game = games[data.title];
     socket.join(data.title);
+    socket.leave('landing');
 
     socket.broadcast.to(socket.game.title).emit('push:game', socket.game.getClientObject());
 
@@ -135,7 +131,10 @@ io.on('connection', function (socket) {
   });
 
   // when the user disconnects.. perform this
-  socket.on('remove user', logout);
+  socket.on('remove user', function () {
+    socket.join('landing');
+    logout();
+  });
   socket.on('disconnect', logout);
 
   function logout() {

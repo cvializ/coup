@@ -4,10 +4,27 @@ define([
   'Vent',
   'views/Play',
   'models/Player',
+  'views/Result',
+  'models/Result',
   'models/PlayerCollection',
   'views/PlayerCollection',
-  'views/action/PrimaryAction'
-], function (Marionette, mainRegion, vent, PlayView, PlayerModel, PlayerCollectionModel, PlayerCollectionView, PrimaryActionView) {
+  'views/action/PrimaryAction',
+  'views/action/SecondaryAction',
+  'views/action/TertiaryAction',
+  'views/action/PendingAction'
+], function (Marionette,
+             mainRegion,
+             vent,
+             PlayView,
+             PlayerModel,
+             ResultView,
+             ResultModel,
+             PlayerCollectionModel,
+             PlayerCollectionView,
+             PrimaryActionView,
+             SecondaryActionView,
+             TertiaryActionView,
+             PendingActionView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -20,7 +37,11 @@ define([
 
     playersView: null,
 
-    'initialize': function initialize(options) {
+    resultView: null,
+
+    resultModel: null,
+
+    initialize: function initialize(options) {
       var self = this;
 
       options = options || {};
@@ -34,13 +55,47 @@ define([
         self.playView = new PlayView();
         self.playersCollection = new PlayerCollectionModel();
         self.playersView = new PlayerCollectionView({ collection: self.playersCollection});
+        self.resultModel = new ResultModel();
+        self.resultView = new ResultView({ model: self.resultModel });
 
         mainRegion.show(self.playView);
 
         self.playView.player.show(self.playersView);
         self.playView.action.show(new PrimaryActionView());
+        self.playView.result.show(self.resultView);
 
         self.socket.emit('pull:game');
+      });
+
+      vent.on('play:move:primary', function primaryMove(data) {
+        self.playView.result.empty();
+        self.socket.emit('make move', data);
+        self.playView.action.show(new PendingActionView());
+      });
+
+      vent.on('play:move:secondary', function secondaryMove(moveData) {
+        moveData = moveData || {};
+        if (moveData.type === 'allow') {
+          self.socket.emit('allow move', moveData);
+        } else if (moveData.type === 'block') {
+          self.socket.emit('block move', moveData);
+          self.playView.action.show(new PendingActionView());
+        } else if (moveData.type === 'doubt') {
+          self.socket.emit('doubt move', moveData);
+        } else {
+          throw 'Unrecognized secondary move type.';
+        }
+      });
+
+      vent.on('play:move:tertiary', function tertiaryMove(moveData) {
+        moveData = moveData || {};
+        if (moveData.type === 'concede') {
+          self.socket.emit('blocker success');
+        } else if (moveData.type === 'doubt') {
+          self.socket.emit('blocker doubt');
+        } else {
+          throw 'Unrecognized tertiary move type.';
+        }
       });
 
       self.socket.on('push:game', function updateGameData(data) {
@@ -62,6 +117,30 @@ define([
       self.socket.on('you are alone', function gameAbandoned() {
         vent.trigger('play:end');
       });
+
+      self.socket.on('move attempted', function moveAttempted() {
+        self.playView.action.show(new SecondaryActionView());
+      });
+
+      self.socket.on('move blocked', function myMoveBlocked() {
+        self.showResult({ title: 'Block Attempted', message: 'Someone is attempting to block you.' });
+        self.playView.action.show(new TertiaryActionView());
+      });
+
+      self.socket.on('block succeeded', function blockSucceeded() {
+        self.showResult({ title: 'Blocked', message: 'Someone was successfully blocked!' });
+        self.playView.action.show(new PrimaryActionView());
+      });
+
+      self.socket.on('move succeeded', function moveSucceeded() {
+        self.showResult({ title: 'Success', message: 'A move was completed.' });
+        self.playView.action.show(new PrimaryActionView());
+      });
+    },
+
+    showResult: function showResult(options) {
+      this.resultModel.set(options);
+      //this.playView.result.show(this.resultView);
     }
   });
 

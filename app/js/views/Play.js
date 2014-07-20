@@ -4,7 +4,8 @@ define(['marionette', 'hbs!templates/play'], function (Marionette, playTemplate)
 
     regions: {
       player: '#c-player-area',
-      action: '#c-action-area'
+      action: '#c-action-area',
+      result: '#c-result-area'
     }
   });
 

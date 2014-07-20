@@ -1,13 +1,14 @@
 define([
+  'Vent',
   'views/action/Action',
   'models/action/PrimaryAction'
-], function (ActionView, PrimaryActionModel, socket) {
+], function (vent, ActionView, PrimaryActionModel) {
   var PrimaryAction = ActionView.extend({
     actionModel: PrimaryActionModel,
 
     events: {
       'click #primary-move' : function move() {
-        console.log('Move!');
+        vent.trigger('play:move:primary', { name: 'Move', type: 'primary', target: null });
       }
     }
   });

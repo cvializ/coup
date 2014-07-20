@@ -7,7 +7,15 @@ define([
   'views/landing/Landing',
   'views/landing/Create',
   'views/Play'
-], function (Marionette, mainRegion, vent, LoginCollectionModel, LoginView, LandingView, CreateView, PlayView) {
+],
+function (Marionette,
+          mainRegion,
+          vent,
+          LoginCollectionModel,
+          LoginView,
+          LandingView,
+          CreateView,
+          PlayView) {
 
   var CoupController = Marionette.Controller.extend({
 
@@ -19,7 +27,7 @@ define([
 
     landingView: null,
 
-    'initialize': function initialize(options) {
+    initialize: function initialize(options) {
       var self = this;
 
       self.socket = options.socket;

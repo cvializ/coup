@@ -1,19 +1,20 @@
 define([
+  'Vent',
   'views/action/Action',
   'models/action/SecondaryAction'
-], function (ActionView, SecondaryActionModel, socket) {
+], function (vent, ActionView, SecondaryActionModel) {
   var SecondaryAction = ActionView.extend({
     actionModel: SecondaryActionModel,
 
     events: {
       'click #secondary-allow': function allow() {
-        console.log('allow');
+        vent.trigger('play:move:secondary', { type: 'allow' });
       },
       'click #secondary-block': function block() {
-        console.log('block');
+        vent.trigger('play:move:secondary', { type: 'block' });
       },
       'click #secondary-doubt': function doubt() {
-        console.log('doubt');
+        vent.trigger('play:move:secondary', { type: 'doubt' });
       }
     }
   });

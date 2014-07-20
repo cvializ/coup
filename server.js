@@ -71,17 +71,15 @@ function Move(moveData) {
   this.responsesRemaining = 0;
 }
 
-Move.prototype.getClientMove = function () {
-  return new ClientMove(player, influence, ability);
+Move.prototype.getClientObject = function () {
+  var clientObject = {
+    player: this.player,
+    influence: this.influence,
+    ability: this.ability
+  };
+
+  return clientObject;
 };
-
-function ClientMove(moveData) {
-  moveData = moveData || {};
-
-  this.influence = moveData.influence || '';
-  this.ability = moveData.ability || '';
-  this.player = moveData.player || null;
-}
 
 // Routing
 app.use(express.static(__dirname + '/app'));
@@ -156,12 +154,14 @@ io.on('connection', function (socket) {
   }
 
   socket.on('make move', function (moveData) {
+    moveData = moveData || {};
+    moveData.player = socket.username;
+
     var currentMove = socket.game.currentMove = new Move(moveData);
 
-    currentMove.player = socket.username;
     currentMove.responsesRemaining = socket.game.userCount - 1;
 
-    socket.broadcast.to(socket.game.title).emit('move attempted', new ClientMove(currentMove));
+    socket.broadcast.to(socket.game.title).emit('move attempted', currentMove.getClientObject());
   });
 
   socket.on('block move', function (data) {

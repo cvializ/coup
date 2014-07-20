@@ -1,16 +1,17 @@
 define([
+  'Vent',
   'views/action/Action',
   'models/action/TertiaryAction'
-], function (ActionView, TertiaryActionModel, socket) {
+], function (vent, ActionView, TertiaryActionModel) {
   var TertiaryAction = ActionView.extend({
     actionModel: TertiaryActionModel,
 
     events: {
       'click #tertiary-allow': function allow() {
-        console.log('allow');
+        vent.trigger('play:move:tertiary', { type: 'concede' });
       },
       'click #tertiary-doubt': function doubt() {
-        console.log('doubt');
+        console.log('play:move:tertiary', { type: 'doubt' });
       }
     }
   });

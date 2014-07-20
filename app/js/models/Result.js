@@ -1,4 +1,4 @@
-define(['backbone'], function () {
+define(['backbone'], function (Backbone) {
   var ResultModel = Backbone.Model.extend({
     defaults: {
       title: 'Unnamed Result',

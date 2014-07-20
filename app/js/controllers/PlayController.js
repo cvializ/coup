@@ -56,13 +56,11 @@ define([
         self.playersCollection = new PlayerCollectionModel();
         self.playersView = new PlayerCollectionView({ collection: self.playersCollection});
         self.resultModel = new ResultModel();
-        self.resultView = new ResultView({ model: self.resultModel });
 
         mainRegion.show(self.playView);
 
         self.playView.player.show(self.playersView);
         self.playView.action.show(new PrimaryActionView());
-        self.playView.result.show(self.resultView);
 
         self.socket.emit('pull:game');
       });
@@ -140,7 +138,7 @@ define([
 
     showResult: function showResult(options) {
       this.resultModel.set(options);
-      //this.playView.result.show(this.resultView);
+      this.playView.result.show(new ResultView({ model: this.resultModel }));
     }
   });
 

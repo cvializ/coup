@@ -14,11 +14,6 @@ app.get('/play/:gameName', function (req, res) {
   res.sendfile('./app/index.html');
 });
 
-function Client(socket) {
-  this.socket = socket;
-  this.data = {};
-}
-
 function Player(options) {
   options = options || {};
 
@@ -29,6 +24,7 @@ function Player(options) {
 
 function GameState(title) {
   this.title = title;
+  this.clients = {}; // for sockets
   this.players = {};
   this.userCount = 0;
   this.currentMove = {
@@ -38,7 +34,8 @@ function GameState(title) {
   };
 }
 
-GameState.prototype.addUser = function (username) {
+GameState.prototype.addUser = function (username, socket) {
+  this.clients[username] = socket;
   this.players[username] = new Player({ name: username });
   this.userCount++;
 };
@@ -57,6 +54,7 @@ GameState.prototype.getClientObject = function () {
 };
 
 GameState.prototype.removeUser = function (username) {
+  delete this.clients[username];
   delete this.players[username];
   this.userCount--;
 };
@@ -85,8 +83,7 @@ Move.prototype.getClientObject = function () {
 app.use(express.static(__dirname + '/app'));
 app.use(express.static(__dirname + '/config'));
 
-var games = {},
-    clients = {};
+var games = {};
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -106,18 +103,26 @@ io.on('connection', function (socket) {
 
   // when the client emits 'add user', this listens and executes
   socket.on('join user', function (data) {
+    // sanitize
+    if (!data.username) {
+      socket.emit('error', { from: 'join user', message: 'invalid username' });
+      return;
+    } else if (!data.title) {
+      socket.emit('error', { from: 'join user', message: 'invalid game title' });
+      return;
+    }
+
     // we store the username in the socket session for this client
     socket.username = data.username;
 
-    clients[socket.username] = new Client(socket);
 
     socket.game = games[data.title];
     socket.join(data.title);
 
     socket.broadcast.to(socket.game.title).emit('push:game', socket.game.getClientObject());
 
-    // add the client's username to the global list
-    socket.game.addUser(socket.username);
+    // add the user to the game
+    socket.game.addUser(socket.username, socket);
 
     addedUser = true;
 
@@ -134,21 +139,22 @@ io.on('connection', function (socket) {
   socket.on('disconnect', logout);
 
   function logout() {
+    var game = socket.game;
     // remove the username from global usernames list
     if (addedUser) {
-      socket.game.removeUser(socket.username);
-      delete clients[socket.username];
+      game.removeUser(socket.username);
+      delete game.clients[socket.username];
 
-      if (socket.game.userCount <= 1) {
-        socket.broadcast.to(socket.game.title).emit('you are alone');
-        delete games[socket.game.title];
+      if (game.userCount <= 1) {
+        socket.broadcast.to(game.title).emit('you are alone');
+        delete games[game.title];
       }
 
       // echo globally that this client has left
-      socket.broadcast.to(socket.game.title).emit('user left', {
+      socket.broadcast.to(game.title).emit('user left', {
         username: socket.username
       });
-      socket.leave(socket.game.title);
+      socket.leave(game.title);
       delete socket.game;
     }
   }
@@ -165,8 +171,11 @@ io.on('connection', function (socket) {
   });
 
   socket.on('block move', function (data) {
-    var target = clients[socket.game.currentMove.player];
-    target.socket.emit('move blocked', data);
+    var game = socket.game,
+        target = game.clients[game.currentMove.player];
+
+    // tell the target someone is attempting to block them
+    target.emit('move blocked', data);
   });
 
   socket.on('doubt move', function (data) {

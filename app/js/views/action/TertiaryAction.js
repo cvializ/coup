@@ -11,7 +11,7 @@ define([
         vent.trigger('play:move:tertiary', { type: 'concede' });
       },
       'click #tertiary-doubt': function doubt() {
-        console.log('play:move:tertiary', { type: 'doubt' });
+        vent.trigger('play:move:tertiary', { type: 'doubt' });
       }
     }
   });

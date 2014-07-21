@@ -4,6 +4,7 @@ var express = require('express'),
     io = require('socket.io')(server),
     requirejs = require('requirejs'),
     config = requirejs('config/config'),
+    uuid = require('node-uuid').v4,
     port = process.env.PORT || config.port || 3000;
 
 server.listen(port, function () {
@@ -13,44 +14,55 @@ server.listen(port, function () {
 function Player(options) {
   options = options || {};
 
+  this.id = options.id || uuid();
+  this.socket = options.socket || null;
   this.name = options.name || 'Unnamed User';
   this.coins = options.coins || 2;
 }
 
-function GameState(title) {
-  this.title = title;
-  this.clients = {}; // for sockets
+Player.prototype.getClientObject = function () {
+  return {
+    id: this.id,
+    name: this.name,
+    coins: this.coins
+  };
+};
+
+function GameState(options) {
+  options = options || {};
+
+  if (!options.title) {
+    throw 'Property "title" missing from GameState constructor\'s options arg';
+  }
+
+  this.id = options.id || uuid();
+  this.title = options.title;
   this.players = {};
   this.userCount = 0;
-  this.currentMove = {
-      player: null,
-      responsesRemaining: 0,
-      success: true
-  };
+  this.currentMove = null;
 }
 
-GameState.prototype.addUser = function (username, socket) {
-  this.clients[username] = socket;
-  this.players[username] = new Player({ name: username });
+GameState.prototype.addUser = function (player) {
+  this.players[player.id] = player;
   this.userCount++;
 };
 
 GameState.prototype.getClientObject = function () {
   var clientObject = {
+    id: this.id,
     title: this.title,
     players: []
   };
 
   for (var key in this.players) {
-    clientObject.players.push(this.players[key]);
+    clientObject.players.push(this.players[key].getClientObject());
   }
 
   return clientObject;
 };
 
-GameState.prototype.removeUser = function (username) {
-  delete this.clients[username];
-  delete this.players[username];
+GameState.prototype.removeUser = function (player) {
+  delete this.players[player.id];
   this.userCount--;
 };
 
@@ -66,7 +78,7 @@ function Move(moveData) {
 
 Move.prototype.getClientObject = function () {
   var clientObject = {
-    player: this.player,
+    player: this.player.getClientObject(),
     influence: this.influence,
     ability: this.ability
   };
@@ -80,15 +92,36 @@ app.use(express.static(__dirname + '/config'));
 
 var games = {};
 
+function gameExists(title) {
+  for (var key in games) {
+    if(games[key].title === title) {
+      return true;
+    }
+  }
+  return false;
+}
+
 io.on('connection', function (socket) {
   var addedUser = false;
 
   socket.join('landing');
 
   socket.on('create game', function (data) {
-    if (!games[data.title]) {
-      games[data.title] = new GameState(data.title);
-      pushGames();
+    data = data || {};
+
+    if (!data.title) {
+      socket.emit('create game failed', { message: 'missing title' });
+    } else if (!data.username) {
+      socket.emit('create game failed', { message: 'missing username' });
+    } else if (gameExists(data.title)) {
+      socket.emit('create game failed', { message: 'game exists' });
+    } else {
+      var newGame = new GameState({ title: data.title });
+      games[newGame.id] = newGame;
+
+      console.log('A new game was made: ' + newGame.id);
+
+      socket.emit('create game succeeded', { username: data.username, id: newGame.id });
     }
   });
 
@@ -100,34 +133,32 @@ io.on('connection', function (socket) {
   socket.on('join user', function (data) {
     // sanitize
     if (!data.username) {
-      socket.emit('error', { from: 'join user', message: 'invalid username' });
-      return;
-    } else if (!data.title) {
-      socket.emit('error', { from: 'join user', message: 'invalid game title' });
-      return;
+      socket.emit('join user failed', { message: 'invalid username' });
+    } else if (!data.id) {
+      socket.emit('join user failed', { message: 'invalid game id' });
+    } else {
+      // we store the player's data in the socket for later
+      socket.player = new Player({ name: data.username, socket: socket });
+
+      socket.game = games[data.id];
+      socket.join(data.id);
+      socket.leave('landing');
+
+      socket.broadcast.to(socket.game.id).emit('push:game', socket.game.getClientObject());
+
+      // add the user to the game
+      socket.game.addUser(socket.player);
+
+      addedUser = true;
+
+      // echo globally (all clients) that a person has connected
+      socket.broadcast.to(socket.game.id).emit('user joined', {
+        username: socket.player.name
+      });
+
+      socket.emit('join user succeeded');
+      pushGames();
     }
-
-    // we store the username in the socket session for this client
-    socket.username = data.username;
-
-
-    socket.game = games[data.title];
-    socket.join(data.title);
-    socket.leave('landing');
-
-    socket.broadcast.to(socket.game.title).emit('push:game', socket.game.getClientObject());
-
-    // add the user to the game
-    socket.game.addUser(socket.username, socket);
-
-    addedUser = true;
-
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.to(socket.game.title).emit('user joined', {
-      username: socket.username
-    });
-
-    pushGames();
   });
 
   // when the user disconnects.. perform this
@@ -141,49 +172,52 @@ io.on('connection', function (socket) {
     var game = socket.game;
     // remove the username from global usernames list
     if (addedUser) {
-      game.removeUser(socket.username);
-      delete game.clients[socket.username];
+      game.removeUser(socket.player);
 
       if (game.userCount <= 1) {
-        socket.broadcast.to(game.title).emit('you are alone');
-        delete games[game.title];
+        socket.broadcast.to(game.id).emit('you are alone');
+        delete games[game.id];
       }
 
       // echo globally that this client has left
-      socket.broadcast.to(game.title).emit('user left', {
-        username: socket.username
+      socket.broadcast.to(game.id).emit('user left', {
+        username: socket.player.name
       });
-      socket.leave(game.title);
+      socket.leave(game.id);
       delete socket.game;
     }
+    pushGames();
   }
 
   socket.on('make move', function (moveData) {
     moveData = moveData || {};
-    moveData.player = socket.username;
 
-    var currentMove = socket.game.currentMove = new Move(moveData);
+    var currentMove = socket.game.currentMove = new Move({
+      influence: moveData.influence,
+      ability: moveData.ability,
+      player: socket.player
+    });
 
     currentMove.responsesRemaining = socket.game.userCount - 1;
 
-    socket.broadcast.to(socket.game.title).emit('move attempted', currentMove.getClientObject());
+    socket.broadcast.to(socket.game.id).emit('move attempted', currentMove.getClientObject());
   });
 
   socket.on('block move', function (data) {
     var game = socket.game,
-        target = game.clients[game.currentMove.player];
+        targetPlayer = game.players[game.currentMove.player.id];
 
     // tell the target someone is attempting to block them
-    target.emit('move blocked', data);
+    targetPlayer.socket.emit('move blocked', data);
   });
 
   socket.on('doubt move', function (data) {
     // if the current player was telling the truth, the doubter loses a card
     // if the current player was lying, he loses a card
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.title).emit('move doubter failed');
+      io.sockets.in(socket.game.id).emit('move doubter failed');
     } else {
-      io.sockets.in(socket.game.title).emit('move doubter succeeded');
+      io.sockets.in(socket.game.id).emit('move doubter succeeded');
     }
   });
 
@@ -192,32 +226,34 @@ io.on('connection', function (socket) {
 
     currentMove.responsesRemaining--;
     if (currentMove.responsesRemaining === 0) {
-      io.sockets.in(socket.game.title).emit('move succeeded', { user: currentMove.player });
+      io.sockets.in(socket.game.id).emit('move succeeded', { user: currentMove.player.getClientObject() });
     }
   });
 
   socket.on('blocker doubt', function (data) {
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.title).emit('block doubter succeeded');
+      io.sockets.in(socket.game.id).emit('block doubter succeeded');
     } else {
-      io.sockets.in(socket.game.title).emit('block doubter failed');
+      io.sockets.in(socket.game.id).emit('block doubter failed');
     }
     // check if the blocker has the card they block with.
     // if so, the doubter loses a card
     // if not, the blocker loses a card
-    //io.sockets.in(socket.game.title).emit('block over');
+    //io.sockets.in(socket.game.id).emit('block over');
   });
 
   socket.on('blocker success', function (data) {
     // the blocker succeeds in blocking the action.
-    io.sockets.in(socket.game.title).emit('block succeeded');
+    io.sockets.in(socket.game.id).emit('block succeeded');
   });
 
   socket.on('pull:game', function () {
-    socket.emit('push:game', games[socket.game.title].getClientObject());
+    socket.emit('push:game', games[socket.game.id].getClientObject());
   });
 
-  socket.on('pull:games', pushGames);
+  socket.on('pull:games', function () {
+    pushGames({ broadcast: false });
+  });
 
   function pushGames(options) {
     options = options || {};

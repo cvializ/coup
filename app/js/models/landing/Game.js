@@ -3,7 +3,7 @@ define(['backbone'], function () {
     defaults: {
       title: 'Unnamed Game',
       players: [],
-      joinable: true
+      id: ''
     }
   });
 

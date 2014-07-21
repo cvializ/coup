@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.4.3",
     "requirejs": "^2.1.14",
-    "socket.io": "^1.0.5"
+    "socket.io": "^1.0.5",
+    "node-uuid": "~1.4.1"
   }
 }

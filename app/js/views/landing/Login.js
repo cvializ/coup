@@ -19,7 +19,7 @@ define(['marionette', 'Vent', 'views/landing/Game', 'hbs!templates/landing/login
       'click @ui.join': function clickJoin() {
         vent.trigger('landing:game:join', {
           username: this.ui.username.val(),
-          title: $('input[type="radio"]:checked', this.$el).val()
+          id: $('input[type="radio"]:checked', this.$el).val()
         });
       }
     }

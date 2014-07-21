@@ -27,6 +27,10 @@ function (Marionette,
 
     landingView: null,
 
+    errorHandler: function errorHandler(data) {
+      alert('Error! ' + data.message);
+    },
+
     initialize: function initialize(options) {
       var self = this;
 
@@ -48,21 +52,30 @@ function (Marionette,
 
       vent.on('landing:game:create', function createNewGame(data) {
         self.socket.emit('create game', data);
-        vent.trigger('landing:game:join', data);
       });
 
       vent.on('landing:game:join', function joinExistingGame(data) {
         self.socket.emit('join user', data);
-        vent.trigger('play:init', data);
       });
 
-      vent.on('play:end', function reloadController() {
+      vent.on('play:end', function reloadController(data) {
         vent.trigger('landing:init');
+      });
+
+      self.socket.on('create game succeeded', function createGameSucceeded(data) {
+        self.socket.emit('join user', data);
+      });
+      self.socket.on('create game failed', self.errorHandler);
+
+      self.socket.on('join user succeeded', function joinUserSucceeded(data) {
+        vent.trigger('play:init');
       });
 
       self.socket.on('push:games', function updateGameData(data) {
         self.games.set(data);
       });
+
+      self.socket.on('join user failed', self.errorHandler);
     }
   });
 

@@ -49,8 +49,7 @@ define([
 
       self.socket = options.socket;
 
-      vent.on('play:init', function loadController(data) {
-        data = data || {};
+      vent.on('play:init', function loadController() {
 
         self.playView = new PlayView();
         self.playersCollection = new PlayerCollectionModel();

@@ -50,13 +50,21 @@ function (Marionette,
         self.socket.emit('ready');
       });
 
+      vent.on('landing:game:create', function createNewGame(data) {
+        self.socket.emit('create game', data, gameCreated);
+      });
+
       function gameCreated(err, data) {
         if (err) {
           self.errorHandler(err);
         } else {
-          self.socket.emit('join user', data, userJoined);
+          vent.trigger('landing:game:join', data);
         }
       }
+
+      vent.on('landing:game:join', function joinExistingGame(data) {
+        self.socket.emit('join user', data, userJoined);
+      });
 
       function userJoined(err, data) {
         if (err) {
@@ -65,14 +73,6 @@ function (Marionette,
           vent.trigger('play:init');
         }
       }
-
-      vent.on('landing:game:create', function createNewGame(data) {
-        self.socket.emit('create game', data, gameCreated);
-      });
-
-      vent.on('landing:game:join', function joinExistingGame(data) {
-        self.socket.emit('join user', data, userJoined);
-      });
 
       vent.on('play:end', function reloadController(data) {
         vent.trigger('landing:init');

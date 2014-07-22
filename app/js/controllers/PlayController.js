@@ -98,7 +98,7 @@ define([
       self.socket.on('push:game', function updateGameData(data) {
         self.game = data;
 
-        self.playersCollection.set(self.game.players);
+        self.playersCollection.reset(self.game.players);
       });
 
       self.socket.on('user joined', function userJoined() {

@@ -79,7 +79,7 @@ function (Marionette,
       });
 
       self.socket.on('push:games', function updateGameData(data) {
-        self.games.set(data);
+        self.games.reset(data);
       });
     }
   });

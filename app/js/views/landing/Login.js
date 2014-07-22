@@ -11,10 +11,6 @@ define(['marionette', 'Vent', 'views/landing/Game', 'hbs!templates/landing/login
       username: '#c-login-form-username',
       join: 'input[type="button"]'
     },
-    collectionEvents: {
-      add: 'onRender',
-      remove: 'onRender'
-    },
     events: {
       'click @ui.join': function clickJoin() {
         vent.trigger('landing:game:join', {

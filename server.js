@@ -106,22 +106,20 @@ io.on('connection', function (socket) {
 
   socket.join('landing');
 
-  socket.on('create game', function (data) {
+  socket.on('create game', function (data, callback) {
     data = data || {};
 
     if (!data.title) {
-      socket.emit('create game failed', { message: 'missing title' });
+      callback('missing title');
     } else if (!data.username) {
-      socket.emit('create game failed', { message: 'missing username' });
+      callback('missing username');
     } else if (gameExists(data.title)) {
-      socket.emit('create game failed', { message: 'game exists' });
+      callback('game exists');
     } else {
       var newGame = new GameState({ title: data.title });
       games[newGame.id] = newGame;
 
-      console.log('A new game was made: ' + newGame.id);
-
-      socket.emit('create game succeeded', { username: data.username, id: newGame.id });
+      callback(undefined, { username: data.username, id: newGame.id });
     }
   });
 
@@ -130,12 +128,12 @@ io.on('connection', function (socket) {
   });
 
   // when the client emits 'add user', this listens and executes
-  socket.on('join user', function (data) {
+  socket.on('join user', function (data, callback) {
     // sanitize
     if (!data.username) {
-      socket.emit('join user failed', { message: 'invalid username' });
+      callback('invalid username');
     } else if (!data.id) {
-      socket.emit('join user failed', { message: 'invalid game id' });
+      callback('invalid game id');
     } else {
       // we store the player's data in the socket for later
       socket.player = new Player({ name: data.username, socket: socket });
@@ -156,7 +154,10 @@ io.on('connection', function (socket) {
         username: socket.player.name
       });
 
-      socket.emit('join user succeeded');
+      // Inform the user of their success
+      callback();
+
+      // Let everyone know a user joined a game.
       pushGames();
     }
   });
@@ -257,13 +258,15 @@ io.on('connection', function (socket) {
 
   function pushGames(options) {
     options = options || {};
-    options.broadcast = options.broadcast || true;
-
+    options.broadcast = (options.broadcast === undefined ? true : options.broadcast);
     var destination;
 
+    // if broadcast is true, send it to all the sockets
+    // in the landing room
     if (options.broadcast) {
       destination = io.sockets.to('landing');
     } else {
+      // if broadcast is false, just send it to the requesting socket.
       destination = socket;
     }
 

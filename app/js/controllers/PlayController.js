@@ -11,7 +11,8 @@ define([
   'views/action/PrimaryAction',
   'views/action/SecondaryAction',
   'views/action/TertiaryAction',
-  'views/action/PendingAction'
+  'views/action/PendingAction',
+  'views/action/StandbyAction'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -24,7 +25,8 @@ define([
              PrimaryActionView,
              SecondaryActionView,
              TertiaryActionView,
-             PendingActionView) {
+             PendingActionView,
+             StandbyActionView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -117,6 +119,10 @@ define([
 
       self.socket.on('move attempted', function moveAttempted() {
         self.playView.action.show(new SecondaryActionView());
+      });
+
+      self.socket.on('move responded to', function beatToThePunch() {
+        self.playView.action.show(new StandbyActionView());
       });
 
       self.socket.on('move blocked', function myMoveBlocked() {

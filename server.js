@@ -104,6 +104,11 @@ function gameExists(title) {
 io.on('connection', function (socket) {
   socket.join('landing');
 
+  socket.on('error', function (err) {
+    console.log('ERROR!');
+    console.log(err);
+  });
+
   socket.on('create game', function (data, callback) {
     data = data || {};
 
@@ -204,10 +209,19 @@ io.on('connection', function (socket) {
 
   socket.on('block move', function (data) {
     var game = socket.game,
-        targetPlayer = game.players[game.currentMove.player.id];
+        players = game.players,
+        myPlayer = socket.player,
+        targetPlayer = players[game.currentMove.player.id];
 
     // tell the target someone is attempting to block them
     targetPlayer.socket.emit('move blocked', data);
+
+    // tell everyone else that someone has beat them to blocking
+    for (var key in players) {
+      if (players[key] !== myPlayer && players[key] !== targetPlayer) {
+        players[key].socket.emit('move responded to');
+      }
+    }
   });
 
   socket.on('doubt move', function (data) {

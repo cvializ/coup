@@ -1,6 +1,6 @@
 define([], function () {
   return {
     port: 8000,
-    host: "localhost"
+    host: "coup-game.herokuapps.com"
   };
 });

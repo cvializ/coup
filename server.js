@@ -102,8 +102,6 @@ function gameExists(title) {
 }
 
 io.on('connection', function (socket) {
-  var addedUser = false;
-
   socket.join('landing');
 
   socket.on('create game', function (data, callback) {
@@ -142,12 +140,10 @@ io.on('connection', function (socket) {
       socket.join(data.id);
       socket.leave('landing');
 
-      socket.broadcast.to(socket.game.id).emit('push:game', socket.game.getClientObject());
-
       // add the user to the game
       socket.game.addUser(socket.player);
 
-      addedUser = true;
+      socket.broadcast.to(socket.game.id).emit('push:game', socket.game.getClientObject());
 
       // echo globally (all clients) that a person has connected
       socket.broadcast.to(socket.game.id).emit('user joined', {
@@ -171,8 +167,9 @@ io.on('connection', function (socket) {
 
   function logout() {
     var game = socket.game;
-    // remove the username from global usernames list
-    if (addedUser) {
+
+    // Only log out the user if they're part of a game.
+    if (game) {
       game.removeUser(socket.player);
 
       if (game.userCount <= 1) {
@@ -186,8 +183,9 @@ io.on('connection', function (socket) {
       });
       socket.leave(game.id);
       delete socket.game;
+
+      pushGames();
     }
-    pushGames();
   }
 
   socket.on('make move', function (moveData) {

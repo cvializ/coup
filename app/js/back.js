@@ -36,7 +36,7 @@ require.config({
 });
 
 define(['CoupApp', 'socket.io', 'config'], function (CoupApp, io, config) {
-  var socket = io.connect('http://' + config.host + ':' + config.port);
+  var socket = io.connect('//' + config.host + ':' + config.port + '/');
 
   CoupApp.start({ socket: socket });
 });

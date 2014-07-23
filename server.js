@@ -2,10 +2,8 @@ var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
-    requirejs = require('requirejs'),
-    config = requirejs('config/config'),
     uuid = require('node-uuid').v4,
-    port = process.env.PORT || config.port || 3000;
+    port = process.env.PORT || 8000;
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -88,7 +86,6 @@ Move.prototype.getClientObject = function () {
 
 // Routing
 app.use(express.static(__dirname + '/app'));
-app.use(express.static(__dirname + '/config'));
 
 var games = {};
 

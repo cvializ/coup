@@ -35,7 +35,7 @@ require.config({
   }
 });
 
-define(['CoupApp', 'socket.io', 'config'], function (CoupApp, io, config) {
+define(['CoupApp', 'socket.io'], function (CoupApp, io) {
   var socket = io.connect();
 
   CoupApp.start({ socket: socket });

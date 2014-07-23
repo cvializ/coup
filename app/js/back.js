@@ -31,7 +31,7 @@ require.config({
     }
   },
   hbs: {
-    templateExgittension: 'html'
+    templateExtension: 'html'
   }
 });
 

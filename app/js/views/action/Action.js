@@ -9,6 +9,8 @@ define([
     template: actionTemplate,
 
     'initialize': function initialize(options) {
+      options = options || {};
+
       this.model = this.model || new this.actionModel(options);
     }
   });

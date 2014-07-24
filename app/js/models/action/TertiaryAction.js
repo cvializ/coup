@@ -1,5 +1,5 @@
-define(['backbone'], function (Backbone) {
-  var TertiaryActionModel = Backbone.Model.extend({
+define(['models/action/Action'], function (ActionModel) {
+  var TertiaryActionModel = ActionModel.extend({
     defaults: {
       title: 'Blocked!',
       text: 'Someone has attempted to block your move.',

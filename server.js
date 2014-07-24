@@ -63,6 +63,7 @@ function Ability(options) {
   this.needsTarget = options.needsTarget || false;
   this.voting = options.voting || 'none';
   this.influence = options.influence || null; // card
+  this.doubtable = (this.influence !== 'default');
 }
 
 Ability.prototype.getClientObject = function () {
@@ -71,7 +72,8 @@ Ability.prototype.getClientObject = function () {
     blockable: this.blockable,
     needsTarget: this.needsTarget,
     voting: this.voting,
-    influence: this.influence
+    influence: this.influence,
+    doubtable: this.doubtable
   };
 };
 

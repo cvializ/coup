@@ -141,7 +141,7 @@ define([
               text += ' ' + moveData.target.name;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text }));
+            self.playView.action.show(new SecondaryActionView({ text: text, ability: moveData.ability }));
           }
         }
       });
@@ -159,7 +159,9 @@ define([
       });
 
       self.socket.on('move blocked', function myMoveBlocked(moveData) {
-        self.showResult({ title: 'Block Attempted', message: 'Someone is attempting to block you.' });
+        var message = moveData.detractor.name + ' is attempting to block you from being able to ' +
+                      moveData.ability.name;
+        self.showResult({ title: 'Block Attempted', message: message });
         self.playView.action.show(new TertiaryActionView());
       });
 

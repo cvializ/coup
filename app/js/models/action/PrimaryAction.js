@@ -1,5 +1,5 @@
-define(['backbone'], function (Backbone) {
-  var PrimaryActionModel = Backbone.Model.extend({
+define(['models/action/Action'], function (ActionModel) {
+  var PrimaryActionModel = ActionModel.extend({
     defaults: {
       title: 'It\'s your turn',
       text: 'Choose your move below!',

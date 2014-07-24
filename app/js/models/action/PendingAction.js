@@ -1,5 +1,5 @@
-define(['backbone'], function (Backbone) {
-  var PendingActionModel = Backbone.Model.extend({
+define(['models/action/Action'], function (ActionModel) {
+  var PendingActionModel = ActionModel.extend({
     defaults: {
       title: 'Waiting...',
       text: 'Your opponents are judging your actions.',

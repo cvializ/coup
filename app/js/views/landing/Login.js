@@ -1,4 +1,9 @@
-define(['marionette', 'Vent', 'views/landing/Game', 'hbs!templates/landing/login'], function (Marionette, vent, GameView, loginTemplate) {
+define([
+  'marionette',
+  'Vent',
+  'views/landing/Game',
+  'hbs!templates/landing/login'
+], function (Marionette, vent, GameView, loginTemplate) {
   var LoginView = Marionette.CompositeView.extend({
     className: 'c-login-view',
     template: loginTemplate,

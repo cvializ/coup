@@ -9,10 +9,10 @@ define([
   'models/PlayerCollection',
   'views/PlayerCollection',
   'views/action/influence/Default',
-  'views/action/SecondaryAction',
-  'views/action/TertiaryAction',
-  'views/action/PendingAction',
-  'views/action/StandbyAction'
+  'views/action/Secondary',
+  'views/action/Tertiary',
+  'views/action/Pending',
+  'views/action/Standby'
 ], function (Marionette,
              mainRegion,
              vent,

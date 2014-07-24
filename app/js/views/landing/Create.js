@@ -1,4 +1,8 @@
-define(['marionette', 'Vent', 'hbs!templates/landing/create'], function (Marionette, vent, createTemplate) {
+define([
+  'marionette',
+  'Vent',
+  'hbs!templates/landing/create'
+], function (Marionette, vent, createTemplate) {
   var CreateView = Marionette.ItemView.extend({
     className: 'c-create-view',
     template: createTemplate,

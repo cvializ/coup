@@ -1,4 +1,7 @@
-define(['views/action/Action', 'models/action/Action'], function (ActionView, ActionModel) {
+define([
+  'views/action/Action',
+  'models/action/Action'
+], function (ActionView, ActionModel) {
   var StandbyActionView = ActionView.extend({
     initialize: function (options) {
       options = options || {};

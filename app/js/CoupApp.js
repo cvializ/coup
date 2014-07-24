@@ -1,5 +1,10 @@
-define(['marionette', 'MainRegion', 'Vent', 'controllers/CoupController', 'controllers/PlayController'],
-function (Marionette, mainRegion, vent, CoupController, PlayController) {
+define([
+  'marionette',
+  'MainRegion',
+  'Vent',
+  'controllers/CoupController',
+  'controllers/PlayController'
+], function (Marionette, mainRegion, vent, CoupController, PlayController) {
   CoupApp = new Marionette.Application();
 
   CoupApp.main = mainRegion;

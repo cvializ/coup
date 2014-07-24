@@ -1,7 +1,7 @@
 define([
   'Vent',
   'views/action/Action',
-  'models/action/SecondaryAction'
+  'models/action/Secondary'
 ], function (vent, ActionView, SecondaryActionModel) {
   var SecondaryAction = ActionView.extend({
     actionModel: SecondaryActionModel,

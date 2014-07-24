@@ -58,6 +58,8 @@ function (Marionette,
         if (err) {
           self.errorHandler(err);
         } else {
+          // The callback is passed the new game's ID,
+          // just like if we chose it from the list
           vent.trigger('landing:game:join', data);
         }
       }

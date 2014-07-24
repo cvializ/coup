@@ -7,8 +7,14 @@ define([
     actionModel: PrimaryActionModel,
 
     events: {
-      'click #primary-move' : function move() {
-        vent.trigger('play:move:primary', { name: 'Move', type: 'primary', target: null });
+      'click #primary-income' : function income() {
+        vent.trigger('play:move:primary', { name: 'Take Income', influence: 'default' });
+      },
+      'click #primary-aid' : function aid() {
+        vent.trigger('play:move:primary', { name: 'Foreign Aid', influence: 'default' });
+      },
+      'click #primary-coup' : function coup() {
+        vent.trigger('play:move:primary', { name: 'Coup', influence: 'default' });
       }
     }
   });

@@ -26,6 +26,55 @@ Player.prototype.getClientObject = function () {
   };
 };
 
+var Abilities = {
+  'default:Take Income': new Ability({
+    name: 'Take Income',
+    blockable: false,
+    influence: 'default'
+  }),
+  'default:Foreign Aid': new Ability({
+    name: 'Foreign Aid',
+    blockable: true,
+    influence: 'default'
+  }),
+  'default:Coup': new Ability({
+    name: 'Coup',
+    blockable: true,
+    influence: 'default'
+  })
+};
+
+function Card(options) {
+  options = options || {};
+
+  this.id = options.id || uuid();
+  this.eliminated = options.eliminated || false;
+}
+
+function Duke(options) {
+  Card.apply(this, arguments);
+
+  this.title = 'Duke';
+}
+
+function Ability(options) {
+  this.name = options.name || '';
+  this.blockable = options.blockable || false;
+  this.needsTarget = options.needsTarget || false;
+  this.voting = options.voting || 'none';
+  this.influence = options.influence || null; // card
+}
+
+Ability.prototype.getClientObject = function () {
+  return {
+    name: this.name,
+    blockable: this.blockable,
+    needsTarget: this.needsTarget,
+    voting: this.voting,
+    influence: this.influence
+  };
+};
+
 function GameState(options) {
   options = options || {};
 
@@ -38,6 +87,7 @@ function GameState(options) {
   this.players = {};
   this.userCount = 0;
   this.currentMove = null;
+  this.deck = {};
 }
 
 GameState.prototype.addUser = function (player) {
@@ -64,12 +114,21 @@ GameState.prototype.removeUser = function (player) {
   this.userCount--;
 };
 
-function Move(moveData) {
-  moveData = moveData || {};
+GameState.prototype.setCurrentMove = function (currentMove) {
+  this.currentMove = currentMove;
+  this.currentMove.responsesRemaining = this.userCount - 1;
+};
 
-  this.influence = moveData.influence || '';
-  this.ability = moveData.ability || '';
-  this.player = moveData.player || null;
+GameState.prototype.getCurrentMove = function () {
+  return this.currentMove;
+}
+
+function Move(options) {
+  options = options || {};
+
+  this.ability = options.ability || null;
+  this.detractor = options.detractor || null;
+  this.player = options.player || null;
 
   this.responsesRemaining = 0;
 }
@@ -77,8 +136,8 @@ function Move(moveData) {
 Move.prototype.getClientObject = function () {
   var clientObject = {
     player: this.player.getClientObject(),
-    influence: this.influence,
-    ability: this.ability
+    detractor: this.detractor && this.detractor.getClientObject(),
+    ability: this.ability.getClientObject()
   };
 
   return clientObject;
@@ -190,61 +249,94 @@ io.on('connection', function (socket) {
     }
   }
 
-  socket.on('make move', function (moveData) {
+  socket.on('make move', function (moveData, callback) {
     moveData = moveData || {};
+    if (!moveData.influence) {
+      callback('move is missing influence');
+    } else if (!moveData.name) {
+      callback('move is missing name');
+    } else {
+      var currentMove,
+          key = moveData.influence + ':' + moveData.name,
+          ability = Abilities[key],
+          move,
+          clientMove,
+          game = socket.game;
 
-    var currentMove = socket.game.currentMove = new Move({
-      influence: moveData.influence,
-      ability: moveData.ability,
-      player: socket.player
-    });
+      if (ability) {
+        move = new Move({
+          ability: ability,
+          player: socket.player
+        });
 
-    currentMove.responsesRemaining = socket.game.userCount - 1;
+        clientMove = move.getClientObject();
 
-    socket.broadcast.to(socket.game.id).emit('move attempted', currentMove.getClientObject());
+        if (!ability.blockable) {
+          io.sockets.to(game.id).emit('move succeeded', clientMove);
+        } else {
+          game.setCurrentMove(move);
+          socket.broadcast.to(socket.game.id).emit('move attempted', clientMove);
+        }
+        // Let the user know no errors occured.
+        callback(undefined, clientMove);
+      } else {
+        callback('unknown move ' + key);
+      }
+    }
   });
 
   socket.on('block move', function (data) {
     var game = socket.game,
         players = game.players,
         myPlayer = socket.player,
-        targetPlayer = players[game.currentMove.player.id];
+        move = game.getCurrentMove(),
+        targetPlayer = move.player,
+        key;
+
+    move.detractor = myPlayer;
 
     // tell the target someone is attempting to block them
-    targetPlayer.socket.emit('move blocked', data);
+    targetPlayer.socket.emit('move blocked', move.getClientObject());
 
     // tell everyone else that someone has beat them to blocking
-    for (var key in players) {
+    for (key in players) {
       if (players[key] !== myPlayer && players[key] !== targetPlayer) {
-        players[key].socket.emit('move responded to');
+        players[key].socket.emit('move responded to', move.getClientObject());
       }
     }
   });
 
   socket.on('doubt move', function (data) {
+    var game = socket.game,
+        move = game.getCurrentMove();
+
+    move.detractor = socket.player; // this player is doubting
+
     // if the current player was telling the truth, the doubter loses a card
     // if the current player was lying, he loses a card
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.id).emit('move doubter failed');
+      io.sockets.in(socket.game.id).emit('move doubter failed', move.getClientObject());
     } else {
-      io.sockets.in(socket.game.id).emit('move doubter succeeded');
+      io.sockets.in(socket.game.id).emit('move doubter succeeded', move.getClientObject());
     }
   });
 
   socket.on('allow move', function (data) {
-    var currentMove = socket.game.currentMove;
+    var game = socket.game,
+        move = game.getCurrentMove();
 
-    currentMove.responsesRemaining--;
-    if (currentMove.responsesRemaining === 0) {
-      io.sockets.in(socket.game.id).emit('move succeeded', { user: currentMove.player.getClientObject() });
+    move.responsesRemaining--;
+    if (move.responsesRemaining === 0) {
+      io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
     }
   });
 
   socket.on('blocker doubt', function (data) {
+    // game.currentMove.detractor should already be set!
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.id).emit('block doubter succeeded');
+      io.sockets.in(socket.game.id).emit('block doubter succeeded', socket.game.getCurrentMove().getClientObject());
     } else {
-      io.sockets.in(socket.game.id).emit('block doubter failed');
+      io.sockets.in(socket.game.id).emit('block doubter failed', socket.game.getCurrentMove().getClientObject());
     }
     // check if the blocker has the card they block with.
     // if so, the doubter loses a card
@@ -254,7 +346,7 @@ io.on('connection', function (socket) {
 
   socket.on('blocker success', function (data) {
     // the blocker succeeds in blocking the action.
-    io.sockets.in(socket.game.id).emit('block succeeded');
+    io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
   });
 
   socket.on('pull:game', function () {

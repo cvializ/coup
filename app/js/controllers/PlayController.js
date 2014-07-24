@@ -43,6 +43,10 @@ define([
 
     resultModel: null,
 
+    handleError: function (err) {
+      alert(err);
+    },
+
     initialize: function initialize(options) {
       var self = this;
 
@@ -68,14 +72,22 @@ define([
 
       vent.on('play:move:primary', function primaryMove(data) {
         self.playView.result.empty();
-        self.socket.emit('make move', data);
-        self.playView.action.show(new PendingActionView());
+        self.socket.emit('make move', data, function moveMade(err, move) {
+          if (err) {
+            self.handleError(err);
+          } else {
+            if (move.ability.blockable) {
+              self.playView.action.show(new PendingActionView());
+            }
+          }
+        });
       });
 
       vent.on('play:move:secondary', function secondaryMove(moveData) {
         moveData = moveData || {};
         if (moveData.type === 'allow') {
           self.socket.emit('allow move', moveData);
+          self.playView.action.show(new PendingActionView({ text: 'Waiting for other players to judge...' }));
         } else if (moveData.type === 'block') {
           self.socket.emit('block move', moveData);
           self.playView.action.show(new PendingActionView());
@@ -117,46 +129,111 @@ define([
         vent.trigger('play:end');
       });
 
-      self.socket.on('move attempted', function moveAttempted() {
-        self.playView.action.show(new SecondaryActionView());
+      self.socket.on('move attempted', function moveAttempted(moveData) {
+        if (!moveData) {
+          self.handleError('move is undefined!');
+        } else {
+
+          if (moveData.ability.blockable === true) {
+            var text = moveData.player.name + ' has attempted to ' + moveData.ability.name;
+
+            if (moveData.target) {
+              text += ' ' + moveData.target.name;
+            }
+
+            self.playView.action.show(new SecondaryActionView({ text: text }));
+          }
+        }
       });
 
-      self.socket.on('move responded to', function beatToThePunch() {
-        self.playView.action.show(new StandbyActionView());
+      self.socket.on('move responded to', function beatToThePunch(moveData) {
+        if (!moveData) {
+          self.handleError('move is undefined!');
+        } else {
+          var text = moveData.detractor.name + ' is trying to block ' +
+                     moveData.player.name + '\'s ability to ' +
+                     moveData.ability.name;
+
+          self.playView.action.show(new StandbyActionView({ text: text }));
+        }
       });
 
-      self.socket.on('move blocked', function myMoveBlocked() {
+      self.socket.on('move blocked', function myMoveBlocked(moveData) {
         self.showResult({ title: 'Block Attempted', message: 'Someone is attempting to block you.' });
         self.playView.action.show(new TertiaryActionView());
       });
 
-      self.socket.on('block succeeded', function blockSucceeded() {
-        self.showResult({ title: 'Blocked', message: 'Someone was successfully blocked!' });
+      self.socket.on('block succeeded', function blockSucceeded(moveData) {
+        var message = moveData.detractor.name + ' successfully blocked '+
+                      moveData.player.name + '\'s ability to ' +
+                      moveData.ability.name;
+
+        self.showResult({ title: 'Blocked', message: message });
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('move succeeded', function moveSucceeded() {
-        self.showResult({ title: 'Success', message: 'A move was completed.' });
+      self.socket.on('move succeeded', function moveSucceeded(moveData) {
+        var options = {
+          title: moveData.ability.name + ' Succeeded!',
+          message: moveData.player.name + ' was able to ' + moveData.ability.name
+        }
+
+        if (moveData.target) {
+          options.message += ' ' + moveData.target.name;
+        }
+
+        self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('move doubter succeeded', function moveDoubterSucceeded() {
-        self.showResult({ title: 'Move Doubted!', message: 'The player was doubted, and was lying!' });
+      self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
+        var doubted = moveData.player.name,
+            doubter = moveData.detractor.name,
+            message = doubted + ' was doubted by ' +
+                      doubter + ' while trying to ' +
+                      moveData.ability.name + ' and ' +
+                      doubted + ' was lying!';
+
+        self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('move doubter failed', function moveDoubterFailed() {
-        self.showResult({ title: 'Move Doubted!', message: 'The player was doubted, but was telling the truth!' });
+      self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
+        var doubted = moveData.player.name,
+            doubter = moveData.detractor.name,
+            message = doubted + ' was doubted by ' +
+                      doubter + ' while trying to ' +
+                      moveData.ability.name + ' and ' +
+                      doubted + ' was telling the truth!';
+
+        self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('block doubter succeeded', function blockDoubterSucceeded() {
-        self.showResult({ title: 'Block Doubted!', message: 'The blocker was lying!' });
+      self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
+        var blocker = moveData.detractor.name,
+            blocked = moveData.player.name,
+            ability = moveData.ability.name,
+            message = blocked + ' doubted ' +
+                      blocker + '\'s ability to block their ability to ' +
+                      ability + ' and ' +
+                      blocker + ' was lying! ' +
+                      blocked + ' can ' + ability;
+
+        self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('block doubter failed', function blockDoubterFailed() {
-        self.showResult({ title: 'Block Doubted!', message: 'The blocker was truthful! Player blocked!' });
+      self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
+        var blocker = moveData.detractor.name,
+            blocked = moveData.player.name,
+            message = blocked + ' doubted ' +
+                      blocker + '\'s ability to block their ability to ' +
+                      moveData.ability.name + ' but ' +
+                      blocker + ' was telling the truth! ' +
+                      blocked + ' blocked!';
+
+        self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
       });
     },

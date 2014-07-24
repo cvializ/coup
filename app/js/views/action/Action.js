@@ -8,8 +8,8 @@ define([
 
     template: actionTemplate,
 
-    'initialize': function initialize() {
-      this.model = this.model || new this.actionModel();
+    'initialize': function initialize(options) {
+      this.model = this.model || new this.actionModel(options);
     }
   });
 

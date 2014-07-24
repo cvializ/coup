@@ -8,7 +8,7 @@ define([
   'models/Result',
   'models/PlayerCollection',
   'views/PlayerCollection',
-  'views/action/PrimaryAction',
+  'views/action/influence/Default',
   'views/action/SecondaryAction',
   'views/action/TertiaryAction',
   'views/action/PendingAction',

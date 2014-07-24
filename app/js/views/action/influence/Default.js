@@ -1,10 +1,10 @@
 define([
   'Vent',
   'views/action/Action',
-  'models/action/PrimaryAction'
-], function (vent, ActionView, PrimaryActionModel) {
-  var PrimaryAction = ActionView.extend({
-    actionModel: PrimaryActionModel,
+  'models/action/influence/Default'
+], function (vent, ActionView, DefaultInfluenceModel) {
+  var DefaultInfluenceView = ActionView.extend({
+    actionModel: DefaultInfluenceModel,
 
     events: {
       'click #primary-income' : function income() {
@@ -19,5 +19,5 @@ define([
     }
   });
 
-  return PrimaryAction;
+  return DefaultInfluenceView;
 });

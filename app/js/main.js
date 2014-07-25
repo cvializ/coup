@@ -5,11 +5,14 @@ require.config({
     jquery : 'ext/jquery-2.1.1',
     marionette : 'ext/backbone.marionette',
     handlebars: 'ext/handlebars-v1.3.0',
-    hbs: 'ext/require-handlebars-plugin/hbs',
     knockout: 'ext/knockout-3.1.0',
-    config: '/config',
     'socket.io': '/socket.io/socket.io',
-    'backbone.wreqr' : 'ext/backbone.wreqr'
+    'backbone.wreqr' : 'ext/backbone.wreqr',
+
+    // plugins
+    hbs: 'ext/require-handlebars-plugin/hbs',
+    text: 'ext/millermedeiros-requirejs-plugins/lib/text',
+    json: 'ext/millermedeiros-requirejs-plugins/src/json'
   },
   shim : {
     jquery : {

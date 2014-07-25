@@ -1,0 +1,11 @@
+{
+  "name": "Duke",
+
+  "abilities": [
+    {
+      "name": "Treasury",
+      "verb": "Tax the Treasury",
+      "blockable": false
+    }
+  ]
+}

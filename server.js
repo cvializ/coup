@@ -3,11 +3,42 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
     uuid = require('node-uuid').v4,
-    port = process.env.PORT || 8000;
+    extend = require('extend'),
+    port = process.env.PORT || 8000,
+    Influences = require('./app/js/models/action/influence/cards/'),
+    Abilities = {},
+    games = {};
+
+// Create the ability objects from data.
+(function () {
+  var aKey,
+      ability,
+      abilityOptions,
+      iKey,
+      influence,
+      influenceAbilities;
+
+  for (iKey in Influences) {
+    influence = Influences[iKey];
+    influenceAbilities = influence.abilities;
+
+    for (aKey in influenceAbilities) {
+      ability = influenceAbilities[aKey];
+
+      // don't modify the original JSON object
+      abilityOptions = extend({ influence: influence.name }, ability)
+
+      Abilities[influence.name + ':' + ability.name] = new Ability(abilityOptions);
+    }
+  }
+}());
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
+
+// Routing
+app.use(express.static(__dirname + '/app'));
 
 function Player(options) {
   options = options || {};
@@ -24,29 +55,6 @@ Player.prototype.getClientObject = function () {
     name: this.name,
     coins: this.coins
   };
-};
-
-var Abilities = {
-  'Default:Income': new Ability({
-    name: 'Take Income',
-    blockable: false,
-    influence: 'Default'
-  }),
-  'Default:Foreign Aid': new Ability({
-    name: 'Foreign Aid',
-    blockable: true,
-    influence: 'Default'
-  }),
-  'Default:Coup': new Ability({
-    name: 'Coup',
-    blockable: true,
-    influence: 'Default'
-  }),
-  'Duke:Treasury': new Ability({
-    name: 'Treasury',
-    blockable: false,
-    influence: 'Duke'
-  })
 };
 
 function Card(options) {
@@ -149,11 +157,6 @@ Move.prototype.getClientObject = function () {
 
   return clientObject;
 };
-
-// Routing
-app.use(express.static(__dirname + '/app'));
-
-var games = {};
 
 function gameExists(title) {
   for (var key in games) {

@@ -1,7 +1,7 @@
 define([
   'marionette',
   'Vent',
-  'hbs!templates/influence/ability'
+  'hbs!templates/ability'
 ], function (Marionette, vent, abilityTemplate) {
   var AbilityView = Marionette.ItemView.extend({
     template: abilityTemplate,
@@ -12,6 +12,9 @@ define([
           verb: this.model.verb,
           influence: this.model.influence
         });
+      }
     }
   });
+
+  return AbilityView;
 });

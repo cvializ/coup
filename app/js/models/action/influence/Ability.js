@@ -1,6 +1,6 @@
 define([
   'backbone'
-], function (Backbone,) {
+], function (Backbone) {
   var AbilityModel = Backbone.Model.extend({
     defaults: {
       name: 'Unnamed Ability',

@@ -19,4 +19,6 @@ define(['backbone'], function (Backbone) {
       }
     }
   });
+
+  return InfluenceModel;
 });

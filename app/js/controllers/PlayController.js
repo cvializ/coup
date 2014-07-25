@@ -76,7 +76,7 @@ define([
           if (err) {
             self.handleError(err);
           } else {
-            if (move.ability.blockable) {
+            if (move.ability.blockable || move.ability.doubtable) {
               self.playView.action.show(new PendingActionView());
             }
           }
@@ -130,18 +130,21 @@ define([
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {
+        var ability;
+
         if (!moveData) {
           self.handleError('move is undefined!');
         } else {
+          ability = moveData.ability;
 
-          if (moveData.ability.blockable === true) {
-            var text = moveData.player.name + ' has attempted to ' + moveData.ability.name;
+          if (ability.blockable || ability.doubtable) {
+            var text = moveData.player.name + ' has attempted to ' + ability.name;
 
             if (moveData.target) {
               text += ' ' + moveData.target.name;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: moveData.ability }));
+            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability }));
           }
         }
       });

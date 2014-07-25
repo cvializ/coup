@@ -6,7 +6,7 @@ define([
 ], function (Marionette, AbilityCollection, AbilityView, influenceTemplate) { 
   var InfluenceView = Marionette.CompositeView.extend({
     initialize: function (options) {
-      this.collection = new AbilityCollection(this.model.abilities);
+      this.collection = new AbilityCollection(this.model.attributes.abilities);
     },
     classname: 'c-influence-view',
     template: influenceTemplate,

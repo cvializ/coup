@@ -7,10 +7,12 @@ define([
     template: abilityTemplate,
     events: {
       'click .c-ability' : function trigger() {
+        var attributes = this.model.attributes;
+
         vent.trigger('play:move:primary', { 
-          name: this.model.name,
-          verb: this.model.verb,
-          influence: this.model.influence
+          name: attributes.name,
+          verb: attributes.verb,
+          influence: attributes.influence
         });
       }
     }

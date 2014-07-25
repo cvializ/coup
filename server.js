@@ -27,20 +27,25 @@ Player.prototype.getClientObject = function () {
 };
 
 var Abilities = {
-  'default:Take Income': new Ability({
+  'Default:Income': new Ability({
     name: 'Take Income',
     blockable: false,
-    influence: 'default'
+    influence: 'Default'
   }),
-  'default:Foreign Aid': new Ability({
+  'Default:Foreign Aid': new Ability({
     name: 'Foreign Aid',
     blockable: true,
-    influence: 'default'
+    influence: 'Default'
   }),
-  'default:Coup': new Ability({
+  'Default:Coup': new Ability({
     name: 'Coup',
     blockable: true,
-    influence: 'default'
+    influence: 'Default'
+  }),
+  'Duke:Treasury': new Ability({
+    name: 'Treasury',
+    blockable: false,
+    influence: 'Duke'
   })
 };
 
@@ -63,7 +68,7 @@ function Ability(options) {
   this.needsTarget = options.needsTarget || false;
   this.voting = options.voting || 'none';
   this.influence = options.influence || null; // card
-  this.doubtable = (this.influence !== 'default');
+  this.doubtable = (this.influence !== 'Default');
 }
 
 Ability.prototype.getClientObject = function () {
@@ -273,7 +278,7 @@ io.on('connection', function (socket) {
 
         clientMove = move.getClientObject();
 
-        if (!ability.blockable) {
+        if (!ability.blockable && !ability.doubtable) {
           io.sockets.to(game.id).emit('move succeeded', clientMove);
         } else {
           game.setCurrentMove(move);

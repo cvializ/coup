@@ -1,4 +1,7 @@
-define(['backbone'], function (Backbone) {
+define([
+  'backbone',
+  'models/action/influence/AbilityCollection'
+], function (Backbone, AbilityCollection) {
   var InfluenceModel = Backbone.Model.extend({
     defaults: {
       name: 'Unnamed Influence',
@@ -17,6 +20,8 @@ define(['backbone'], function (Backbone) {
       for (i = 0; i < abilities.length; i++) {
         abilities[i].influence = this.attributes.name;
       }
+
+      this.attributes.abilities = new AbilityCollection(abilities);
     }
   });
 

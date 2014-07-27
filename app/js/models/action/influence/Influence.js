@@ -14,14 +14,14 @@ define([
     },
 
     initialize: function (object) {
-      var abilities = this.attributes.abilities,
+      var abilities = this.get('abilities'),
           i;
 
       for (i = 0; i < abilities.length; i++) {
-        abilities[i].influence = this.attributes.name;
+        abilities[i].influence = this.get('name');
       }
 
-      this.attributes.abilities = new AbilityCollection(abilities);
+      this.set('abilities', new AbilityCollection(abilities));
     }
   });
 

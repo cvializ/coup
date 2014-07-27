@@ -3,10 +3,10 @@ define([
   'models/action/influence/AbilityCollection',
   'views/action/influence/Ability',
   'hbs!templates/influence'
-], function (Marionette, AbilityCollection, AbilityView, influenceTemplate) { 
+], function (Marionette, AbilityCollection, AbilityView, influenceTemplate) {
   var InfluenceView = Marionette.CompositeView.extend({
     initialize: function (options) {
-      this.collection = this.model.attributes.abilities;
+      this.collection = this.model.get('abilities');
     },
     classname: 'c-influence-view',
     template: influenceTemplate,

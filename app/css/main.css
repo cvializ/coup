@@ -2,14 +2,19 @@
   box-sizing: border-box;
 }
 
-#c-player-area .c-player-view {
-  display: inline-block;
+#c-player-area .c-player-view, #c-action-area .c-player-view {
+  display: block;
+  float: left;
   margin: 5px;
   padding: 5px;
   height: 160px;
   width: 100px;
   background-color: gray;
   vertical-align: middle;
+}
+
+.c-player-choice-view {
+  float: left;
 }
 
 .c-landing-view {

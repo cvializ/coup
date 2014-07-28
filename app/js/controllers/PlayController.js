@@ -12,7 +12,8 @@ define([
   'views/action/Secondary',
   'views/action/Tertiary',
   'views/action/Pending',
-  'views/action/Standby'
+  'views/action/Standby',
+  'views/ChoosePlayer'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -26,7 +27,8 @@ define([
              SecondaryActionView,
              TertiaryActionView,
              PendingActionView,
-             StandbyActionView) {
+             StandbyActionView,
+             ChoosePlayerView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -59,7 +61,7 @@ define([
 
         self.playView = new PlayView();
         self.playersCollection = new PlayerCollectionModel();
-        self.playersView = new PlayerCollectionView({ collection: self.playersCollection});
+        self.playersView = new PlayerCollectionView({ collection: self.playersCollection });
         self.resultModel = new ResultModel();
 
         mainRegion.show(self.playView);
@@ -70,9 +72,9 @@ define([
         self.socket.emit('pull:game');
       });
 
-      vent.on('play:move:primary', function primaryMove(data) {
+      function makePrimaryMove(moveData) {
         self.playView.result.empty();
-        self.socket.emit('make move', data, function moveMade(err, move) {
+        self.socket.emit('make move', moveData, function moveMade(err, move) {
           if (err) {
             self.handleError(err);
           } else {
@@ -81,6 +83,31 @@ define([
             }
           }
         });
+      }
+
+      function filterPlayerChoice(player) {
+        return player.id !== self.game.user.id;
+      }
+
+      vent.on('play:move:primary', function primaryMove(moveData) {
+        var chooseCollection,
+            chooseView;
+        if (moveData.needsTarget) {
+          // Show the choose view
+          chooseCollection = new PlayerCollectionModel(self.playersCollection.filter(filterPlayerChoice));
+          chooseView = new ChoosePlayerView({ collection: chooseCollection });
+          self.playView.action.show(chooseView);
+
+          // Wait for the user to select their choice
+          vent.on('play:move:primary:choice', function playerChosen(data) {
+            moveData.target = data.choice;
+            makePrimaryMove(moveData);
+            console.log(moveData.target);
+            vent.off('play:move:primary:choice'); // this doesn't seem right
+          });
+        } else {
+          makePrimaryMove(moveData);
+        }
       });
 
       vent.on('play:move:secondary', function secondaryMove(moveData) {
@@ -112,7 +139,7 @@ define([
       self.socket.on('push:game', function updateGameData(data) {
         self.game = data;
 
-        self.playersCollection.reset(self.game.players);
+        if (self.playersCollection) self.playersCollection.reset(self.game.players);
       });
 
       self.socket.on('user joined', function userJoined() {

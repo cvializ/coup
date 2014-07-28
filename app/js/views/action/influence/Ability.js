@@ -11,7 +11,8 @@ define([
         vent.trigger('play:move:primary', {
           name: this.model.get('name'),
           verb: this.model.get('verb'),
-          influence: this.model.get('influence')
+          influence: this.model.get('influence'),
+          needsTarget: this.model.get('needsTarget')
         });
       }
     }

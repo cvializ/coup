@@ -241,7 +241,7 @@ io.on('connection', function (socket) {
     options = options || {};
 
     var destination = options.destination || socket.game.id;
-    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject());
+    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject(socket));
   }
 
   socket.on('pull:games', function () {

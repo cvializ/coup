@@ -189,7 +189,6 @@ define([
 
         self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
-
         self.socket.emit('pull:game');
       });
 
@@ -215,6 +214,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -229,6 +229,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {

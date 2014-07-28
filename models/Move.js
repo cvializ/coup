@@ -18,4 +18,8 @@ Move.prototype.getClientObject = function () {
   return clientObject;
 };
 
+Move.prototype.success = function () {
+  this.ability.action(this);
+};
+
 module.exports = Move;

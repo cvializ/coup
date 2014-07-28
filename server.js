@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
       // add the user to the game
       socket.game.addUser(socket.player);
 
-      socket.broadcast.to(socket.game.id).emit('push:game', socket.game.getClientObject());
+      pushGame();
 
       // echo globally (all clients) that a person has connected
       socket.broadcast.to(socket.game.id).emit('user joined', {
@@ -149,7 +149,7 @@ io.on('connection', function (socket) {
         clientMove = move.getClientObject();
 
         if (!ability.blockable && !ability.doubtable) {
-          ability.action(move);
+          move.success();
           io.sockets.to(game.id).emit('move succeeded', clientMove);
         } else {
           game.setCurrentMove(move);
@@ -187,14 +187,16 @@ io.on('connection', function (socket) {
   socket.on('doubt move', function (data) {
     var game = socket.game,
         move = game.getCurrentMove(),
-        clientMove = move.getClientObject();
+        clientMove; 
 
     move.detractor = socket.player; // this player is doubting
+
+    clientMove = move.getClientObject(); // after setting the detractor.
 
     // if the current player was telling the truth, the doubter loses a card
     // if the current player was lying, he loses a card
     if (Math.random() > 0.5) {
-      move.player.socket.emit('move succeded', clientMove);
+      move.success();
       io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
     } else {
       io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
@@ -207,7 +209,7 @@ io.on('connection', function (socket) {
 
     move.responsesRemaining--;
     if (move.responsesRemaining === 0) {
-      move.ability.action(move);
+      move.success();
       io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
     }
   });
@@ -217,8 +219,7 @@ io.on('connection', function (socket) {
         clientMove = move.getClientObject();
     // game.currentMove.detractor should already be set!
     if (Math.random() > 0.5) {
-      move.ability.action(move);
-      move.player.socket.emit('move succeeded', clientMove);
+      move.success();
       io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
     } else {
       io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
@@ -234,9 +235,14 @@ io.on('connection', function (socket) {
     io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
   });
 
-  socket.on('pull:game', function () {
-    socket.emit('push:game', games[socket.game.id].getClientObject());
-  });
+  socket.on('pull:game', pushGame);
+
+  function pushGame(options) {
+    options = options || {};
+
+    var destination = options.destination || socket.game.id;
+    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject());
+  }
 
   socket.on('pull:games', function () {
     pushGames({ broadcast: false });

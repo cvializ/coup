@@ -5,7 +5,8 @@
     {
       "name": "Treasury",
       "verb": "Tax the Treasury",
-      "blockable": false
+      "blockable": false,
+      "needsTarget": false
     }
   ]
 }

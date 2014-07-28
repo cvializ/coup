@@ -84,10 +84,8 @@ io.on('connection', function (socket) {
 
       pushGame();
 
-      // echo globally (all clients) that a person has connected
-      socket.broadcast.to(socket.game.id).emit('user joined', {
-        username: socket.player.name
-      });
+      // Give the user everything they need to know about themselves
+      socket.emit('user joined', { player: socket.player.getClientObject() });
 
       // Inform the user of their success
       callback();
@@ -143,6 +141,7 @@ io.on('connection', function (socket) {
       if (ability) {
         move = new Move({
           ability: ability,
+          target: game.players[moveData.target],
           player: socket.player
         });
 
@@ -241,7 +240,7 @@ io.on('connection', function (socket) {
     options = options || {};
 
     var destination = options.destination || socket.game.id;
-    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject(socket));
+    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject());
   }
 
   socket.on('pull:games', function () {

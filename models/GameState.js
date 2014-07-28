@@ -24,8 +24,7 @@ GameState.prototype.getClientObject = function (socket) {
   var clientObject = {
     id: this.id,
     title: this.title,
-    players: [],
-    user: (socket && socket.player.getClientObject()) || null
+    players: []
   };
 
   for (var key in this.players) {

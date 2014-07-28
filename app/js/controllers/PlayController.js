@@ -86,7 +86,7 @@ define([
       }
 
       function filterPlayerChoice(player) {
-        return player.id !== self.game.user.id;
+        return player.id !== self.socket.player.id;
       }
 
       vent.on('play:move:primary', function primaryMove(moveData) {
@@ -102,7 +102,6 @@ define([
           vent.on('play:move:primary:choice', function playerChosen(data) {
             moveData.target = data.choice;
             makePrimaryMove(moveData);
-            console.log(moveData.target);
             vent.off('play:move:primary:choice'); // this doesn't seem right
           });
         } else {

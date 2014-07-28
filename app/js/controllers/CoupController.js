@@ -83,6 +83,10 @@ function (Marionette,
       self.socket.on('push:games', function updateGameData(data) {
         self.games.reset(data);
       });
+
+      self.socket.on('user joined', function joinedAGame(data) {
+        self.socket.player = data.player;
+      });
     }
   });
 

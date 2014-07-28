@@ -4,6 +4,7 @@ define([
   'hbs!templates/ability'
 ], function (Marionette, vent, abilityTemplate) {
   var AbilityView = Marionette.ItemView.extend({
+    className: 'c-ability-view',
     template: abilityTemplate,
     events: {
       'click .c-ability' : function trigger() {

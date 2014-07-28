@@ -8,10 +8,10 @@ define([
     initialize: function (options) {
       this.collection = this.model.get('abilities');
     },
-    classname: 'c-influence-view',
+    className: 'c-influence-view',
     template: influenceTemplate,
     childView: AbilityView,
-    childContainer: '.c-influence-abilities'
+    childViewContainer: '.c-influence-abilities'
   });
 
   return InfluenceView;

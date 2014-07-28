@@ -1,3 +1,6 @@
 [submodule "app/js/ext/require-handlebars-plugin"]
 	path = app/js/ext/require-handlebars-plugin
 	url = https://github.com/SlexAxton/require-handlebars-plugin
+[submodule "app/js/ext/millermedeiros-requirejs-plugins"]
+	path = app/js/ext/millermedeiros-requirejs-plugins
+	url = https://github.com/millermedeiros/requirejs-plugins

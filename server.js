@@ -1,154 +1,30 @@
-var express = require('express'),
+var 
+    // Library objects
+    express = require('express'),    
+    uuid = require('node-uuid').v4,
+    extend = require('extend'),
+
+    // Model objects
+    GameState = require('./models/GameState'),
+    Player = require('./models/Player'),
+    Move = require('./models/Move'),
+    Ability = require('./models/Ability'),
+    Influences = require('./models/Influences'),
+
+    // Server variables
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
-    uuid = require('node-uuid').v4,
-    port = process.env.PORT || 8000;
+    port = process.env.PORT || 8000,
+    // State
+    games = {};
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-function Player(options) {
-  options = options || {};
-
-  this.id = options.id || uuid();
-  this.socket = options.socket || null;
-  this.name = options.name || 'Unnamed User';
-  this.coins = options.coins || 2;
-}
-
-Player.prototype.getClientObject = function () {
-  return {
-    id: this.id,
-    name: this.name,
-    coins: this.coins
-  };
-};
-
-var Abilities = {
-  'default:Take Income': new Ability({
-    name: 'Take Income',
-    blockable: false,
-    influence: 'default'
-  }),
-  'default:Foreign Aid': new Ability({
-    name: 'Foreign Aid',
-    blockable: true,
-    influence: 'default'
-  }),
-  'default:Coup': new Ability({
-    name: 'Coup',
-    blockable: true,
-    influence: 'default'
-  })
-};
-
-function Card(options) {
-  options = options || {};
-
-  this.id = options.id || uuid();
-  this.eliminated = options.eliminated || false;
-}
-
-function Duke(options) {
-  Card.apply(this, arguments);
-
-  this.title = 'Duke';
-}
-
-function Ability(options) {
-  this.name = options.name || '';
-  this.blockable = options.blockable || false;
-  this.needsTarget = options.needsTarget || false;
-  this.voting = options.voting || 'none';
-  this.influence = options.influence || null; // card
-  this.doubtable = (this.influence !== 'default');
-}
-
-Ability.prototype.getClientObject = function () {
-  return {
-    name: this.name,
-    blockable: this.blockable,
-    needsTarget: this.needsTarget,
-    voting: this.voting,
-    influence: this.influence,
-    doubtable: this.doubtable
-  };
-};
-
-function GameState(options) {
-  options = options || {};
-
-  if (!options.title) {
-    throw 'Property "title" missing from GameState constructor\'s options arg';
-  }
-
-  this.id = options.id || uuid();
-  this.title = options.title;
-  this.players = {};
-  this.userCount = 0;
-  this.currentMove = null;
-  this.deck = {};
-}
-
-GameState.prototype.addUser = function (player) {
-  this.players[player.id] = player;
-  this.userCount++;
-};
-
-GameState.prototype.getClientObject = function () {
-  var clientObject = {
-    id: this.id,
-    title: this.title,
-    players: []
-  };
-
-  for (var key in this.players) {
-    clientObject.players.push(this.players[key].getClientObject());
-  }
-
-  return clientObject;
-};
-
-GameState.prototype.removeUser = function (player) {
-  delete this.players[player.id];
-  this.userCount--;
-};
-
-GameState.prototype.setCurrentMove = function (currentMove) {
-  this.currentMove = currentMove;
-  this.currentMove.responsesRemaining = this.userCount - 1;
-};
-
-GameState.prototype.getCurrentMove = function () {
-  return this.currentMove;
-}
-
-function Move(options) {
-  options = options || {};
-
-  this.ability = options.ability || null;
-  this.detractor = options.detractor || null;
-  this.player = options.player || null;
-
-  this.responsesRemaining = 0;
-}
-
-Move.prototype.getClientObject = function () {
-  var clientObject = {
-    player: this.player.getClientObject(),
-    detractor: this.detractor && this.detractor.getClientObject(),
-    ability: this.ability.getClientObject()
-  };
-
-  return clientObject;
-};
-
 // Routing
 app.use(express.static(__dirname + '/app'));
-
-var games = {};
 
 function gameExists(title) {
   for (var key in games) {
@@ -206,12 +82,10 @@ io.on('connection', function (socket) {
       // add the user to the game
       socket.game.addUser(socket.player);
 
-      socket.broadcast.to(socket.game.id).emit('push:game', socket.game.getClientObject());
+      pushGame();
 
-      // echo globally (all clients) that a person has connected
-      socket.broadcast.to(socket.game.id).emit('user joined', {
-        username: socket.player.name
-      });
+      // Give the user everything they need to know about themselves
+      socket.emit('user joined', { player: socket.player.getClientObject() });
 
       // Inform the user of their success
       callback();
@@ -259,8 +133,7 @@ io.on('connection', function (socket) {
       callback('move is missing name');
     } else {
       var currentMove,
-          key = moveData.influence + ':' + moveData.name,
-          ability = Abilities[key],
+          ability = Influences[moveData.influence].abilities[moveData.name],
           move,
           clientMove,
           game = socket.game;
@@ -268,12 +141,14 @@ io.on('connection', function (socket) {
       if (ability) {
         move = new Move({
           ability: ability,
+          target: game.players[moveData.target],
           player: socket.player
         });
 
         clientMove = move.getClientObject();
 
-        if (!ability.blockable) {
+        if (!ability.blockable && !ability.doubtable) {
+          move.success();
           io.sockets.to(game.id).emit('move succeeded', clientMove);
         } else {
           game.setCurrentMove(move);
@@ -282,7 +157,7 @@ io.on('connection', function (socket) {
         // Let the user know no errors occured.
         callback(undefined, clientMove);
       } else {
-        callback('unknown move ' + key);
+        callback('unknown move ' + moveData.influence + ':' + moveData.name);
       }
     }
   });
@@ -310,16 +185,20 @@ io.on('connection', function (socket) {
 
   socket.on('doubt move', function (data) {
     var game = socket.game,
-        move = game.getCurrentMove();
+        move = game.getCurrentMove(),
+        clientMove; 
 
     move.detractor = socket.player; // this player is doubting
+
+    clientMove = move.getClientObject(); // after setting the detractor.
 
     // if the current player was telling the truth, the doubter loses a card
     // if the current player was lying, he loses a card
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.id).emit('move doubter failed', move.getClientObject());
+      move.success();
+      io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
     } else {
-      io.sockets.in(socket.game.id).emit('move doubter succeeded', move.getClientObject());
+      io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
     }
   });
 
@@ -329,16 +208,20 @@ io.on('connection', function (socket) {
 
     move.responsesRemaining--;
     if (move.responsesRemaining === 0) {
+      move.success();
       io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
     }
   });
 
   socket.on('blocker doubt', function (data) {
+    var move = socket.game.getCurrentMove(),
+        clientMove = move.getClientObject();
     // game.currentMove.detractor should already be set!
     if (Math.random() > 0.5) {
-      io.sockets.in(socket.game.id).emit('block doubter succeeded', socket.game.getCurrentMove().getClientObject());
+      move.success();
+      io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
     } else {
-      io.sockets.in(socket.game.id).emit('block doubter failed', socket.game.getCurrentMove().getClientObject());
+      io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
     }
     // check if the blocker has the card they block with.
     // if so, the doubter loses a card
@@ -351,9 +234,14 @@ io.on('connection', function (socket) {
     io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
   });
 
-  socket.on('pull:game', function () {
-    socket.emit('push:game', games[socket.game.id].getClientObject());
-  });
+  socket.on('pull:game', pushGame);
+
+  function pushGame(options) {
+    options = options || {};
+
+    var destination = options.destination || socket.game.id;
+    io.sockets.to(destination).emit('push:game', games[socket.game.id].getClientObject());
+  }
 
   socket.on('pull:games', function () {
     pushGames({ broadcast: false });

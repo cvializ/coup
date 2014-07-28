@@ -13,10 +13,15 @@ define(['backbone'], function (Backbone) {
 
       var i,
           condition,
-          choices = this.attributes.choices,
+          choices,
           ability = options.ability;
 
-      if (options.ability) {
+      // Make a shallow copy of the array; it and its contents are references to the objects
+      // in the actionModel's defaults array GROSS : S
+      this.set('choices', this.get('choices').slice());
+      choices = this.get('choices');
+
+      if (ability) {
         for (i = 0; i < choices.length; i++) {
           condition = choices[i].condition;
 

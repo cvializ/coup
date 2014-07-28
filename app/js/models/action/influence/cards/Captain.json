@@ -1,0 +1,12 @@
+{
+  "name": "Captain",
+
+  "abilities": [
+    {
+      "name": "Steal",
+      "verb": "Steal from",
+      "blockable": true,
+      "needsTarget": true
+    }
+  ]
+}

@@ -8,11 +8,12 @@ define([
   'models/Result',
   'models/PlayerCollection',
   'views/PlayerCollection',
-  'views/action/influence/Default',
+  'views/action/Primary',
   'views/action/Secondary',
   'views/action/Tertiary',
   'views/action/Pending',
-  'views/action/Standby'
+  'views/action/Standby',
+  'views/ChoosePlayer'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -26,7 +27,8 @@ define([
              SecondaryActionView,
              TertiaryActionView,
              PendingActionView,
-             StandbyActionView) {
+             StandbyActionView,
+             ChoosePlayerView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -59,7 +61,7 @@ define([
 
         self.playView = new PlayView();
         self.playersCollection = new PlayerCollectionModel();
-        self.playersView = new PlayerCollectionView({ collection: self.playersCollection});
+        self.playersView = new PlayerCollectionView({ collection: self.playersCollection });
         self.resultModel = new ResultModel();
 
         mainRegion.show(self.playView);
@@ -70,17 +72,41 @@ define([
         self.socket.emit('pull:game');
       });
 
-      vent.on('play:move:primary', function primaryMove(data) {
+      function makePrimaryMove(moveData) {
         self.playView.result.empty();
-        self.socket.emit('make move', data, function moveMade(err, move) {
+        self.socket.emit('make move', moveData, function moveMade(err, move) {
           if (err) {
             self.handleError(err);
           } else {
-            if (move.ability.blockable) {
+            if (move.ability.blockable || move.ability.doubtable) {
               self.playView.action.show(new PendingActionView());
             }
           }
         });
+      }
+
+      function filterPlayerChoice(player) {
+        return player.id !== self.socket.player.id;
+      }
+
+      vent.on('play:move:primary', function primaryMove(moveData) {
+        var chooseCollection,
+            chooseView;
+        if (moveData.needsTarget) {
+          // Show the choose view
+          chooseCollection = new PlayerCollectionModel(self.playersCollection.filter(filterPlayerChoice));
+          chooseView = new ChoosePlayerView({ collection: chooseCollection });
+          self.playView.action.show(chooseView);
+
+          // Wait for the user to select their choice
+          vent.on('play:move:primary:choice', function playerChosen(data) {
+            moveData.target = data.choice;
+            makePrimaryMove(moveData);
+            vent.off('play:move:primary:choice'); // this doesn't seem right
+          });
+        } else {
+          makePrimaryMove(moveData);
+        }
       });
 
       vent.on('play:move:secondary', function secondaryMove(moveData) {
@@ -112,7 +138,7 @@ define([
       self.socket.on('push:game', function updateGameData(data) {
         self.game = data;
 
-        self.playersCollection.reset(self.game.players);
+        if (self.playersCollection) self.playersCollection.reset(self.game.players);
       });
 
       self.socket.on('user joined', function userJoined() {
@@ -130,18 +156,21 @@ define([
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {
+        var ability;
+
         if (!moveData) {
           self.handleError('move is undefined!');
         } else {
+          ability = moveData.ability;
 
-          if (moveData.ability.blockable === true) {
-            var text = moveData.player.name + ' has attempted to ' + moveData.ability.name;
+          if (ability.blockable || ability.doubtable) {
+            var text = moveData.player.name + ' has attempted to ' + ability.name;
 
             if (moveData.target) {
               text += ' ' + moveData.target.name;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: moveData.ability }));
+            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability }));
           }
         }
       });
@@ -186,6 +215,7 @@ define([
 
         self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
@@ -210,6 +240,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -224,6 +255,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {

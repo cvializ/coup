@@ -1,0 +1,24 @@
+{
+  "name": "Default",
+
+  "abilities": [
+    {
+      "name": "Income",
+      "verb": "Take Income",
+      "blockable": false,
+      "needsTarget": false
+    },
+    {
+      "name": "Foreign Aid",
+      "verb": "take Foreign Aid",
+      "blockable": true,
+      "needsTarget": false
+    },
+    {
+      "name": "Coup",
+      "verb": "Coup",
+      "blockable": false,
+      "needsTarget": true
+    }
+  ]
+}

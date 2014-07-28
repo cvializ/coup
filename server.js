@@ -17,6 +17,25 @@ var express = require('express'),
       iKey,
       influence,
       influenceAbilities;
+      
+  var Cards = {
+    Default: {
+      Income: function (move) {
+        move.player.coins++;
+      },
+      'Foreign Aid': function (move) {
+        move.player.coins += 2;
+      },
+      Coup: function (move) {
+        console.log('COUP');
+      }
+    },
+    Duke: {
+      Treasury: function (move) {
+        move.player.coins += 3;
+      }
+    }
+  }
 
   for (iKey in Influences) {
     influence = Influences[iKey];
@@ -28,7 +47,10 @@ var express = require('express'),
       // don't modify the original JSON object
       abilityOptions = extend({ influence: influence.name }, ability)
 
-      Abilities[influence.name + ':' + ability.name] = new Ability(abilityOptions);
+      var abilityObj = new Ability(abilityOptions);
+      abilityObj.action = Cards[influence.name][abilityObj.name];
+
+      Abilities[influence.name + ':' + ability.name] = abilityObj;
     }
   }
 }());
@@ -282,6 +304,7 @@ io.on('connection', function (socket) {
         clientMove = move.getClientObject();
 
         if (!ability.blockable && !ability.doubtable) {
+          ability.action(move);
           io.sockets.to(game.id).emit('move succeeded', clientMove);
         } else {
           game.setCurrentMove(move);
@@ -337,6 +360,7 @@ io.on('connection', function (socket) {
 
     move.responsesRemaining--;
     if (move.responsesRemaining === 0) {
+      move.ability.action(move);
       io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
     }
   });

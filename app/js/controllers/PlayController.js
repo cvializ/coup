@@ -189,6 +189,8 @@ define([
 
         self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
+
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {

@@ -1,7 +1,6 @@
 define([
-  'views/Choose',
-  'views/PlayerChoice',
-  'hbs!templates/choosePlayer'
+  'views/widgets/Choose',
+  'views/widgets/PlayerChoice'
 ], function (ChooseView, PlayerChoiceView) {
   var ChoosePlayerView = ChooseView.extend({
     childView: PlayerChoiceView,

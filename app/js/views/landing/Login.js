@@ -1,5 +1,5 @@
 define([
-  'views/Choose',
+  'views/widgets/Choose',
   'views/landing/Game',
   'hbs!templates/landing/login'
 ], function (ChooseView, GameView, loginTemplate) {

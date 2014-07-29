@@ -13,7 +13,7 @@ define([
   'views/action/Tertiary',
   'views/action/Pending',
   'views/action/Standby',
-  'views/ChoosePlayer'
+  'views/widgets/ChoosePlayer'
 ], function (Marionette,
              mainRegion,
              vent,

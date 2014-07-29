@@ -1,7 +1,7 @@
 define([
   'marionette',
   'Vent',
-  'hbs!templates/choose'
+  'hbs!templates/widgets/choose'
 ], function (Marionette, vent, chooseTemplate) {
   var ChooseView = Marionette.CompositeView.extend({
     className: 'c-choose-view c-group',
@@ -24,6 +24,7 @@ define([
     choiceKey: 'choice',
     events: {
       'click @ui.select': function clickSelect() {
+        // Pass all the data in the ui elements
         var data = {};
         for (var key in this.ui) {
           if (key !== 'select') {

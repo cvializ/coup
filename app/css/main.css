@@ -13,6 +13,14 @@
   vertical-align: middle;
 }
 
+.c-player-influences img {
+  background-color: green;
+}
+
+.eliminated {
+  background-color: red;
+}
+
 .c-player-choice-view {
   float: left;
 }

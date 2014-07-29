@@ -186,18 +186,24 @@ io.on('connection', function (socket) {
   socket.on('doubt move', function (data) {
     var game = socket.game,
         move = game.getCurrentMove(),
-        clientMove; 
+        player = move.player,
+        detractor = socket.player,
+        clientMove;
 
-    move.detractor = socket.player; // this player is doubting
+    move.detractor = detractor; // this player is doubting
 
     clientMove = move.getClientObject(); // after setting the detractor.
 
-    // if the current player was telling the truth, the doubter loses a card
-    // if the current player was lying, he loses a card
-    if (Math.random() > 0.5) {
+    if (move.player.hasInfluence(move.influence)) {
+      // The player was truthful.
+      // Take away the doubter's card
       move.success();
+      detractor.influences.pop();
       io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
     } else {
+      // the player was lying.
+      // take away the player's card
+      player.influences.pop();
       io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
     }
   });

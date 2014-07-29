@@ -207,7 +207,7 @@ define([
         var options = {
           title: moveData.ability.name + ' Succeeded!',
           message: moveData.player.name + ' was able to ' + moveData.ability.name
-        }
+        };
 
         if (moveData.target) {
           options.message += ' ' + moveData.target.name;
@@ -228,6 +228,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
 
       self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
@@ -269,6 +270,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        self.socket.emit('pull:game');
       });
     },
 

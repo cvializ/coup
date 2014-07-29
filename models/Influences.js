@@ -19,7 +19,7 @@ function eachInfluence(influence, i, arr) {
 
   for (key in abilityData) {
     abilityDatum = abilityData[key];
-    
+
     options = {
       influence: influence.name,
       action: actions[abilityDatum.name]

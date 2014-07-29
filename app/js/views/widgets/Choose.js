@@ -20,7 +20,7 @@ define([
     getChoice: function () {
       return $('input[type="radio"]:checked', this.$el).val();
     },
-    selectEvent: null,
+    selectEvent: '',
     choiceKey: 'choice',
     events: {
       'click @ui.select': function clickSelect() {

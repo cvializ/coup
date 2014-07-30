@@ -198,8 +198,10 @@ io.on('connection', function (socket) {
       // The player was truthful.
       // Take away the doubter's card
       move.success();
-      detractor.influences.pop();
-      io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+      // Tell the user to select an influence to lose. //detractor.influences.pop();
+      detractor.socket.emit('select influence', function (err, data) {
+        io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+      });
     } else {
       // the player was lying.
       // take away the player's card

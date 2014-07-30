@@ -85,7 +85,7 @@ io.on('connection', function (socket) {
       pushGame();
 
       // Give the user everything they need to know about themselves
-      socket.emit('user joined', { player: socket.player.getClientObject() });
+      socket.emit('user joined', { player: socket.player.getClientObject({ privileged: true }) });
 
       // Inform the user of their success
       callback();
@@ -183,6 +183,20 @@ io.on('connection', function (socket) {
     }
   });
 
+  function cardSelectedToEliminate(err, data) {
+    data = data || {};
+
+    var influences = this.influences,
+        influenceId = data.id;
+
+    for (var key in influences) {
+      if (influences[key].id === data.id) {
+        influences[key].eliminated = true;
+        break;
+      }
+    }
+  }
+
   socket.on('doubt move', function (data) {
     var game = socket.game,
         move = game.getCurrentMove(),
@@ -198,16 +212,15 @@ io.on('connection', function (socket) {
       // The player was truthful.
       // Take away the doubter's card
       move.success();
-      // Tell the user to select an influence to lose. //detractor.influences.pop();
-      detractor.socket.emit('select influence', function (err, data) {
-        io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
-      });
+      io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+      detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
     } else {
       // the player was lying.
       // take away the player's card
-      player.influences.pop();
       io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+      player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));
     }
+    pushGame();
   });
 
   socket.on('allow move', function (data) {
@@ -240,6 +253,15 @@ io.on('connection', function (socket) {
   socket.on('blocker success', function (data) {
     // the blocker succeeds in blocking the action.
     io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
+  });
+
+  socket.on('pull:player', function (data, callback) {
+    data = data || {};
+    if (data.id !== socket.player.id) {
+      callback('you may only access your information');
+    } else {
+      callback(undefined, player.getClientObject({ privileged: true }));
+    }
   });
 
   socket.on('pull:game', pushGame);

@@ -6,6 +6,7 @@ define([
   'models/Player',
   'views/Result',
   'models/Result',
+  'models/CardCollection',
   'models/PlayerCollection',
   'views/PlayerCollection',
   'views/action/Primary',
@@ -13,7 +14,8 @@ define([
   'views/action/Tertiary',
   'views/action/Pending',
   'views/action/Standby',
-  'views/widgets/ChoosePlayer'
+  'views/widgets/ChoosePlayer',
+  'views/widgets/ChooseCard'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -21,6 +23,7 @@ define([
              PlayerModel,
              ResultView,
              ResultModel,
+             CardCollectionModel,
              PlayerCollectionModel,
              PlayerCollectionView,
              PrimaryActionView,
@@ -28,7 +31,8 @@ define([
              TertiaryActionView,
              PendingActionView,
              StandbyActionView,
-             ChoosePlayerView) {
+             ChoosePlayerView,
+             ChooseCardView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -272,7 +276,20 @@ define([
         self.playView.action.show(new PrimaryActionView());
         self.socket.emit('pull:game');
       });
+
+      self.socket.on('select own influence', function selectInfluence(moveData, callback) {
+        self.playView.action.show(new ChooseCardView({ collection: new CardCollectionModel(self.socket.player.influences) }));// Wait for the user to select their choice
+        vent.on('play:move:select:influence', function influenceChosen(data) {
+          console.log(data);
+          callback(undefined, data)
+          vent.off('play:move:select:influence');
+          self.playView.action.show(new PrimaryActionView());
+          self.socket.emit('pull:game');
+        });
+      });
     },
+
+
 
     showResult: function showResult(options) {
       this.resultModel.set(options);

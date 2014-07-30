@@ -9,9 +9,7 @@ function Player(options) {
   this.name = options.name || 'Unnamed User';
   this.coins = options.coins || 2;
   this.influences = [];
-}
-
-var uneliminatedCard = new Card();
+} 
 
 Player.prototype.hasInfluence = function (influence) {
   for (var i = 0; i < this.influences.length; i++) {
@@ -21,19 +19,27 @@ Player.prototype.hasInfluence = function (influence) {
   return false;
 };
 
-Player.prototype.getClientObject = function () {
-  return {
+Player.prototype.getClientObject = function (options) {
+  options = options || {};
+
+  var clientObject = {
     id: this.id,
     name: this.name,
     coins: this.coins,
-    influences: this.influences.map(function showEliminated(card) {
+    influences: this.influences
+  };
+
+  if (!options.privileged) {
+    clientObject.influences = this.influences.map(function showEliminated(card) {
       if (card.eliminated) {
         return card;
       } else {
-        return uneliminatedCard;
+        return new Card({ dummy: true }); // an uneliminated card. "mystery card"
       }
-    })
-  };
+    });
+  }
+
+  return clientObject;
 };
 
 module.exports = Player;

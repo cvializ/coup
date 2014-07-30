@@ -4,7 +4,8 @@ define([
 ], function (ChooseView, CardChoiceView) {
   var ChooseCardView = ChooseView.extend({
     childView: CardChoiceView,
-    selectEvent: 'play:move:influence:choice'
+    selectEvent: 'play:move:select:influence',
+    choiceKey: 'id'
   });
 
   return ChooseCardView;

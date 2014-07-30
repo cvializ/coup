@@ -34,15 +34,17 @@ GameState.prototype.addUser = function (player) {
   this.userCount++;
 };
 
-GameState.prototype.getClientObject = function (socket) {
+GameState.prototype.getClientObject = function () {
   var clientObject = {
     id: this.id,
     title: this.title,
     players: []
-  };
+  },
+  player;
 
   for (var key in this.players) {
-    clientObject.players.push(this.players[key].getClientObject());
+    player = this.players[key];
+    clientObject.players.push(player.getClientObject());
   }
 
   return clientObject;

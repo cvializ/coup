@@ -1,7 +1,18 @@
-define(['marionette', 'hbs!templates/player'], function (Marionette, playerTemplate) {
-  var PlayerView = Marionette.ItemView.extend({
+define([
+  'marionette',
+  'views/Card',
+  'models/CardCollection',
+  'hbs!templates/player'
+], function (Marionette, CardView, CardCollectionModel, playerTemplate) {
+  var PlayerView = Marionette.CompositeView.extend({
+    initialize: function (options) {
+      options = options || {};
+      this.collection = options.collection || new CardCollectionModel(this.model.get('influences'));
+    },
     className: 'c-player-view',
-    template: playerTemplate
+    template: playerTemplate,
+    childView: CardView,
+    childViewContainer: '.c-player-influences'
   });
 
   return PlayerView;

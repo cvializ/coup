@@ -5,6 +5,7 @@ function Move(options) {
   this.detractor = options.detractor || null;
   this.player = options.player || null;
   this.target = options.target || null;
+  this.influence = options.influence || '';
 
   this.responsesRemaining = 0;
 }
@@ -14,7 +15,8 @@ Move.prototype.getClientObject = function () {
     player: this.player.getClientObject(),
     detractor: this.detractor && this.detractor.getClientObject(),
     ability: this.ability.getClientObject(),
-    target: this.target && this.target.getClientObject()
+    target: this.target && this.target.getClientObject(),
+    influence: this.influence
   };
 
   return clientObject;

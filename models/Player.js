@@ -11,10 +11,16 @@ function Player(options) {
   this.influences = [];
 } 
 
-Player.prototype.hasInfluence = function (influence) {
-  for (var i = 0; i < this.influences.length; i++) {
-    if (this.influences[i].name === influence)
+Player.prototype.hasInfluence = function (influenceName) {
+  var playerInfluence,
+      i;
+
+  for (i = 0; i < this.influences.length; i++) {
+    playerInfluence = this.influences[i];
+
+    if (!playerInfluence.eliminated && this.influences[i].name === influenceName) {
       return true;
+    }
   }
   return false;
 };

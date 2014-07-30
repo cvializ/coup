@@ -142,7 +142,8 @@ io.on('connection', function (socket) {
         move = new Move({
           ability: ability,
           target: game.players[moveData.target],
-          player: socket.player
+          player: socket.player,
+          influence: moveData.influence
         });
 
         clientMove = move.getClientObject();
@@ -257,7 +258,9 @@ io.on('connection', function (socket) {
 
   socket.on('pull:player', function (data, callback) {
     data = data || {};
-    if (data.id !== socket.player.id) {
+    var player = socket.player;
+
+    if (data.id !== player.id) {
       callback('you may only access your information');
     } else {
       callback(undefined, player.getClientObject({ privileged: true }));

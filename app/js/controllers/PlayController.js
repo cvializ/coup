@@ -73,7 +73,7 @@ define([
         self.playView.player.show(self.playersView);
         self.playView.action.show(new PrimaryActionView());
 
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       function makePrimaryMove(moveData) {
@@ -139,19 +139,33 @@ define([
         }
       });
 
-      self.socket.on('push:game', function updateGameData(data) {
+      function updateGameData() {
+        self.socket.emit('pull:game');
+      }
+
+      self.socket.on('push:game', function gameDataPushed(data) {
         self.game = data;
 
         if (self.playersCollection) self.playersCollection.reset(self.game.players);
+
+        self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
+          var existing = self.playersCollection.filter(function (player) {
+            return player.get('id') === playerData.id;
+          });
+          existing = existing[0];
+
+          self.playersCollection.remove(existing);
+          self.playersCollection.add(playerData);
+        });
       });
 
       self.socket.on('user joined', function userJoined() {
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('user left', function userLeft() {
         if (self.game.players.length > 2) {
-          self.socket.emit('pull:game');
+          updateGameData();
         }
       });
 
@@ -219,7 +233,7 @@ define([
 
         self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
@@ -232,7 +246,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
@@ -245,7 +259,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -260,7 +274,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
@@ -274,7 +288,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('select own influence', function selectInfluence(moveData, callback) {
@@ -284,7 +298,7 @@ define([
           callback(undefined, data)
           vent.off('play:move:select:influence');
           self.playView.action.show(new PrimaryActionView());
-          self.socket.emit('pull:game');
+          updateGameData();
         });
       });
     },

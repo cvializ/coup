@@ -8,5 +8,11 @@
       "blockable": true,
       "needsTarget": true
     }
+  ],
+  "blocks": [
+    {
+      "influence": "Captain",
+      "ability": "Steal"
+    }
   ]
 }

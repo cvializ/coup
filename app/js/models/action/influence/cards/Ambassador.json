@@ -1,0 +1,18 @@
+{
+  "name": "Ambassador",
+
+  "abilities": [
+    {
+      "name": "Exchange Influence",
+      "verb": "Exchange Influence",
+      "blockable": false,
+      "needsTarget": false
+    }
+  ],
+  "blocks": [
+    {
+      "influence": "Captain",
+      "ability": "Steal"
+    }
+  ]
+}

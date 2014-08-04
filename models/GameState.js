@@ -62,6 +62,6 @@ GameState.prototype.setCurrentMove = function (currentMove) {
 
 GameState.prototype.getCurrentMove = function () {
   return this.currentMove;
-}
+};
 
 module.exports = GameState;

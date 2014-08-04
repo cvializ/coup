@@ -8,5 +8,11 @@
       "blockable": false,
       "needsTarget": false
     }
+  ],
+  "blocks": [
+    {
+      "influence": "Default",
+      "ability": "Foreign Aid"
+    }
   ]
 }

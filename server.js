@@ -239,18 +239,21 @@ io.on('connection', function (socket) {
 
   socket.on('blocker doubt', function (data) {
     var move = socket.game.getCurrentMove(),
-        clientMove = move.getClientObject();
+        clientMove = move.getClientObject(),
+        player = move.player,
+        detractor = move.detractor;
     // game.currentMove.detractor should already be set!
-    if (Math.random() > 0.5) {
-      move.success();
-      io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
-    } else {
+
+    if (detractor.canBlock(move.influence, move.ability)) {
+      // The doubter needs to give up a card because they were wrong.
       io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
+      player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));
+    } else {
+      move.success();
+      // The liar blocker needs to give up an influence.
+      io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
+      detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
     }
-    // check if the blocker has the card they block with.
-    // if so, the doubter loses a card
-    // if not, the blocker loses a card
-    //io.sockets.in(socket.game.id).emit('block over');
   });
 
   socket.on('blocker success', function (data) {

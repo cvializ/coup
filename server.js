@@ -1,6 +1,6 @@
-var 
+var
     // Library objects
-    express = require('express'),    
+    express = require('express'),
     uuid = require('node-uuid').v4,
     extend = require('extend'),
 
@@ -82,10 +82,12 @@ io.on('connection', function (socket) {
       // add the user to the game
       socket.game.addUser(socket.player);
 
-      pushGame();
-
       // Give the user everything they need to know about themselves
       socket.emit('user joined', { player: socket.player.getClientObject({ privileged: true }) });
+
+      // Push the game to the player AFTER they've connected.
+      pushGame();
+
 
       // Inform the user of their success
       callback();

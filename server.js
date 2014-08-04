@@ -244,7 +244,7 @@ io.on('connection', function (socket) {
         detractor = move.detractor;
     // game.currentMove.detractor should already be set!
 
-    if (detractor.canBlock(move.influence, move.ability)) {
+    if (detractor.canBlock(move.influence, move.ability.name)) {
       // The doubter needs to give up a card because they were wrong.
       io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
       player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));

@@ -6,7 +6,7 @@
       "name": "Assassinate",
       "verb": "Assassinate",
       "blockable": true,
-      "needsTarget": false
+      "needsTarget": true
     }
   ],
   "blocks": []

@@ -170,18 +170,23 @@ io.on('connection', function (socket) {
         players = game.players,
         myPlayer = socket.player,
         move = game.getCurrentMove(),
-        targetPlayer = move.player,
+        ability = move.ability,
+        blockedPlayer = move.player,
         key;
 
-    move.detractor = myPlayer;
+    if (ability.needsTarget && myPlayer !== move.target) {
+      console.log("Only the targeted player may block")
+    } else {
+      move.detractor = myPlayer;
 
-    // tell the target someone is attempting to block them
-    targetPlayer.socket.emit('move blocked', move.getClientObject());
+      // tell the target someone is attempting to block them
+      blockedPlayer.socket.emit('move blocked', move.getClientObject());
 
-    // tell everyone else that someone has beat them to blocking
-    for (key in players) {
-      if (players[key] !== myPlayer && players[key] !== targetPlayer) {
-        players[key].socket.emit('move responded to', move.getClientObject());
+      // tell everyone else that someone has beat them to blocking
+      for (key in players) {
+        if (players[key] !== myPlayer && players[key] !== blockedPlayer) {
+          players[key].socket.emit('move responded to', move.getClientObject());
+        }
       }
     }
   });

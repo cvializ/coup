@@ -25,7 +25,8 @@ define(['backbone'], function (Backbone) {
         for (i = 0; i < choices.length; i++) {
           condition = choices[i].condition;
 
-          if (ability && ability[condition] === false) {
+          if ((ability && ability[condition] === false) ||
+              (options.conditions && options.conditions[condition] === false)) {
             choices.splice(i, 1);
           }
         }

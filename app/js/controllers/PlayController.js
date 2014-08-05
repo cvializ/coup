@@ -174,7 +174,9 @@ define([
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {
-        var ability;
+        var ability,
+            text,
+            canBlock = true;
 
         if (!moveData) {
           self.handleError('move is undefined!');
@@ -182,13 +184,18 @@ define([
           ability = moveData.ability;
 
           if (ability.blockable || ability.doubtable) {
-            var text = moveData.player.name + ' has attempted to ' + ability.name;
+            text = moveData.player.name + ' has attempted to ' + ability.name;
 
             if (moveData.target) {
               text += ' ' + moveData.target.name;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability }));
+            // If there is a target and you are not the target, do not enable the block button
+            if (ability.needsTarget && moveData.target && moveData.target.id !== self.socket.player.id) {
+              canBlock = false;
+            }
+
+            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
           }
         }
       });

@@ -151,7 +151,8 @@ io.on('connection', function (socket) {
         clientMove = move.getClientObject();
 
         if (!ability.blockable && !ability.doubtable) {
-          move.success();
+          move.success(game);
+          pushPlayer();
           io.sockets.to(game.id).emit('move succeeded', clientMove);
         } else {
           game.setCurrentMove(move);
@@ -219,7 +220,8 @@ io.on('connection', function (socket) {
     if (move.player.hasInfluence(move.influence)) {
       // The player was truthful.
       // Take away the doubter's card
-      move.success();
+      move.success(game);
+      pushPlayer();
       io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
       detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
     } else {
@@ -237,7 +239,8 @@ io.on('connection', function (socket) {
 
     move.responsesRemaining--;
     if (move.responsesRemaining === 0) {
-      move.success();
+      move.success(game);
+      pushPlayer();
       io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
     }
   });
@@ -254,7 +257,8 @@ io.on('connection', function (socket) {
       io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
       player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));
     } else {
-      move.success();
+      move.success(game);
+      pushPlayer();
       // The liar blocker needs to give up an influence.
       io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
       detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
@@ -289,6 +293,14 @@ io.on('connection', function (socket) {
   socket.on('pull:games', function () {
     pushGames({ broadcast: false });
   });
+
+  socket.on('pull:player', function () {
+    pushPlayer();
+  });
+
+  function pushPlayer() {
+    socket.emit('push:player', { player: socket.player.getClientObject({ privileged: true }) });
+  }
 
   function pushGames(options) {
     options = options || {};

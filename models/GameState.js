@@ -30,7 +30,7 @@ function GameState(options) {
 
 GameState.prototype.addUser = function (player) {
   this.players[player.id] = player;
-  player.influences = this.deck.drawFromBottomOfDeck(2);
+  player.influences = this.deck.drawRandom(2);
   this.userCount++;
 };
 

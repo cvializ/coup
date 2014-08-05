@@ -159,6 +159,10 @@ define([
         });
       });
 
+      self.socket.on('push:player', function playerPushed(data) {
+        self.socket.player = data.player;
+      });
+
       self.socket.on('user joined', function userJoined() {
         updateGameData();
       });
@@ -301,16 +305,17 @@ define([
       self.socket.on('select own influence', function selectInfluence(moveData, callback) {
         self.playView.action.show(new ChooseCardView({ collection: new CardCollectionModel(self.socket.player.influences) }));// Wait for the user to select their choice
         vent.on('play:move:select:influence', function influenceChosen(data) {
-          console.log(data);
-          callback(undefined, data)
+          // Let the server know which influence the user chose
+          callback(undefined, data);
+          // Remove the listener.
           vent.off('play:move:select:influence');
+
+          // Reset and update
           self.playView.action.show(new PrimaryActionView());
           updateGameData();
         });
       });
     },
-
-
 
     showResult: function showResult(options) {
       this.resultModel.set(options);

@@ -51,6 +51,7 @@ define([
 
     handleError: function (err) {
       alert(err);
+      this.playView.action.show(new PrimaryActionView());
     },
 
     initialize: function initialize(options) {

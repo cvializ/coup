@@ -18,7 +18,8 @@
       "name": "Coup",
       "verb": "Coup",
       "blockable": false,
-      "needsTarget": true
+      "needsTarget": true,
+      "cost": 7
     }
   ]
 }

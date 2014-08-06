@@ -6,7 +6,8 @@
       "name": "Treasury",
       "verb": "Tax the Treasury",
       "blockable": false,
-      "needsTarget": false
+      "needsTarget": false,
+      "cost": 0
     }
   ],
   "blocks": [

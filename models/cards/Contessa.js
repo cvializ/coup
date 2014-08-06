@@ -1,3 +1,4 @@
-var Contessa = {
+var ContessaAbilities = {
+  // The Contessa only has blocks.
 };
-module.exports = Contessa;
+module.exports = ContessaAbilities;

@@ -1,4 +1,4 @@
-var Default = {
+var DefaultAbilities = {
   Income: function (move, game, callback) {
     move.player.coins++;
     if (callback) callback();
@@ -8,8 +8,7 @@ var Default = {
     if (callback) callback();
   },
   Coup: function (move, game, callback) {
-    move.player.coins -= 7;
     move.target.chooseEliminatedCard(callback);
   }
 };
-module.exports = Default;
+module.exports = DefaultAbilities;

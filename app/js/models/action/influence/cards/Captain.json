@@ -6,7 +6,8 @@
       "name": "Steal",
       "verb": "Steal from",
       "blockable": true,
-      "needsTarget": true
+      "needsTarget": true,
+      "cost": 0
     }
   ],
   "blocks": [

@@ -7,8 +7,9 @@ define([
   'json!models/action/influence/cards/Ambassador.json',
   'json!models/action/influence/cards/Assassin.json',
   'json!models/action/influence/cards/Duke.json',
-  'json!models/action/influence/cards/Captain.json',
-  'json!models/action/influence/cards/Contessa.json'
+  'json!models/action/influence/cards/Captain.json'
+  // Don't load the contessa.json; she can only block
+  // and does not have any primary actions.
 ], function (Marionette,
              InfluenceCollection,
              InfluenceView,
@@ -18,8 +19,7 @@ define([
              ambassadorData,
              assassinData,
              dukeData,
-             captainData,
-             contessaData) {
+             captainData) {
 
   var PrimaryActionView = Marionette.CompositeView.extend({
     initialize: function (options) {
@@ -36,8 +36,7 @@ define([
       ambassadorData,
       assassinData,
       dukeData,
-      captainData,
-      contessaData
+      captainData
     ]
   });
 

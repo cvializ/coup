@@ -17,7 +17,7 @@ var
     io = require('socket.io')(server),
     port = process.env.PORT || 8000,
     // State
-    games = {};
+    games = require('./models/GameCollection');
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -25,15 +25,6 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '/app'));
-
-function gameExists(title) {
-  for (var key in games) {
-    if(games[key].title === title) {
-      return true;
-    }
-  }
-  return false;
-}
 
 io.on('connection', function (socket) {
   socket.join('landing');
@@ -50,7 +41,7 @@ io.on('connection', function (socket) {
       callback('missing title');
     } else if (!data.username) {
       callback('missing username');
-    } else if (gameExists(data.title)) {
+    } else if (games.gameExists(data.title)) {
       callback('game exists');
     } else {
       var newGame = new GameState({ title: data.title });

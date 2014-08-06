@@ -1,21 +1,25 @@
 function Ability(options) {
   this.name = options.name || '';
-  this.blockable = options.blockable || false;
-  this.needsTarget = options.needsTarget || false;
-  this.voting = options.voting || 'none';
+
   this.influence = options.influence || null; // card
   this.doubtable = (this.influence !== 'Default');
+  this.blockable = options.blockable || false;
+
   this.action = options.action || null;
+  this.cost = options.cost || 0;
+  this.needsTarget = options.needsTarget || false;
 }
 
 Ability.prototype.getClientObject = function () {
   return {
     name: this.name,
-    blockable: this.blockable,
-    needsTarget: this.needsTarget,
-    voting: this.voting,
+
     influence: this.influence,
-    doubtable: this.doubtable
+    doubtable: this.doubtable,
+    blockable: this.blockable,
+
+    cost: this.cost,
+    needsTarget: this.needsTarget
   };
 };
 

@@ -6,7 +6,8 @@
       "name": "Exchange Influence",
       "verb": "Exchange Influence",
       "blockable": false,
-      "needsTarget": false
+      "needsTarget": false,
+      "cost": 0
     }
   ],
   "blocks": [

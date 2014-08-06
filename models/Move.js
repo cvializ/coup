@@ -23,6 +23,7 @@ Move.prototype.getClientObject = function () {
 };
 
 Move.prototype.success = function (game, callback) {
+  this.player.coins -= this.ability.cost || 0;
   this.ability.action(this, game, callback);
 };
 

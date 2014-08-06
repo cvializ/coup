@@ -138,13 +138,18 @@ io.on('connection', function (socket) {
           ability = Influences[moveData.influence].abilities[moveData.name],
           move,
           clientMove,
-          game = socket.game;
+          game = socket.game,
+          player = socket.player;
 
-      if (ability) {
+      if (!ability) {
+        callback('unknown move ' + moveData.influence + ':' + moveData.name);
+      } else if (ability.cost > player.coins) {
+        callback('you don\'t have enough coins for this ability');
+      } else {
         move = new Move({
           ability: ability,
           target: game.players[moveData.target],
-          player: socket.player,
+          player: player,
           influence: moveData.influence
         });
 
@@ -165,8 +170,6 @@ io.on('connection', function (socket) {
         }
         // Let the user know no errors occured.
         callback(undefined, clientMove);
-      } else {
-        callback('unknown move ' + moveData.influence + ':' + moveData.name);
       }
     }
   });

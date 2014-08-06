@@ -151,9 +151,14 @@ io.on('connection', function (socket) {
         clientMove = move.getClientObject();
 
         if (!ability.blockable && !ability.doubtable) {
-          move.success(game);
-          pushPlayer();
-          io.sockets.to(game.id).emit('move succeeded', clientMove);
+          move.success(game, function (err) {
+            if (err) {
+              console.log('move success error ' + err);
+            } else {
+              pushPlayer();
+              io.sockets.to(game.id).emit('move succeeded', clientMove);
+            }
+          });
         } else {
           game.setCurrentMove(move);
           socket.broadcast.to(socket.game.id).emit('move attempted', clientMove);
@@ -192,20 +197,6 @@ io.on('connection', function (socket) {
     }
   });
 
-  function cardSelectedToEliminate(err, data) {
-    data = data || {};
-
-    var influences = this.influences,
-        influenceId = data.id;
-
-    for (var key in influences) {
-      if (influences[key].id === data.id) {
-        influences[key].eliminated = true;
-        break;
-      }
-    }
-  }
-
   socket.on('doubt move', function (data) {
     var game = socket.game,
         move = game.getCurrentMove(),
@@ -220,15 +211,25 @@ io.on('connection', function (socket) {
     if (move.player.hasInfluence(move.influence)) {
       // The player was truthful.
       // Take away the doubter's card
-      move.success(game);
-      pushPlayer();
-      io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
-      detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
+      move.success(game, function (err) {
+        if (err) {
+          console.log('move success error ' + err);
+        } else {
+          pushPlayer();
+          io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+          detractor.chooseEliminatedCard();
+        }
+      });
     } else {
-      // the player was lying.
-      // take away the player's card
-      io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
-      player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));
+      player.chooseEliminatedCard(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          // the player was lying.
+          // take away the player's card
+          io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+        }
+      });
     }
     pushGame();
   });
@@ -239,9 +240,14 @@ io.on('connection', function (socket) {
 
     move.responsesRemaining--;
     if (move.responsesRemaining === 0) {
-      move.success(game);
-      pushPlayer();
-      io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
+      move.success(game, function (err) {
+        if (err) {
+          console.log('move success error ' + err);
+        } else {
+          pushPlayer();
+          io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
+        }
+      });
     }
   });
 
@@ -253,15 +259,26 @@ io.on('connection', function (socket) {
     // game.currentMove.detractor should already be set!
 
     if (detractor.canBlock(move.influence, move.ability.name)) {
-      // The doubter needs to give up a card because they were wrong.
-      io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
-      player.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(player));
+      // Wait for the player to choose their lost card before telling everyone what happened?
+      player.chooseEliminatedCard(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          // The doubter needs to give up a card because they were wrong.
+          io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
+        }
+      });
     } else {
-      move.success(game);
-      pushPlayer();
-      // The liar blocker needs to give up an influence.
-      io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
-      detractor.socket.emit('select own influence', clientMove, cardSelectedToEliminate.bind(detractor));
+      move.success(game, function (err) {
+        if (err) {
+          console.log('move success error ' + err);
+        } else {
+          pushPlayer();
+          // The liar blocker needs to give up an influence.
+          io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
+          detractor.chooseEliminatedCard();
+        }
+      });
     }
   });
 

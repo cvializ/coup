@@ -71,4 +71,29 @@ Player.prototype.getClientObject = function (options) {
   return clientObject;
 };
 
+Player.prototype.chooseEliminatedCard = function (callback) {
+  var self = this;
+
+  self.socket.emit('select own influence', null, function (err) {
+    selectedCardToEliminate.apply(self, arguments);
+    if (callback) {
+      callback(err);
+    }
+  });
+}
+
+function selectedCardToEliminate(err, data) {
+  data = data || {};
+
+  var influences = this.influences,
+      dataId = data.id;
+
+  for (var key in influences) {
+    if (influences[key].id === dataId) {
+      influences[key].eliminated = true;
+      break;
+    }
+  }
+};
+
 module.exports = Player;

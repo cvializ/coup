@@ -22,8 +22,8 @@ Move.prototype.getClientObject = function () {
   return clientObject;
 };
 
-Move.prototype.success = function (game) {
-  this.ability.action(this, game);
+Move.prototype.success = function (game, callback) {
+  this.ability.action(this, game, callback);
 };
 
 module.exports = Move;

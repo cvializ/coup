@@ -252,7 +252,8 @@ io.on('connection', function (socket) {
   });
 
   socket.on('blocker doubt', function (data) {
-    var move = socket.game.getCurrentMove(),
+    var game = socket.game,
+        move = game.getCurrentMove(),
         clientMove = move.getClientObject(),
         player = move.player,
         detractor = move.detractor;

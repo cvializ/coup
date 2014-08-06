@@ -6,6 +6,7 @@ define([
   'models/Player',
   'views/Result',
   'models/Result',
+  'models/CardCollection',
   'models/PlayerCollection',
   'views/PlayerCollection',
   'views/action/Primary',
@@ -13,7 +14,8 @@ define([
   'views/action/Tertiary',
   'views/action/Pending',
   'views/action/Standby',
-  'views/ChoosePlayer'
+  'views/widgets/ChoosePlayer',
+  'views/widgets/ChooseCard'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -21,6 +23,7 @@ define([
              PlayerModel,
              ResultView,
              ResultModel,
+             CardCollectionModel,
              PlayerCollectionModel,
              PlayerCollectionView,
              PrimaryActionView,
@@ -28,7 +31,8 @@ define([
              TertiaryActionView,
              PendingActionView,
              StandbyActionView,
-             ChoosePlayerView) {
+             ChoosePlayerView,
+             ChooseCardView) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -69,7 +73,7 @@ define([
         self.playView.player.show(self.playersView);
         self.playView.action.show(new PrimaryActionView());
 
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       function makePrimaryMove(moveData) {
@@ -135,19 +139,37 @@ define([
         }
       });
 
-      self.socket.on('push:game', function updateGameData(data) {
+      function updateGameData() {
+        self.socket.emit('pull:game');
+      }
+
+      self.socket.on('push:game', function gameDataPushed(data) {
         self.game = data;
 
         if (self.playersCollection) self.playersCollection.reset(self.game.players);
+
+        self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
+          var existing = self.playersCollection.filter(function (player) {
+            return player.get('id') === playerData.id;
+          });
+          existing = existing[0];
+
+          self.playersCollection.remove(existing);
+          self.playersCollection.add(playerData);
+        });
+      });
+
+      self.socket.on('push:player', function playerPushed(data) {
+        self.socket.player = data.player;
       });
 
       self.socket.on('user joined', function userJoined() {
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('user left', function userLeft() {
         if (self.game.players.length > 2) {
-          self.socket.emit('pull:game');
+          updateGameData();
         }
       });
 
@@ -156,7 +178,9 @@ define([
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {
-        var ability;
+        var ability,
+            text,
+            canBlock = true;
 
         if (!moveData) {
           self.handleError('move is undefined!');
@@ -164,13 +188,18 @@ define([
           ability = moveData.ability;
 
           if (ability.blockable || ability.doubtable) {
-            var text = moveData.player.name + ' has attempted to ' + ability.name;
+            text = moveData.player.name + ' has attempted to ' + ability.name;
 
             if (moveData.target) {
               text += ' ' + moveData.target.name;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability }));
+            // If there is a target and you are not the target, do not enable the block button
+            if (ability.needsTarget && moveData.target && moveData.target.id !== self.socket.player.id) {
+              canBlock = false;
+            }
+
+            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
           }
         }
       });
@@ -207,7 +236,7 @@ define([
         var options = {
           title: moveData.ability.name + ' Succeeded!',
           message: moveData.player.name + ' was able to ' + moveData.ability.name
-        }
+        };
 
         if (moveData.target) {
           options.message += ' ' + moveData.target.name;
@@ -215,7 +244,7 @@ define([
 
         self.showResult(options);
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
@@ -228,6 +257,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        updateGameData();
       });
 
       self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
@@ -240,7 +270,7 @@ define([
 
         self.showResult({ title: 'Move Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -255,7 +285,7 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
-        self.socket.emit('pull:game');
+        updateGameData();
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
@@ -269,6 +299,21 @@ define([
 
         self.showResult({ title: 'Block Doubted!', message: message });
         self.playView.action.show(new PrimaryActionView());
+        updateGameData();
+      });
+
+      self.socket.on('select own influence', function selectInfluence(moveData, callback) {
+        self.playView.action.show(new ChooseCardView({ collection: new CardCollectionModel(self.socket.player.influences) }));// Wait for the user to select their choice
+        vent.on('play:move:select:influence', function influenceChosen(data) {
+          // Let the server know which influence the user chose
+          callback(undefined, data);
+          // Remove the listener.
+          vent.off('play:move:select:influence');
+
+          // Reset and update
+          self.playView.action.show(new PrimaryActionView());
+          updateGameData();
+        });
       });
     },
 

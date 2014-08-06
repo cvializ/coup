@@ -1,0 +1,13 @@
+{
+  "name": "Assassin",
+
+  "abilities": [
+    {
+      "name": "Assassinate",
+      "verb": "Assassinate",
+      "blockable": true,
+      "needsTarget": true
+    }
+  ],
+  "blocks": []
+}

@@ -1,7 +1,7 @@
 define([
   'marionette',
   'Vent',
-  'hbs!templates/ability'
+  'hbs!templates/action/influence/ability'
 ], function (Marionette, vent, abilityTemplate) {
   var AbilityView = Marionette.ItemView.extend({
     className: 'c-ability-view',

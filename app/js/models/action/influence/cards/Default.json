@@ -4,7 +4,7 @@
   "abilities": [
     {
       "name": "Income",
-      "verb": "Take Income",
+      "verb": "take Income",
       "blockable": false,
       "needsTarget": false
     },

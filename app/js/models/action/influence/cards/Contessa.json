@@ -1,0 +1,12 @@
+{
+  "name": "Contessa",
+
+  "abilities": [
+  ],
+  "blocks": [
+    {
+      "influence": "Assassin",
+      "ability": "Assassinate"
+    }
+  ]
+}

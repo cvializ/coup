@@ -3,6 +3,7 @@ define([
   'MainRegion',
   'Vent',
   'views/Play',
+  'models/Play',
   'models/Player',
   'views/Result',
   'models/Result',
@@ -20,6 +21,7 @@ define([
              mainRegion,
              vent,
              PlayView,
+             PlayModel,
              PlayerModel,
              ResultView,
              ResultModel,
@@ -64,7 +66,7 @@ define([
 
       vent.on('play:init', function loadController() {
 
-        self.playView = new PlayView();
+        self.playView = new PlayView({ model: new PlayModel({ player: self.socket.player }) });
         self.playersCollection = new PlayerCollectionModel();
         self.playersView = new PlayerCollectionView({ collection: self.playersCollection });
         self.resultModel = new ResultModel();

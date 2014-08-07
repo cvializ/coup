@@ -2,18 +2,19 @@
   "name": "coup",
   "version": "0.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "class-extend": "^0.1.1",
     "express": "^4.4.3",
     "extend": "^1.3.0",
     "node-uuid": "~1.4.1",
-    "socket.io": "^1.0.5",
-    "shuffle": "~0.2.1"
+    "shuffle": "~0.2.1",
+    "socket.io": "^1.0.5"
   }
 }

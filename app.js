@@ -1,27 +1,20 @@
 var
-    // Model objects
-    GameState = require('./models/GameState'),
-    Player = require('./models/Player'),
-    Move = require('./models/Move'),
-    Ability = require('./models/Ability'),
-    Influences = require('./models/Influences'),
-
     // Server variables
-    server = require('./server.js'),
+    server = require('./server'),
     io = server.io,
-
-    // State
-    games = require('./models/GameCollection');
+    emitter = require('./emitter'),
 
     // Controllers
     LandingController = require('./controllers/Landing'),
-    PlayController = require('./controllers/Play');
+    PlayController = require('./controllers/Play'),
+    GameDataController = require('./controllers/GameData');
 
 io.on('connection', function (socket) {
   socket.join('landing');
 
-  var lc = new LandingController({ socket: socket }),
-      pc = new PlayController({ socket: socket });
+  var lc = new LandingController({ emitter: socket }),
+      pc = new PlayController({ emitter: socket }),
+      gdc = new GameDataController({ emitter: emitter });
 
   socket.on('error', function (err) {
     console.log('ERROR!');

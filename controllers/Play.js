@@ -2,6 +2,7 @@ var Base = require('./Base'),
     Move = require('../models/Move'),
     Influences = require('../models/Influences'),
     games = require('../models/GameCollection'),
+    emitter = require('../emitter'),
     io = require('../server').io;
 
 var PlayController = Base.extend({
@@ -41,7 +42,7 @@ var PlayController = Base.extend({
               if (err) {
                 console.log('move success error ' + err);
               } else {
-                pushPlayer.call(socket);
+                pushPlayer(socket);
                 io.sockets.to(game.id).emit('move succeeded', clientMove);
               }
             });
@@ -101,7 +102,7 @@ var PlayController = Base.extend({
           if (err) {
             console.log('move success error ' + err);
           } else {
-            pushPlayer.call(socket);
+            pushPlayer(socket);
             io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
             detractor.chooseEliminatedCard();
           }
@@ -117,7 +118,10 @@ var PlayController = Base.extend({
           }
         });
       }
-      pushGame.call(socket);
+      emitter.emit('push:game', {
+        destination: socket,
+        game: games[socket.game.id].getClientObject()
+      });
     },
 
     'allow move': function allowMove(data) {
@@ -131,7 +135,7 @@ var PlayController = Base.extend({
           if (err) {
             console.log('move success error ' + err);
           } else {
-            pushPlayer.call(socket);
+            pushPlayer(socket);
             io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
           }
         });
@@ -162,7 +166,7 @@ var PlayController = Base.extend({
           if (err) {
             console.log('move success error ' + err);
           } else {
-            pushPlayer.call(socket);
+            pushPlayer(socket);
             // The liar blocker needs to give up an influence.
             io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
             detractor.chooseEliminatedCard();
@@ -177,7 +181,13 @@ var PlayController = Base.extend({
       io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
     },
 
-    'pull:game': pushGame,
+    'pull:game': function pullGame() {
+      var socket = this;
+      emitter.emit('push:game', {
+        destination: socket,
+        game: games[socket.game.id].getClientObject()
+      });
+    },
 
     'pull:player': function pullPlayer(data, callback) {
       data = data || {};
@@ -193,14 +203,11 @@ var PlayController = Base.extend({
   }
 });
 
-function pushGame() {
-  var socket = this;
-  io.sockets.to(socket.game.id).emit('push:game', games[socket.game.id].getClientObject());
-}
-
-function pushPlayer() {
-  var socket = this;
-  socket.emit('push:player', { player: socket.player.getClientObject({ privileged: true }) });
+function pushPlayer(socket) {
+  emitter.emit('push:player', {
+    destination: socket,
+    player: socket.player.getClientObject({ privileged: true })
+  });
 }
 
 module.exports = PlayController;

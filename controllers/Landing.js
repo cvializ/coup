@@ -2,8 +2,8 @@ var Base = require('./Base'),
     GameState = require('../models/GameState'),
     Player = require('../models/Player'),
     games = require('../models/GameCollection'),
+    emitter = require('../emitter'),
     io = require('../server').io;
-
 
 var LandingController = Base.extend({
   events: {
@@ -23,9 +23,9 @@ var LandingController = Base.extend({
         callback(undefined, { username: data.username, id: newGame.id });
       }
     },
-    
+
     'ready': function ready() {
-      pushGames({ destination: this });
+      emitter.emit('push:game:collection', { destination: this });
     },
 
     'join user': function joinUser(data, callback) {
@@ -51,14 +51,19 @@ var LandingController = Base.extend({
         socket.emit('user joined', { player: socket.player.getClientObject({ privileged: true }) });
 
         // Push the game to the player AFTER they've connected.
-        io.sockets.to(socket.game.id).emit('push:game', games[socket.game.id].getClientObject());
-
+        emitter.emit('push:game', {
+          destination: io.sockets.to(socket.game.id),
+          game: games[socket.game.id].getClientObject()
+        });
 
         // Inform the user of their success
         callback();
 
         // Let everyone know a user joined a game.
-        pushGames({ destination: io.sockets.to('landing') });
+        emitter.emit('push:game:collection', {
+          destination: io.sockets.to('landing'),
+          games: games.getClientObject()
+        });
       }
     },
 
@@ -91,19 +96,11 @@ function logout() {
     socket.leave(game.id);
     delete socket.game;
 
-    pushGames({ destination: io.sockets.to('landing') });
+    emitter.emit('push:game:collection', {
+      destination: io.sockets.to('landing'),
+      games: games.getClientObject()
+    });
   }
-}
-
-function pushGames(options) {
-  options = options || {};
-
-  var gameList = [];
-  for (var key in games) {
-    gameList.push(games[key].getClientObject());
-  }
-
-  options.destination.emit('push:games', gameList);
 }
 
 module.exports = LandingController;

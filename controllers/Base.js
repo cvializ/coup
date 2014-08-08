@@ -1,5 +1,4 @@
-var util = require('util'),
-    ExtendBase = require('class-extend'),
+var ExtendBase = require('class-extend'),
     Base;
 
 Base = ExtendBase.extend({
@@ -8,11 +7,11 @@ Base = ExtendBase.extend({
   },
   initialize: function (options) {
     options = options || {};
-    var socket = this.socket = options.socket,
+    var emitter = this.emitter = options.emitter,
         events = this.events;
 
     for (var key in events) {
-      socket.on(key, events[key]);
+      emitter.on(key, events[key]);
     }
   }
 });

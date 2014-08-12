@@ -7,20 +7,47 @@ var Base = require('./Base'),
 
 var PlayController = Base.extend({
   events: {
+    'vote start': function voteStart() {
+      var socket = this,
+          game = socket.game,
+          players = game.players,
+          currentPlayer;
+
+      game.votesToStart--;
+
+      if (game.votesToStart === 0) {
+        game.start();
+
+        currentPlayer = game.currentPlayer;
+        currentPlayer.socket.emit('my turn');
+
+        for (var key in players) {
+          if (players[key] !== currentPlayer) {
+            players[key].socket.emit('new turn');
+          }
+        }
+      }
+    },
+
     'make move': function makeMove(moveData, callback) {
-      var socket = this;
+      var socket = this,
+          game = socket.game,
+          player = socket.player,
+          move,
+          clientMove,
+          ability;
 
       moveData = moveData || {};
-      if (!moveData.influence) {
+
+
+      if (game.currentPlayer.id !== socket.player.id) {
+        callback('it is not your turn');
+      } else if (!moveData.influence) {
         callback('move is missing influence');
       } else if (!moveData.name) {
         callback('move is missing name');
       } else {
-        var ability = Influences[moveData.influence].abilities[moveData.name],
-            move,
-            clientMove,
-            game = socket.game,
-            player = socket.player;
+            ability = Influences[moveData.influence].abilities[moveData.name];
 
         if (!ability) {
           callback('unknown move ' + moveData.influence + ':' + moveData.name);

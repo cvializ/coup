@@ -4,7 +4,7 @@ define(['backbone'], function (Backbone) {
       title: 'Untitled Action',
       text: 'This action doesn\'t do anything!',
       choices: [
-        { id: 'ok', title: 'OK', action: function action() { console.log('YOU CHOSE OK.'); }}
+        { title: 'OK',  id: 'action-ok' }
       ]
     },
 

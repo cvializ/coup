@@ -10,6 +10,7 @@ define([
   'models/CardCollection',
   'models/PlayerCollection',
   'views/PlayerCollection',
+  'views/action/Ready',
   'views/action/Primary',
   'views/action/Secondary',
   'views/action/Tertiary',
@@ -28,6 +29,7 @@ define([
              CardCollectionModel,
              PlayerCollectionModel,
              PlayerCollectionView,
+             ReadyActionView,
              PrimaryActionView,
              SecondaryActionView,
              TertiaryActionView,
@@ -74,9 +76,14 @@ define([
         mainRegion.show(self.playView);
 
         self.playView.player.show(self.playersView);
-        self.playView.action.show(new PrimaryActionView());
+        self.playView.action.show(new ReadyActionView());
 
         updateGameData();
+      });
+
+      vent.on('play:start:ready', function ready() {
+        self.socket.emit('vote start');
+        self.playView.action.show(new PendingActionView());
       });
 
       function makePrimaryMove(moveData) {
@@ -176,6 +183,14 @@ define([
 
       self.socket.on('you are alone', function gameAbandoned() {
         vent.trigger('play:end');
+      });
+
+      self.socket.on('my turn', function myTurn() {
+        self.playView.action.show(new PrimaryActionView());
+      });
+
+      self.socket.on('new turn', function newTurn() {
+        self.playView.action.show(new StandbyActionView({ text: 'It\'s someone\'s turn!' }));
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {

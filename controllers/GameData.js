@@ -1,5 +1,4 @@
-var Base = require('./Base'),
-    games = require('../models/GameCollection');
+var Base = require('./Base');
 
 var GameDataController = Base.extend({
   events: {
@@ -22,7 +21,7 @@ var GameDataController = Base.extend({
     'push:player': function pushPlayer(options) {
       options = options || {};
 
-      options.destination.emit('push:player', { player: options.player })
+      options.destination.emit('push:player', { player: options.player });
     }
   }
 });

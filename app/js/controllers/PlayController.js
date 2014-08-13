@@ -149,7 +149,9 @@ define([
       self.socket.on('push:game', function gameDataPushed(data) {
         self.game = data;
 
-        if (self.playersCollection) self.playersCollection.reset(self.game.players);
+        if (self.playersCollection) {
+          self.playersCollection.reset(self.game.players);
+        }
 
         self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
           var existing = self.playersCollection.filter(function (player) {
@@ -164,10 +166,6 @@ define([
 
       self.socket.on('push:player', function playerPushed(data) {
         self.socket.player = data.player;
-      });
-
-      self.socket.on('user joined', function userJoined() {
-        updateGameData();
       });
 
       self.socket.on('user left', function userLeft() {

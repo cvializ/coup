@@ -1,8 +1,9 @@
 define([
+  'jquery',
   'marionette',
   'Vent',
   'hbs!templates/widgets/choose'
-], function (Marionette, vent, chooseTemplate) {
+], function ($, Marionette, vent, chooseTemplate) {
   var ChooseView = Marionette.CompositeView.extend({
     className: 'c-choose-view c-group',
     template: chooseTemplate,

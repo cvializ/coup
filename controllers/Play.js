@@ -16,8 +16,7 @@ var PlayController = Base.extend({
       } else if (!moveData.name) {
         callback('move is missing name');
       } else {
-        var currentMove,
-            ability = Influences[moveData.influence].abilities[moveData.name],
+        var ability = Influences[moveData.influence].abilities[moveData.name],
             move,
             clientMove,
             game = socket.game,
@@ -67,7 +66,7 @@ var PlayController = Base.extend({
           key;
 
       if (ability.needsTarget && myPlayer !== move.target) {
-        console.log("Only the targeted player may block")
+        console.log('Only the targeted player may block');
       } else {
         move.detractor = myPlayer;
 

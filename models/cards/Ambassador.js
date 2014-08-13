@@ -1,7 +1,9 @@
 var AmbassadorAbilities = {
   'Exchange Influence': function exchangeInfluence(move, game, callback) {
     var player = move.player,
-        activeInfluence = player.influences.filter(function (influence) { return !influence.eliminated });
+        activeInfluence = player.influences.filter(function (influence) {
+          return !influence.eliminated;
+        });
 
     game.deck.putOnTopOfDeck(activeInfluence);
     game.deck.shuffle();
@@ -14,7 +16,9 @@ var AmbassadorAbilities = {
       }
     });
 
-    if (callback) callback();
+    if (callback) {
+      callback();
+    }
   }
 };
 module.exports = AmbassadorAbilities;

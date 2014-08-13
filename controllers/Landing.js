@@ -25,7 +25,12 @@ var LandingController = Base.extend({
     },
 
     'ready': function ready() {
-      emitter.emit('push:game:collection', { destination: this });
+      var socket = this;
+
+      emitter.emit('push:game:collection', {
+        destination: socket,
+        games: games.getClientObject()
+      });
     },
 
     'join user': function joinUser(data, callback) {
@@ -68,8 +73,10 @@ var LandingController = Base.extend({
     },
 
     'remove user': function removeUser() {
+      var socket = this;
+
       socket.join('landing');
-      logout.call(this);
+      logout.call(socket);
     },
 
     'disconnect': logout

@@ -1,3 +1,4 @@
+/* jshint unused: false */
 var
     // Server variables
     server = require('./server'),

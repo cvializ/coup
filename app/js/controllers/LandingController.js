@@ -5,8 +5,7 @@ define([
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
-  'views/landing/Create',
-  'views/Play'
+  'views/landing/Create'
 ],
 function (Marionette,
           mainRegion,
@@ -14,8 +13,7 @@ function (Marionette,
           LoginCollectionModel,
           LoginView,
           LandingView,
-          CreateView,
-          PlayView) {
+          CreateView) {
 
   var CoupController = Marionette.Controller.extend({
 

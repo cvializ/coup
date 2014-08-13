@@ -80,7 +80,7 @@ Player.prototype.chooseEliminatedCard = function (callback) {
       callback(err);
     }
   });
-}
+};
 
 function selectedCardToEliminate(err, data) {
   data = data || {};
@@ -94,6 +94,6 @@ function selectedCardToEliminate(err, data) {
       break;
     }
   }
-};
+}
 
 module.exports = Player;

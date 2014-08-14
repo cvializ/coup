@@ -78,7 +78,9 @@ GameState.prototype.nextTurn = function () {
 
   for (var key in players) {
     if (players[key] !== currentPlayer) {
-      players[key].socket.emit('new turn');
+      players[key].socket.emit('new turn', {
+        player: currentPlayer.getClientObject()
+      });
     }
   }
 };
@@ -96,6 +98,8 @@ GameState.prototype.getClientObject = function () {
   var clientObject = {
     id: this.id,
     title: this.title,
+    started: this.started,
+    currentPlayer: this.currentPlayer && this.currentPlayer.getClientObject(),
     players: []
   },
   player;

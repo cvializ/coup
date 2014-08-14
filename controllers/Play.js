@@ -200,13 +200,16 @@ var PlayController = Base.extend({
 
     'blocker success': function blockerSuccess(data) {
       var socket = this;
+          game = socket.game;
+
       // the blocker succeeds in blocking the action.
-      io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
+      io.sockets.in(game.id).emit('block succeeded', game.getCurrentMove().getClientObject());
       game.nextTurn();
     },
 
     'pull:game': function pullGame() {
       var socket = this;
+
       emitter.emit('push:game', {
         destination: socket,
         game: socket.game.getClientObject()

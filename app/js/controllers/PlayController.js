@@ -263,7 +263,6 @@ define([
         }
 
         self.showResult(options);
-        updateGameData();
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
@@ -275,7 +274,6 @@ define([
                       doubted + ' was lying!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
@@ -287,7 +285,6 @@ define([
                       doubted + ' was telling the truth!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -301,7 +298,6 @@ define([
                       blocked + ' can ' + ability;
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
@@ -314,7 +310,6 @@ define([
                       blocked + ' blocked!';
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('select own influence', function selectInfluence(moveData, callback) {
@@ -324,9 +319,6 @@ define([
           callback(undefined, data);
           // Remove the listener.
           vent.off('play:move:select:influence');
-
-          // Reset and update
-          updateGameData();
         });
       });
     },

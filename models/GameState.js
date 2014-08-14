@@ -2,6 +2,8 @@ var uuid = require('node-uuid').v4,
     shuffle = require('shuffle').shuffle,
     Card = require('./Card'),
     Carousel = require('./Carousel'),
+    io = require('../server').io,
+    emitter = require('../emitter'),
     influenceTypes = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
 
 function GameState(options) {
@@ -67,6 +69,11 @@ GameState.prototype.nextTurn = function () {
       }
     }
   }
+
+  emitter.emit('push:game', {
+    destination: io.sockets.to(this.id),
+    game: this.getClientObject()
+  });
 };
 
 GameState.prototype.getRemainingPlayers = function () {

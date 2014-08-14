@@ -113,33 +113,42 @@ var PlayController = Base.extend({
       if (move.player.hasInfluence(move.influence)) {
         // The player was truthful.
         // Take away the doubter's card
-        move.success(game, function (err) {
+        move.success(game, function (err, data) {
+          data = data || {};
+
           if (err) {
             console.log('move success error ' + err);
           } else {
             pushPlayer(socket);
             io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
-            detractor.chooseEliminatedCard(function (err) {
+
+            if (!data.noDoubleEliminate) {
+              detractor.chooseEliminatedCard(function (err) {
+                game.nextTurn();
+              });
+            } else {
+              // We don't need the callback since the player won't
+              // choose a card. But we still need to call nextTurn
               game.nextTurn();
-            });
+            }
           }
         });
       } else {
-        player.chooseEliminatedCard(function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            // the player was lying.
-            // take away the player's card
-            io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
-            game.nextTurn();
-          }
-        });
+        if (!data.noDoubleEliminate) {
+          player.chooseEliminatedCard(function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              // the player was lying.
+              // take away the player's card
+              io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+              game.nextTurn();
+            }
+          });
+        } else {
+          game.nextTurn();
+        }
       }
-      emitter.emit('push:game', {
-        destination: socket,
-        game: socket.game.getClientObject()
-      });
     },
 
     'allow move': function allowMove(data) {
@@ -162,6 +171,7 @@ var PlayController = Base.extend({
     },
 
     'blocker doubt': function blockerDoubt(data) {
+
       var socket = this,
           game = socket.game,
           move = game.getCurrentMove(),
@@ -182,16 +192,23 @@ var PlayController = Base.extend({
           }
         });
       } else {
-        move.success(game, function (err) {
+        move.success(game, function (err, data) {
+          data = data || {};
+
           if (err) {
             console.log('move success error ' + err);
           } else {
             pushPlayer(socket);
             // The liar blocker needs to give up an influence.
             io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
-            detractor.chooseEliminatedCard(function (err) {
+
+            if (!data.noDoubleEliminate) {
+              detractor.chooseEliminatedCard(function (err) {
+                game.nextTurn();
+              });
+            } else {
               game.nextTurn();
-            });
+            }
           }
         });
       }

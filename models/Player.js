@@ -84,7 +84,7 @@ Player.prototype.chooseEliminatedCard = function (callback) {
 
       self.eliminateCard(data.id);
       if (callback) {
-        callback(err);
+        callback(err, { noDoubleEliminate: true });
       }
     });
   } else {
@@ -92,7 +92,7 @@ Player.prototype.chooseEliminatedCard = function (callback) {
       // If the user only has one card left, get rid of it for them.
       self.eliminateCard(activeCards.pop().id);
     }
-    callback();
+    callback(undefined, { noDoubleEliminate: true });
   }
 };
 

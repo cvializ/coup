@@ -55,7 +55,6 @@ define([
 
     handleError: function (err) {
       alert(err);
-      this.playView.action.show(new PrimaryActionView());
     },
 
     initialize: function initialize(options) {
@@ -82,8 +81,13 @@ define([
       });
 
       vent.on('play:start:ready', function ready() {
-        self.socket.emit('vote start');
-        self.playView.action.show(new PendingActionView());
+        self.socket.emit('vote start', function (err) {
+          if (err) {
+            self.handleError(err);
+          } else {
+            self.playView.action.show(new PendingActionView());
+          }
+        });
       });
 
       function makePrimaryMove(moveData) {

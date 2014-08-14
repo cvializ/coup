@@ -6,14 +6,22 @@ var Base = require('./Base'),
 
 var PlayController = Base.extend({
   events: {
-    'vote start': function voteStart() {
+    'vote start': function voteStart(callback) {
       var socket = this,
           game = socket.game;
 
-      game.votesToStart--;
+      if (game.userCount === 1) {
+        callback('please wait until others have joined');
+      } else {
+        game.votesToStart--;
 
-      if (game.votesToStart === 0) {
-        game.start();
+        // Tell the user we got their vote.
+        callback();
+
+        // Start the game if everyone has voted.
+        if (game.votesToStart === 0) {
+          game.start();
+        }
       }
     },
 

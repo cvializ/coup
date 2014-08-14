@@ -5,7 +5,7 @@ var uuid = require('node-uuid').v4,
 
 function Carousel(collection) {
   this.list = [];
-  this.index = -1;
+  this.index = 0;
 
   for (var key in collection) {
     if (collection.hasOwnProperty(key)) {
@@ -69,7 +69,18 @@ GameState.prototype.start = function () {
 };
 
 GameState.prototype.nextTurn = function () {
-  this.currentPlayer = this.carousel.next();
+  var players = this.players,
+      currentPlayer;
+
+  this.currentPlayer = currentPlayer = this.carousel.next();
+
+  currentPlayer.socket.emit('my turn');
+
+  for (var key in players) {
+    if (players[key] !== currentPlayer) {
+      players[key].socket.emit('new turn');
+    }
+  }
 };
 
 GameState.prototype.addUser = function (player) {

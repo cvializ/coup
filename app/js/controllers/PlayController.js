@@ -190,7 +190,10 @@ define([
       });
 
       self.socket.on('new turn', function newTurn() {
-        self.playView.action.show(new StandbyActionView({ text: 'It\'s someone\'s turn!' }));
+        var socket = this,
+            text = 'It\'s ' + socket.player.name + '\'s turn!';
+
+        self.playView.action.show(new StandbyActionView({ text: text }));
       });
 
       self.socket.on('move attempted', function moveAttempted(moveData) {

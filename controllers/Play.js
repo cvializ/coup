@@ -7,20 +7,36 @@ var Base = require('./Base'),
 
 var PlayController = Base.extend({
   events: {
+    'vote start': function voteStart() {
+      var socket = this,
+          game = socket.game;
+
+      game.votesToStart--;
+
+      if (game.votesToStart === 0) {
+        game.start();
+      }
+    },
+
     'make move': function makeMove(moveData, callback) {
-      var socket = this;
+      var socket = this,
+          game = socket.game,
+          player = socket.player,
+          move,
+          clientMove,
+          ability;
 
       moveData = moveData || {};
-      if (!moveData.influence) {
+
+
+      if (game.currentPlayer.id !== socket.player.id) {
+        callback('it is not your turn');
+      } else if (!moveData.influence) {
         callback('move is missing influence');
       } else if (!moveData.name) {
         callback('move is missing name');
       } else {
-        var ability = Influences[moveData.influence].abilities[moveData.name],
-            move,
-            clientMove,
-            game = socket.game,
-            player = socket.player;
+            ability = Influences[moveData.influence].abilities[moveData.name];
 
         if (!ability) {
           callback('unknown move ' + moveData.influence + ':' + moveData.name);
@@ -43,6 +59,7 @@ var PlayController = Base.extend({
               } else {
                 pushPlayer(socket);
                 io.sockets.to(game.id).emit('move succeeded', clientMove);
+                game.nextTurn();
               }
             });
           } else {
@@ -103,7 +120,9 @@ var PlayController = Base.extend({
           } else {
             pushPlayer(socket);
             io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
-            detractor.chooseEliminatedCard();
+            detractor.chooseEliminatedCard(function (err) {
+              game.nextTurn();
+            });
           }
         });
       } else {
@@ -114,12 +133,13 @@ var PlayController = Base.extend({
             // the player was lying.
             // take away the player's card
             io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+            game.nextTurn();
           }
         });
       }
       emitter.emit('push:game', {
         destination: socket,
-        game: games[socket.game.id].getClientObject()
+        game: socket.game.getClientObject()
       });
     },
 
@@ -136,6 +156,7 @@ var PlayController = Base.extend({
           } else {
             pushPlayer(socket);
             io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
+            game.nextTurn();
           }
         });
       }
@@ -158,6 +179,7 @@ var PlayController = Base.extend({
           } else {
             // The doubter needs to give up a card because they were wrong.
             io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
+            game.nextTurn();
           }
         });
       } else {
@@ -168,7 +190,9 @@ var PlayController = Base.extend({
             pushPlayer(socket);
             // The liar blocker needs to give up an influence.
             io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
-            detractor.chooseEliminatedCard();
+            detractor.chooseEliminatedCard(function (err) {
+              game.nextTurn();
+            });
           }
         });
       }
@@ -178,13 +202,14 @@ var PlayController = Base.extend({
       var socket = this;
       // the blocker succeeds in blocking the action.
       io.sockets.in(socket.game.id).emit('block succeeded', socket.game.getCurrentMove().getClientObject());
+      game.nextTurn();
     },
 
     'pull:game': function pullGame() {
       var socket = this;
       emitter.emit('push:game', {
         destination: socket,
-        game: games[socket.game.id].getClientObject()
+        game: socket.game.getClientObject()
       });
     },
 

@@ -41,5 +41,10 @@ require.config({
 define(['CoupApp', 'socket.io'], function (CoupApp, io) {
   var socket = io.connect();
 
+  socket.on('error', function (err) {
+    console.error('ERROR');
+    console.log(err);
+  });
+
   CoupApp.start({ socket: socket });
 });

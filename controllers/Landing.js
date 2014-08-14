@@ -34,13 +34,18 @@ var LandingController = Base.extend({
     },
 
     'join user': function joinUser(data, callback) {
-      var socket = this;
+      data = data || {};
+
+      var socket = this,
+          game = games[data.id];
 
       // sanitize
       if (!data.username) {
         callback('invalid username');
-      } else if (!data.id) {
+      } else if (typeof game === 'undefined') {
         callback('invalid game id');
+      } else if (game.started) {
+        callback('that game is already in progress');
       } else {
         // we store the player's data in the socket for later
         socket.player = new Player({ name: data.username, socket: socket });

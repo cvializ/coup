@@ -189,9 +189,11 @@ define([
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('new turn', function newTurn() {
+      self.socket.on('new turn', function newTurn(turnData) {
+        turnData = turnData || {};
         var socket = this,
-            text = 'It\'s ' + socket.player.name + '\'s turn!';
+            player = turnData.player,
+            text = 'It\'s ' + (player && player.name) + '\'s turn!';
 
         self.playView.action.show(new StandbyActionView({ text: text }));
       });
@@ -248,7 +250,6 @@ define([
                       moveData.ability.name;
 
         self.showResult({ title: 'Blocked', message: message });
-        self.playView.action.show(new PrimaryActionView());
       });
 
       self.socket.on('move succeeded', function moveSucceeded(moveData) {
@@ -262,7 +263,6 @@ define([
         }
 
         self.showResult(options);
-        self.playView.action.show(new PrimaryActionView());
         updateGameData();
       });
 
@@ -275,7 +275,6 @@ define([
                       doubted + ' was lying!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        self.playView.action.show(new PrimaryActionView());
         updateGameData();
       });
 
@@ -288,7 +287,6 @@ define([
                       doubted + ' was telling the truth!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        self.playView.action.show(new PrimaryActionView());
         updateGameData();
       });
 
@@ -303,7 +301,6 @@ define([
                       blocked + ' can ' + ability;
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        self.playView.action.show(new PrimaryActionView());
         updateGameData();
       });
 
@@ -317,7 +314,6 @@ define([
                       blocked + ' blocked!';
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        self.playView.action.show(new PrimaryActionView());
         updateGameData();
       });
 
@@ -330,7 +326,6 @@ define([
           vent.off('play:move:select:influence');
 
           // Reset and update
-          self.playView.action.show(new PrimaryActionView());
           updateGameData();
         });
       });

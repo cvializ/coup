@@ -73,27 +73,37 @@ Player.prototype.getClientObject = function (options) {
 };
 
 Player.prototype.chooseEliminatedCard = function (callback) {
-  var self = this;
+  var self = this,
+      activeCards = self.influences.filter(cardIsActive);
 
-  self.socket.emit('select own influence', null, function (err, data) {
-    self.eliminateCard(data);
-    if (callback) {
-      callback(err);
+  // If the user has multiple cards left, actually let them choose which one
+  // to give up
+  if (activeCards.length > 1) {
+    self.socket.emit('select own influence', null, function (err, data) {
+      data = data || {};
+
+      self.eliminateCard(data.id);
+      if (callback) {
+        callback(err);
+      }
+    });
+  } else {
+    if (activeCards.length) {
+      // If the user only has one card left, get rid of it for them.
+      self.eliminateCard(activeCards.pop().id);
     }
-  });
+    callback();
+  }
 };
 
-Player.prototype.eliminateCard = function(options) {
-  data = data || {};
-
+Player.prototype.eliminateCard = function(cardId) {
   var influences = this.influences,
-      cardId = options.id,
-      card = influences.filter(function (d) { return d.id == cardId; }).pop();
+      card = influences.filter(function (d) { return d.id === cardId; }).pop();
 
   if (card) {
     card.eliminated = true;
     // If there are no active cards, the player is eliminated
-    this.eliminated = (this.influences.filter(cardIsActive).length > 0);
+    this.eliminated = (this.influences.filter(cardIsActive).length < 1);
   }
 };
 

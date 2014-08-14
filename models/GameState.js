@@ -1,38 +1,8 @@
 var uuid = require('node-uuid').v4,
     shuffle = require('shuffle').shuffle,
     Card = require('./Card'),
+    Carousel = require('./Carousel'),
     influenceTypes = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
-
-function Carousel(collection) {
-  this.list = [];
-  this.index = 0;
-
-  for (var key in collection) {
-    if (collection.hasOwnProperty(key)) {
-      this.list.push(collection[key]);
-    }
-  }
-}
-
-Carousel.prototype.next = function () {
-  var len = this.list.length;
-
-  if (len === 0) {
-    return null;
-  }
-
-  this.index = this.getNextIndex();
-
-  return this.list[this.index];
-};
-
-Carousel.prototype.getNextIndex = function () {
-  return (this.index === this.list.length - 1 ? 0 : this.index + 1);
-};
-
-Carousel.prototype.peek = function () {
-  return this.list[this.getNextIndex()];
-};
 
 function GameState(options) {
   options = options || {};
@@ -81,21 +51,39 @@ GameState.prototype.nextTurn = function () {
     this.currentPlayer = currentPlayer = this.carousel.next();
   } while (currentPlayer.eliminated);
 
-  currentPlayer.socket.emit('my turn');
+  if (this.won()) {
+    var winner = this.getRemainingPlayers().pop();
+    console.log('A WINNER IS YOU, ' + winner.name);
+  } else {
+    // Tell the current play it's their turn
+    currentPlayer.socket.emit('my turn');
 
-  for (var key in players) {
-    if (players[key] !== currentPlayer) {
-      players[key].socket.emit('new turn', {
-        player: currentPlayer.getClientObject()
-      });
+    // Tell everyone else that it's not their turn
+    for (var key in players) {
+      if (players[key] !== currentPlayer) {
+        players[key].socket.emit('new turn', {
+          player: currentPlayer.getClientObject()
+        });
+      }
     }
   }
 };
 
-GameState.prototype.won = function () {
-  if (activePlayers.length === 1) {
-    console.log('A WINNER IS YOU, ' + activePlayers.pop().name);
+GameState.prototype.getRemainingPlayers = function () {
+  var list = [],
+      key;
+
+  for (key in this.players) {
+    if (!this.players[key].eliminated) {
+      list.push(this.players[key]);
+    }
   }
+
+  return list;
+};
+
+GameState.prototype.won = function () {
+  return this.getRemainingPlayers().length === 1;
 };
 
 GameState.prototype.addUser = function (player) {
@@ -113,8 +101,14 @@ GameState.prototype.getClientObject = function () {
     title: this.title,
     started: this.started,
     currentPlayer: this.currentPlayer && this.currentPlayer.getClientObject(),
-    players: this.players.map(function (p) { return p.getClientObject(); })
-  };
+    players: []
+  },
+  playerList = clientObject.players,
+  key;
+
+  for (key in this.players) {
+    playerList.push(this.players[key].getClientObject());
+  }
 
   return clientObject;
 };

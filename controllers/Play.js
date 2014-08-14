@@ -1,7 +1,6 @@
 var Base = require('./Base'),
     Move = require('../models/Move'),
     Influences = require('../models/Influences'),
-    games = require('../models/GameCollection'),
     emitter = require('../emitter'),
     io = require('../server').io;
 
@@ -199,7 +198,7 @@ var PlayController = Base.extend({
     },
 
     'blocker success': function blockerSuccess(data) {
-      var socket = this;
+      var socket = this,
           game = socket.game;
 
       // the blocker succeeds in blocking the action.

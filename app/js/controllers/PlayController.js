@@ -182,6 +182,7 @@ define([
       });
 
       self.socket.on('you are alone', function gameAbandoned() {
+        self.socket.emit('remove user');
         vent.trigger('play:end');
       });
 

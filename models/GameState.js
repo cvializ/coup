@@ -21,13 +21,17 @@ Carousel.prototype.next = function () {
     return null;
   }
 
-  if (this.index === len - 1) {
-    this.index = 0;
-  } else {
-    this.index++;
-  }
+  this.index = this.getNextIndex();
 
   return this.list[this.index];
+};
+
+Carousel.prototype.getNextIndex = function () {
+  return (this.index === this.list.length - 1 ? 0 : this.index + 1);
+};
+
+Carousel.prototype.peek = function () {
+  return this.list[this.getNextIndex()];
 };
 
 function GameState(options) {
@@ -72,7 +76,10 @@ GameState.prototype.nextTurn = function () {
   var players = this.players,
       currentPlayer;
 
-  this.currentPlayer = currentPlayer = this.carousel.next();
+  // Get the next eligible player.
+  do {
+    this.currentPlayer = currentPlayer = this.carousel.next();
+  } while (currentPlayer.eliminated);
 
   currentPlayer.socket.emit('my turn');
 
@@ -82,6 +89,12 @@ GameState.prototype.nextTurn = function () {
         player: currentPlayer.getClientObject()
       });
     }
+  }
+};
+
+GameState.prototype.won = function () {
+  if (activePlayers.length === 1) {
+    console.log('A WINNER IS YOU, ' + activePlayers.pop().name);
   }
 };
 
@@ -100,14 +113,8 @@ GameState.prototype.getClientObject = function () {
     title: this.title,
     started: this.started,
     currentPlayer: this.currentPlayer && this.currentPlayer.getClientObject(),
-    players: []
-  },
-  player;
-
-  for (var key in this.players) {
-    player = this.players[key];
-    clientObject.players.push(player.getClientObject());
-  }
+    players: this.players.map(function (p) { return p.getClientObject(); })
+  };
 
   return clientObject;
 };

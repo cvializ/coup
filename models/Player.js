@@ -10,6 +10,7 @@ function Player(options) {
   this.name = options.name || 'Unnamed User';
   this.coins = options.coins || 2;
   this.influences = [];
+  this.eliminated = false;
 }
 
 Player.prototype.hasInfluence = function (influenceName) {
@@ -74,26 +75,30 @@ Player.prototype.getClientObject = function (options) {
 Player.prototype.chooseEliminatedCard = function (callback) {
   var self = this;
 
-  self.socket.emit('select own influence', null, function (err) {
-    selectedCardToEliminate.apply(self, arguments);
+  self.socket.emit('select own influence', null, function (err, data) {
+    self.eliminateCard(data);
     if (callback) {
       callback(err);
     }
   });
 };
 
-function selectedCardToEliminate(err, data) {
+Player.prototype.eliminateCard = function(options) {
   data = data || {};
 
   var influences = this.influences,
-      dataId = data.id;
+      cardId = options.id,
+      card = influences.filter(function (d) { return d.id == cardId; }).pop();
 
-  for (var key in influences) {
-    if (influences[key].id === dataId) {
-      influences[key].eliminated = true;
-      break;
-    }
+  if (card) {
+    card.eliminated = true;
+    // If there are no active cards, the player is eliminated
+    this.eliminated = (this.influences.filter(cardIsActive).length > 0);
   }
+};
+
+function cardIsActive(card) {
+  return !card.eliminated;
 }
 
 module.exports = Player;

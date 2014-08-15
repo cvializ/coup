@@ -55,7 +55,7 @@ GameState.prototype.nextTurn = function () {
 
   if (this.won()) {
     var winner = this.getRemainingPlayers().pop();
-    console.log('A WINNER IS YOU, ' + winner.name);
+    io.sockets.to(this.id).emit('game over', { winner: winner.getClientObject() });
   } else {
     // Tell the current play it's their turn
     currentPlayer.socket.emit('my turn');

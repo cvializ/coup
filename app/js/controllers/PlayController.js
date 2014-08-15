@@ -95,6 +95,7 @@ define([
         self.socket.emit('make move', moveData, function moveMade(err, move) {
           if (err) {
             self.handleError(err);
+            self.playView.action.show(new PrimaryActionView());
           } else {
             if (move.ability.blockable || move.ability.doubtable) {
               self.playView.action.show(new PendingActionView());
@@ -185,7 +186,7 @@ define([
         }
       });
 
-      self.socket.on('you are alone', function gameAbandoned() {
+      self.socket.on('force quit', function gameAbandoned() {
         self.socket.emit('remove user');
         vent.trigger('play:end');
       });
@@ -325,6 +326,15 @@ define([
           // Remove the listener.
           vent.off('play:move:select:influence');
         });
+      });
+
+      self.socket.on('game over', function gameOver(data) {
+        data = data || {};
+        var winner = data.winner;
+
+        alert(winner.name + ' has WON THE GAME!');
+        self.socket.emit('remove user');
+        vent.trigger('play:end');
       });
     },
 

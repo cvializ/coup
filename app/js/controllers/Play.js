@@ -131,13 +131,27 @@ define([
       vent.on('play:move:secondary', function secondaryMove(moveData) {
         moveData = moveData || {};
         if (moveData.type === 'allow') {
-          self.socket.emit('allow move', moveData);
-          self.playView.action.show(new PendingActionView({ text: 'Waiting for other players to judge...' }));
+          self.socket.emit('allow move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            } else {
+              self.playView.action.show(new PendingActionView({ text: 'Waiting for other players to judge...' }));
+            }
+          });
         } else if (moveData.type === 'block') {
-          self.socket.emit('block move', moveData);
-          self.playView.action.show(new PendingActionView());
+          self.socket.emit('block move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            } else {
+              self.playView.action.show(new PendingActionView());
+            }
+          });
         } else if (moveData.type === 'doubt') {
-          self.socket.emit('doubt move', moveData);
+          self.socket.emit('doubt move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            }
+          });
         } else {
           throw 'Unrecognized secondary move type.';
         }
@@ -230,7 +244,9 @@ define([
               canBlock = false;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
+            if (!self.socket.player.eliminated) {
+              self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
+            }
           }
         }
       });

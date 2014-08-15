@@ -56,7 +56,8 @@ Player.prototype.getClientObject = function (options) {
     id: this.id,
     name: this.name,
     coins: this.coins,
-    influences: this.influences
+    influences: this.influences,
+    eliminated: this.eliminated
   };
 
   if (!options.privileged) {

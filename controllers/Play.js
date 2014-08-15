@@ -79,7 +79,7 @@ var PlayController = Base.extend({
       }
     },
 
-    'block move': function blockMove(data) {
+    'block move': function blockMove(data, callback) {
       var socket = this,
           game = socket.game,
           players = game.players,
@@ -89,8 +89,10 @@ var PlayController = Base.extend({
           blockedPlayer = move.player,
           key;
 
-      if (ability.needsTarget && myPlayer !== move.target) {
-        console.log('Only the targeted player may block');
+      if (myPlayer.eliminated) {
+        callback('Eliminated players may not respond to moves.');
+      } else if (ability.needsTarget && myPlayer !== move.target) {
+        callback('Only the targeted player may block');
       } else {
         move.detractor = myPlayer;
 
@@ -103,10 +105,12 @@ var PlayController = Base.extend({
             players[key].socket.emit('move responded to', move.getClientObject());
           }
         }
+
+        callback();
       }
     },
 
-    'doubt move': function doubtMove(data) {
+    'doubt move': function doubtMove(data, callback) {
       var socket = this,
           game = socket.game,
           move = game.getCurrentMove(),
@@ -114,67 +118,83 @@ var PlayController = Base.extend({
           detractor = socket.player,
           clientMove;
 
-      move.detractor = detractor; // this player is doubting
-
-      clientMove = move.getClientObject(); // after setting the detractor.
-
-      if (move.player.hasInfluence(move.influence)) {
-        // The player was truthful.
-        // Take away the doubter's card
-        move.success(game, function (err, data) {
-          data = data || {};
-
-          if (err) {
-            console.log('move success error ' + err);
-          } else {
-            pushPlayer(socket);
-            io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
-
-            if (!data.noDoubleEliminate) {
-              detractor.chooseEliminatedCard(function (err) {
-                game.nextTurn();
-              });
-            } else {
-              // We don't need the callback since the player won't
-              // choose a card. But we still need to call nextTurn
-              game.nextTurn();
-            }
-          }
-        });
+      if (detractor.eliminated) {
+        callback('Eliminated players may not respond to moves.');
       } else {
-        if (!data.noDoubleEliminate) {
-          player.chooseEliminatedCard(function (err) {
+        move.detractor = detractor; // this player is doubting
+        clientMove = move.getClientObject(); // after setting the detractor.
+
+        if (move.player.hasInfluence(move.influence)) {
+          // The player was truthful.
+          // Take away the doubter's card
+          move.success(game, function (err, data) {
+            data = data || {};
+
             if (err) {
-              console.log(err);
+              callback(err);
             } else {
-              // the player was lying.
-              // take away the player's card
-              io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
-              game.nextTurn();
+              pushPlayer(socket);
+              io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+
+              if (!data.noDoubleEliminate) {
+                detractor.chooseEliminatedCard(function (err) {
+                  callback();
+                  game.nextTurn();
+                });
+              } else {
+                // We don't need the chooseEliminatedCard callback since the
+                // player won't _choose_ the eliminated card.
+                // But we still need to call nextTurn
+                callback();
+                game.nextTurn();
+              }
             }
           });
         } else {
-          game.nextTurn();
+          if (!data.noDoubleEliminate) {
+            player.chooseEliminatedCard(function (err) {
+              if (err) {
+                callback(err);
+              } else {
+                callback();
+                // the player was lying.
+                // take away the player's card
+                io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+                game.nextTurn();
+              }
+            });
+          } else {
+            callback();
+            game.nextTurn();
+          }
         }
       }
     },
 
-    'allow move': function allowMove(data) {
+    'allow move': function allowMove(data, callback) {
       var socket = this,
           game = socket.game,
           move = game.getCurrentMove();
 
-      move.responsesRemaining--;
-      if (move.responsesRemaining === 0) {
-        move.success(game, function (err) {
-          if (err) {
-            console.log('move success error ' + err);
-          } else {
-            pushPlayer(socket);
-            io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
-            game.nextTurn();
-          }
-        });
+      if (socket.player.eliminated) {
+        callback('Eliminated players may not respond to moves.');
+      } else {
+        move.responsesRemaining--;
+
+        if (move.responsesRemaining === 0) {
+          move.success(game, function (err) {
+            if (err) {
+              callback(err);
+            } else {
+              callback();
+              pushPlayer(socket);
+              io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
+              game.nextTurn();
+            }
+          });
+        } else {
+          callback();
+        }
       }
     },
 

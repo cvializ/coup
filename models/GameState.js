@@ -127,8 +127,16 @@ GameState.prototype.removeUser = function (player) {
 };
 
 GameState.prototype.setCurrentMove = function (currentMove) {
+  var activePlayerCount = 0,
+      key;
+  for (key in this.players) {
+    if (!this.players[key].eliminated) {
+      activePlayerCount++;
+    }
+  }
+
   this.currentMove = currentMove;
-  this.currentMove.responsesRemaining = this.userCount - 1;
+  this.currentMove.responsesRemaining = activePlayerCount - 1;
 };
 
 GameState.prototype.getCurrentMove = function () {

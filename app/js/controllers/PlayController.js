@@ -166,6 +166,10 @@ define([
         }
 
         self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
+          // update the player in their own socket
+          self.socket.player = playerData;
+
+          // Update the player in the collection
           var existing = self.playersCollection.filter(function (player) {
             return player.get('id') === playerData.id;
           });

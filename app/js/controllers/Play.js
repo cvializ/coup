@@ -55,7 +55,6 @@ define([
 
     handleError: function (err) {
       alert(err);
-      this.playView.action.show(new PrimaryActionView());
     },
 
     initialize: function initialize(options) {
@@ -82,8 +81,13 @@ define([
       });
 
       vent.on('play:start:ready', function ready() {
-        self.socket.emit('vote start');
-        self.playView.action.show(new PendingActionView());
+        self.socket.emit('vote start', function (err) {
+          if (err) {
+            self.handleError(err);
+          } else {
+            self.playView.action.show(new PendingActionView());
+          }
+        });
       });
 
       function makePrimaryMove(moveData) {
@@ -91,6 +95,7 @@ define([
         self.socket.emit('make move', moveData, function moveMade(err, move) {
           if (err) {
             self.handleError(err);
+            self.playView.action.show(new PrimaryActionView());
           } else {
             if (move.ability.blockable || move.ability.doubtable) {
               self.playView.action.show(new PendingActionView());
@@ -100,7 +105,7 @@ define([
       }
 
       function filterPlayerChoice(player) {
-        return player.id !== self.socket.player.id;
+        return player.id !== self.socket.player.id && !player.get('eliminated');
       }
 
       vent.on('play:move:primary', function primaryMove(moveData) {
@@ -126,13 +131,27 @@ define([
       vent.on('play:move:secondary', function secondaryMove(moveData) {
         moveData = moveData || {};
         if (moveData.type === 'allow') {
-          self.socket.emit('allow move', moveData);
-          self.playView.action.show(new PendingActionView({ text: 'Waiting for other players to judge...' }));
+          self.socket.emit('allow move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            } else {
+              self.playView.action.show(new PendingActionView({ text: 'Waiting for other players to judge...' }));
+            }
+          });
         } else if (moveData.type === 'block') {
-          self.socket.emit('block move', moveData);
-          self.playView.action.show(new PendingActionView());
+          self.socket.emit('block move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            } else {
+              self.playView.action.show(new PendingActionView());
+            }
+          });
         } else if (moveData.type === 'doubt') {
-          self.socket.emit('doubt move', moveData);
+          self.socket.emit('doubt move', moveData, function (err) {
+            if (err) {
+              self.handleError(err);
+            }
+          });
         } else {
           throw 'Unrecognized secondary move type.';
         }
@@ -161,6 +180,10 @@ define([
         }
 
         self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
+          // update the player in their own socket
+          self.socket.player = playerData;
+
+          // Update the player in the collection
           var existing = self.playersCollection.filter(function (player) {
             return player.get('id') === playerData.id;
           });
@@ -181,7 +204,8 @@ define([
         }
       });
 
-      self.socket.on('you are alone', function gameAbandoned() {
+      self.socket.on('force quit', function gameAbandoned() {
+        self.socket.emit('remove user');
         vent.trigger('play:end');
       });
 
@@ -220,7 +244,9 @@ define([
               canBlock = false;
             }
 
-            self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
+            if (!self.socket.player.eliminated) {
+              self.playView.action.show(new SecondaryActionView({ text: text, ability: ability, conditions: { blockable: canBlock } }));
+            }
           }
         }
       });
@@ -263,7 +289,6 @@ define([
         }
 
         self.showResult(options);
-        updateGameData();
       });
 
       self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
@@ -275,7 +300,6 @@ define([
                       doubted + ' was lying!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
@@ -287,7 +311,6 @@ define([
                       doubted + ' was telling the truth!';
 
         self.showResult({ title: 'Move Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
@@ -301,7 +324,6 @@ define([
                       blocked + ' can ' + ability;
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
@@ -314,7 +336,6 @@ define([
                       blocked + ' blocked!';
 
         self.showResult({ title: 'Block Doubted!', message: message });
-        updateGameData();
       });
 
       self.socket.on('select own influence', function selectInfluence(moveData, callback) {
@@ -324,10 +345,16 @@ define([
           callback(undefined, data);
           // Remove the listener.
           vent.off('play:move:select:influence');
-
-          // Reset and update
-          updateGameData();
         });
+      });
+
+      self.socket.on('game over', function gameOver(data) {
+        data = data || {};
+        var winner = data.winner;
+
+        alert(winner.name + ' has WON THE GAME!');
+        self.socket.emit('remove user');
+        vent.trigger('play:end');
       });
     },
 

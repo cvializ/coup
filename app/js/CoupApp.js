@@ -2,8 +2,8 @@ define([
   'marionette',
   'MainRegion',
   'Vent',
-  'controllers/LandingController',
-  'controllers/PlayController'
+  'controllers/Landing',
+  'controllers/Play'
 ], function (Marionette, mainRegion, vent, LandingController, PlayController) {
   var CoupApp = new Marionette.Application(),
       landingController,

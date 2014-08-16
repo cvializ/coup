@@ -1,34 +1,10 @@
 var uuid = require('node-uuid').v4,
     shuffle = require('shuffle').shuffle,
     Card = require('./Card'),
+    Carousel = require('./Carousel'),
+    io = require('../server').io,
+    emitter = require('../emitter'),
     influenceTypes = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
-
-function Carousel(collection) {
-  this.list = [];
-  this.index = 0;
-
-  for (var key in collection) {
-    if (collection.hasOwnProperty(key)) {
-      this.list.push(collection[key]);
-    }
-  }
-}
-
-Carousel.prototype.next = function () {
-  var len = this.list.length;
-
-  if (len === 0) {
-    return null;
-  }
-
-  if (this.index === len - 1) {
-    this.index = 0;
-  } else {
-    this.index++;
-  }
-
-  return this.list[this.index];
-};
 
 function GameState(options) {
   options = options || {};
@@ -72,17 +48,49 @@ GameState.prototype.nextTurn = function () {
   var players = this.players,
       currentPlayer;
 
-  this.currentPlayer = currentPlayer = this.carousel.next();
+  // Get the next eligible player.
+  do {
+    this.currentPlayer = currentPlayer = this.carousel.next();
+  } while (currentPlayer.eliminated);
 
-  currentPlayer.socket.emit('my turn');
+  if (this.won()) {
+    var winner = this.getRemainingPlayers().pop();
+    io.sockets.to(this.id).emit('game over', { winner: winner.getClientObject() });
+  } else {
+    // Tell the current play it's their turn
+    currentPlayer.socket.emit('my turn');
 
-  for (var key in players) {
-    if (players[key] !== currentPlayer) {
-      players[key].socket.emit('new turn', {
-        player: currentPlayer.getClientObject()
-      });
+    // Tell everyone else that it's not their turn
+    for (var key in players) {
+      if (players[key] !== currentPlayer) {
+        players[key].socket.emit('new turn', {
+          player: currentPlayer.getClientObject()
+        });
+      }
     }
   }
+
+  emitter.emit('push:game', {
+    destination: io.sockets.to(this.id),
+    game: this.getClientObject()
+  });
+};
+
+GameState.prototype.getRemainingPlayers = function () {
+  var list = [],
+      key;
+
+  for (key in this.players) {
+    if (!this.players[key].eliminated) {
+      list.push(this.players[key]);
+    }
+  }
+
+  return list;
+};
+
+GameState.prototype.won = function () {
+  return this.getRemainingPlayers().length === 1;
 };
 
 GameState.prototype.addUser = function (player) {
@@ -102,11 +110,11 @@ GameState.prototype.getClientObject = function () {
     currentPlayer: this.currentPlayer && this.currentPlayer.getClientObject(),
     players: []
   },
-  player;
+  playerList = clientObject.players,
+  key;
 
-  for (var key in this.players) {
-    player = this.players[key];
-    clientObject.players.push(player.getClientObject());
+  for (key in this.players) {
+    playerList.push(this.players[key].getClientObject());
   }
 
   return clientObject;
@@ -119,8 +127,16 @@ GameState.prototype.removeUser = function (player) {
 };
 
 GameState.prototype.setCurrentMove = function (currentMove) {
+  var activePlayerCount = 0,
+      key;
+  for (key in this.players) {
+    if (!this.players[key].eliminated) {
+      activePlayerCount++;
+    }
+  }
+
   this.currentMove = currentMove;
-  this.currentMove.responsesRemaining = this.userCount - 1;
+  this.currentMove.responsesRemaining = activePlayerCount - 1;
 };
 
 GameState.prototype.getCurrentMove = function () {

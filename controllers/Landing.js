@@ -77,12 +77,7 @@ var LandingController = Base.extend({
       }
     },
 
-    'remove user': function removeUser() {
-      var socket = this;
-
-      socket.join('landing');
-      logout.call(socket);
-    },
+    'remove user': logout,
 
     'disconnect': logout
   }
@@ -92,19 +87,22 @@ function logout() {
   var socket = this,
       game = socket.game;
 
+  socket.join('landing');
+
   // Only log out the user if they're part of a game.
   if (game) {
     game.removeUser(socket.player);
 
     if (game.userCount <= 1) {
-      socket.broadcast.to(game.id).emit('you are alone');
+      socket.broadcast.to(game.id).emit('force quit');
       delete games[game.id];
     }
 
-    // echo globally that this client has left
+    // tell the game's members that an opponent left
     socket.broadcast.to(game.id).emit('user left', {
       username: socket.player.name
     });
+
     socket.leave(game.id);
     delete socket.game;
 

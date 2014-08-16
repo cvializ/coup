@@ -10,6 +10,7 @@ function Player(options) {
   this.name = options.name || 'Unnamed User';
   this.coins = options.coins || 2;
   this.influences = [];
+  this.eliminated = false;
 }
 
 Player.prototype.hasInfluence = function (influenceName) {
@@ -55,7 +56,8 @@ Player.prototype.getClientObject = function (options) {
     id: this.id,
     name: this.name,
     coins: this.coins,
-    influences: this.influences
+    influences: this.influences,
+    eliminated: this.eliminated
   };
 
   if (!options.privileged) {
@@ -72,28 +74,42 @@ Player.prototype.getClientObject = function (options) {
 };
 
 Player.prototype.chooseEliminatedCard = function (callback) {
-  var self = this;
+  var self = this,
+      activeCards = self.influences.filter(cardIsActive);
 
-  self.socket.emit('select own influence', null, function (err) {
-    selectedCardToEliminate.apply(self, arguments);
-    if (callback) {
-      callback(err);
+  // If the user has multiple cards left, actually let them choose which one
+  // to give up
+  if (activeCards.length > 1) {
+    self.socket.emit('select own influence', null, function (err, data) {
+      data = data || {};
+
+      self.eliminateCard(data.id);
+      if (callback) {
+        callback(err, { noDoubleEliminate: true });
+      }
+    });
+  } else {
+    if (activeCards.length) {
+      // If the user only has one card left, get rid of it for them.
+      self.eliminateCard(activeCards.pop().id);
     }
-  });
+    callback(undefined, { noDoubleEliminate: true });
+  }
 };
 
-function selectedCardToEliminate(err, data) {
-  data = data || {};
-
+Player.prototype.eliminateCard = function(cardId) {
   var influences = this.influences,
-      dataId = data.id;
+      card = influences.filter(function (d) { return d.id === cardId; }).pop();
 
-  for (var key in influences) {
-    if (influences[key].id === dataId) {
-      influences[key].eliminated = true;
-      break;
-    }
+  if (card) {
+    card.eliminated = true;
+    // If there are no active cards, the player is eliminated
+    this.eliminated = (this.influences.filter(cardIsActive).length < 1);
   }
+};
+
+function cardIsActive(card) {
+  return !card.eliminated;
 }
 
 module.exports = Player;

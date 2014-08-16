@@ -30,51 +30,55 @@ var PlayController = Base.extend({
           game = socket.game,
           player = socket.player,
           move,
-          clientMove,
-          ability;
+          ability,
+          target;
 
       moveData = moveData || {};
 
-
       if (game.currentPlayer.id !== socket.player.id) {
-        callback('it is not your turn');
+        callback('It is not your turn.');
       } else if (!moveData.influence) {
-        callback('move is missing influence');
+        callback('Your move is missing the influence\'s name.');
       } else if (!moveData.name) {
-        callback('move is missing name');
+        callback('Your move is missing the ability\'s name.');
       } else {
             ability = Influences[moveData.influence].abilities[moveData.name];
+            target = game.players[moveData.target];
 
         if (!ability) {
-          callback('unknown move ' + moveData.influence + ':' + moveData.name);
+          callback('Unknown move ' + moveData.influence + ':' + moveData.name);
+        } else if (ability.needsTarget && (!target || target.eliminated)) {
+          if (!target) {
+            callback('The ability ' + ability.name + ' requires a target.');
+          } else {
+            callback('You cannot target an eliminated player.');
+          }
         } else if (ability.cost > player.coins) {
           callback('you don\'t have enough coins for this ability');
         } else {
           move = new Move({
             ability: ability,
-            target: game.players[moveData.target],
+            target: target,
             player: player,
             influence: moveData.influence
           });
 
-          clientMove = move.getClientObject();
-
           if (!ability.blockable && !ability.doubtable) {
             move.success(game, function (err) {
               if (err) {
-                console.log('move success error ' + err);
+                callback(err);
               } else {
                 pushPlayer(socket);
-                io.sockets.to(game.id).emit('move succeeded', clientMove);
+                io.sockets.to(game.id).emit('move succeeded', move.getClientObject());
                 game.nextTurn();
               }
             });
           } else {
             game.setCurrentMove(move);
-            socket.broadcast.to(socket.game.id).emit('move attempted', clientMove);
+            socket.broadcast.to(socket.game.id).emit('move attempted', move.getClientObject());
           }
           // Let the user know no errors occured.
-          callback(undefined, clientMove);
+          callback(undefined, move.getClientObject());
         }
       }
     },
@@ -254,10 +258,12 @@ var PlayController = Base.extend({
     'pull:game': function pullGame() {
       var socket = this;
 
-      emitter.emit('push:game', {
-        destination: socket,
-        game: socket.game.getClientObject()
-      });
+      if (socket && socket.game) {
+        emitter.emit('push:game', {
+          destination: socket,
+          game: socket.game.getClientObject()
+        });
+      }
     },
 
     'pull:player': function pullPlayer(data, callback) {

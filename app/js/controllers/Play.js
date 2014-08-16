@@ -105,7 +105,7 @@ define([
       }
 
       function filterPlayerChoice(player) {
-        return player.id !== self.socket.player.id;
+        return player.id !== self.socket.player.id && !player.get('eliminated');
       }
 
       vent.on('play:move:primary', function primaryMove(moveData) {

@@ -1,6 +1,7 @@
 function Carousel(collection) {
   this.list = [];
-  this.index = 0;
+  // The index of the most recently returned item
+  this.index = -1;
 
   for (var key in collection) {
     if (collection.hasOwnProperty(key)) {
@@ -10,15 +11,17 @@ function Carousel(collection) {
 }
 
 Carousel.prototype.next = function () {
-  var len = this.list.length;
+  var nextItem;
 
-  if (len === 0) {
+  if (this.list.length === 0) {
     return null;
   }
 
   this.index = this.getNextIndex();
 
-  return this.list[this.index];
+  nextItem = this.list[this.index];
+
+  return nextItem;
 };
 
 Carousel.prototype.getNextIndex = function () {
@@ -26,7 +29,11 @@ Carousel.prototype.getNextIndex = function () {
 };
 
 Carousel.prototype.peek = function () {
-  return this.list[this.getNextIndex()];
+  if (this.list.length > 0) {
+    return this.list[this.getNextIndex()];
+  } else {
+    return null;
+  }
 };
 
 module.exports = Carousel;

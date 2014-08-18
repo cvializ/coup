@@ -16,5 +16,9 @@
     "node-uuid": "~1.4.1",
     "shuffle": "~0.2.1",
     "socket.io": "^1.0.5"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
   }
 }

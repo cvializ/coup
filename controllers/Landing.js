@@ -1,7 +1,7 @@
 var Base = require('./Base'),
     GameState = require('../models/GameState'),
     Player = require('../models/Player'),
-    games = require('../models/GameCollection'),
+    games = require('../games'),
     emitter = require('../emitter'),
     io = require('../server').io;
 

@@ -1,4 +1,3 @@
-/* jshint unused: false */
 var
     // Server variables
     server = require('./server'),
@@ -17,10 +16,11 @@ var
 io.on('connection', function (socket) {
   socket.join('landing');
 
+  socket._gameDataController = gdc;
   // Create one each of these controllers, since they handle
   // each client's socket events.
-  var lc = new LandingController({ emitter: socket }),
-      pc = new PlayController({ emitter: socket });
+  socket._landingController = new LandingController({ emitter: socket });
+  socket._playController = new PlayController({ emitter: socket });
 
   socket.on('error', function (err) {
     console.log('ERROR!');

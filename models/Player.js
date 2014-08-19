@@ -1,6 +1,7 @@
 var uuid = require('node-uuid').v4,
     Card = require('./Card'),
-    Influences = require('./Influences');
+    Influences = require('./Influences'),
+    emitter = require('../emitter');
 
 function Player(options) {
   options = options || {};
@@ -80,7 +81,7 @@ Player.prototype.chooseEliminatedCard = function (callback) {
   // If the user has multiple cards left, actually let them choose which one
   // to give up
   if (activeCards.length > 1) {
-    self.socket.emit('select own influence', null, function (err, data) {
+    emitter.emit('select own influence', { destination: self.socket }, function (err, data) {
       data = data || {};
 
       self.eliminateCard(data.id);

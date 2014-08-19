@@ -8,15 +8,19 @@ var
     LandingController = require('./controllers/Landing'),
     PlayController = require('./controllers/Play'),
     GameDataController = require('./controllers/GameData'),
+    PlayerController = require('./controllers/Player'),
 
-    // instantiate this controller only once, since it listens for
-    // server-side events only and thus only needs to be created once.
-    gdc = new GameDataController({ emitter: emitter });
+    // instantiate these controller only once, since they listen for
+    // server-side events only and all their dependencies are injected,
+    // thus they only need to be created once.
+    gdc = new GameDataController({ emitter: emitter }),
+    playerController = new PlayerController({ emitter: emitter });
 
 io.on('connection', function (socket) {
   socket.join('landing');
 
   socket._gameDataController = gdc;
+  socket._playerController = playerController;
   // Create one each of these controllers, since they handle
   // each client's socket events.
   socket._landingController = new LandingController({ emitter: socket });

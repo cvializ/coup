@@ -1,8 +1,9 @@
 function GameCollection() { }
 
-function exists(title) {
-  for (var key in this) {
-    if(this[key].title === title) {
+function exists(value, key) {
+  key = key || 'title';
+  for (var id in this) {
+    if(this[id][key] === value) {
       return true;
     }
   }

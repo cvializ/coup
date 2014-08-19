@@ -13,6 +13,14 @@ Base = ExtendBase.extend({
     for (var key in events) {
       emitter.on(key, events[key]);
     }
+  },
+  stop: function () {
+    var emitter = this.emitter,
+        events = this.events;
+
+    for (var key in events) {
+      emitter.removeListener(key, events[key]);
+    }
   }
 });
 

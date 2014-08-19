@@ -55,15 +55,19 @@ GameState.prototype.nextTurn = function () {
 
   if (this.won()) {
     var winner = this.getRemainingPlayers().pop();
-    io.sockets.to(this.id).emit('game over', { winner: winner.getClientObject() });
+    emitter.emit('game over', {
+      destination: io.sockets.to(this.id),
+      winner: winner.getClientObject()
+    });
   } else {
     // Tell the current play it's their turn
-    currentPlayer.socket.emit('my turn');
+    emitter.emit('my turn', { destination: currentPlayer.socket });
 
     // Tell everyone else that it's not their turn
     for (var key in players) {
       if (players[key] !== currentPlayer) {
-        players[key].socket.emit('new turn', {
+        emitter.emit('new turn', {
+          destination: players[key].socket,
           player: currentPlayer.getClientObject()
         });
       }

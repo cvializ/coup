@@ -9,7 +9,9 @@ var uuid = require('node-uuid').v4,
 function GameState(options) {
   options = options || {};
 
-  var influenceDeck = [];
+  var influenceDeck = [],
+      cardTypeCount = influenceTypes.length,
+      cardsPerType = options.cardsPerType || 3;
 
   if (!options.title) {
     throw 'Property "title" missing from GameState constructor\'s options arg';
@@ -28,8 +30,8 @@ function GameState(options) {
   this.carousel = null;
   this.currentPlayer = null;
 
-  for (var i = 0; i < 3; i++) {
-    for (var j = 0; j < 5; j++) {
+  for (var i = 0; i < cardsPerType; i++) {
+    for (var j = 0; j < cardTypeCount; j++) {
       influenceDeck.push(new Card({ name: influenceTypes[j] }));
     }
   }
@@ -38,10 +40,12 @@ function GameState(options) {
 }
 
 GameState.prototype.start = function () {
-  this.started = true;
-  this.carousel = new Carousel(this.players);
+  if (this.userCount > 1) {
+    this.started = true;
+    this.carousel = new Carousel(this.players);
 
-  this.nextTurn();
+    this.nextTurn();
+  }
 };
 
 GameState.prototype.nextTurn = function () {

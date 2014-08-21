@@ -14,7 +14,13 @@ Base = ExtendBase.extend({
         events = this.events;
 
     for (var key in events) {
-      this.listeners[key] = this.bindListener(key, events[key]);
+      // If we don't specify a listener function,
+      // just use the default "passthrough" listener
+      if (typeof(events[key]) !== 'function') {
+        events[key] = this.createDefaultListener(key);
+      }
+
+      this.listeners[key] = this.bindListener(events[key]);
       emitter.on(key, this.listeners[key]);
     }
   },
@@ -29,24 +35,15 @@ Base = ExtendBase.extend({
     }
   },
 
-  bindListener: function (key, listener) {
-    var self = this,
-        boundListener;
-
-    // If we don't specify a listener function,
-    // just use the default "passthrough" listener
-    if (typeof(listener) !== 'function') {
-      listener = self.createDefaultListener(key);
-    }
+  bindListener: function (listener) {
+    var self = this;
 
     // Since the EventEmitter resets the listener's `this`,
     // wrap our desired function and bind `this` to it.
     // The wrapper's `this` will be reset, but not the inner fn.
-    boundListener = function listenerWrapper() {
+    return function listenerWrapper() {
       listener.apply(self, arguments);
     };
-
-    return boundListener;
   },
 
   createDefaultListener: function createDefaultListener(eventName) {

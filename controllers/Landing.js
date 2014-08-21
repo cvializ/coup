@@ -25,7 +25,7 @@ var LandingController = Base.extend({
     },
 
     'ready': function ready() {
-      var socket = this;
+      var socket = this.emitter;
 
       emitter.emit('push:game:collection', {
         destination: socket,
@@ -36,7 +36,7 @@ var LandingController = Base.extend({
     'join user': function joinUser(data, callback) {
       data = data || {};
 
-      var socket = this,
+      var socket = this.emitter,
           game = games[data.id];
 
       // sanitize
@@ -84,7 +84,7 @@ var LandingController = Base.extend({
 });
 
 function logout() {
-  var socket = this,
+  var socket = this.emitter,
       game = socket.game;
 
   socket.join('landing');

@@ -135,34 +135,36 @@ describe('GameState', function () {
     });
 
     it('should inform participants of new turns', function (done) {
-      var expected = {
-            player: player2.getClientObject()
-          },
-          mockController,
-          remaining = 3;
+      var mockController;
 
       game.start();
 
       mockController = new MockController({
         emitter: emitter,
+        remainingResponses: 3,
+        expected: {
+          player: player2.getClientObject()
+        },
         events: {
-          'doneAfterAllRespond': function doneAfterAllRespond(options) {
-            if (options.remaining === 0) {
+          'respond': function doneAfterAllRespond() {
+            var remaining = --this.options.remainingResponses;
+            if (remaining === 0) {
+              // Success!
               done();
-              mockController.stop();
+              this.stop();
             }
           },
           'my turn': function myTurn() {
-            emitter.emit('doneAfterAllRespond', { remaining: --remaining });
+            emitter.emit('respond');
           },
           'new turn': function newTurn(options) {
             for (var key in options) {
               if (key === 'destination') {
                 continue;
               }
-              expect(expected[key]).to.deep.equal(options[key]);
+              expect(this.expected[key]).to.deep.equal(options[key]);
             }
-            emitter.emit('doneAfterAllRespond', { remaining: --remaining });
+            emitter.emit('respond');
           }
         }
       });

@@ -1,8 +1,10 @@
 function GameCollection() { }
 
-function exists(title) {
+function exists(value, property) {
+  property = property || 'title';
+
   for (var key in this) {
-    if(this[key].title === title) {
+    if(this[key][property] === value) {
       return true;
     }
   }

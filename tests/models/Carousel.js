@@ -62,8 +62,8 @@ describe('Carousel', function () {
     });
 
     it('should not advance the index', function () {
-      var peeked,
-          next;
+      var peeked;
+
       // check for the first
       expect(carousel.index).to.equal(-1);
       peeked = carousel.peek();
@@ -81,7 +81,7 @@ describe('Carousel', function () {
 
   describe('#getNextIndex', function () {
     it('should return 0 on the first call', function () {
-      expect(carousel.getNextIndex()).to.equal(0);
+      expect(0).to.equal(carousel.getNextIndex());
     });
 
     it('should return 0 after (list.length) calls to #next', function () {

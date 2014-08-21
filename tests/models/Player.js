@@ -20,7 +20,7 @@ describe('Player', function () {
   });
 
   describe('#chooseEliminatedCard', function () {
-    it('should offer the user a choice of which card to remove (the first one)', function (done) {
+    it('should offer the user a choice of which card to remove', function (done) {
       var mockController = new MockController({
         emitter: emitter,
         events: {
@@ -93,33 +93,38 @@ describe('Player', function () {
   describe('#getClientObject', function () {
     it('should not expose uneliminated cards to other users', function () {
       var clientObject = player.getClientObject({ privileged: false }),
-          key;
+          clientInfluences = clientObject.influences,
+          i;
 
-      for (key in clientObject.influences) {
-        expect(clientObject.influences[key].dummy).to.equal(true);
+      for (i = 0; i < clientInfluences.length; i++) {
+        expect(clientInfluences[i].dummy).to.equal(true);
       }
     });
 
     it('should expose eliminated cards to other users', function () {
       var clientObject,
-          key,
+          clientInfluences,
           i;
+
       for (i = 0; i < influences.length; i++) {
         influences[i].eliminated = true;
       }
 
       clientObject = player.getClientObject({ privileged: false });
-      for (key in clientObject.influences) {
-        expect(clientObject.influences[key].dummy).to.equal(false);
+      clientInfluences = clientObject.influences;
+
+      for (i = 0; i < clientInfluences.length; i++) {
+        expect(clientInfluences[i].dummy).to.equal(false);
       }
     });
 
     it('should expose all cards to the player who owns them', function () {
       var clientObject = player.getClientObject({ privileged: true }),
-          key;
+          clientInfluences = clientObject.influences,
+          i;
 
-      for (key in clientObject.influences) {
-        expect(clientObject.influences[key].dummy).to.equal(false);
+      for (i = 0; i < clientInfluences.length; i++) {
+        expect(clientInfluences[i].dummy).to.equal(false);
       }
     });
   });

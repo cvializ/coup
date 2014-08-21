@@ -107,23 +107,15 @@ describe('GameState', function () {
     });
 
     it('should inform participants that the last remaining player has won the game.', function (done) {
-      var expected = {
-            winner: player2.getClientObject()
-          },
-          mockController;
+      var mockController;
 
       mockController = new MockController({
         emitter: emitter,
         events: {
           'game over': function gameOver(options) {
-            for (var key in options) {
-              if (key === 'destination') {
-                continue;
-              }
-              expect(expected[key]).to.deep.equal(options[key]);
-            }
-            mockController.stop();
+            expect(player2.getClientObject()).to.deep.equal(options.winner);
             done();
+            this.stop();
           }
         }
       });
@@ -142,9 +134,6 @@ describe('GameState', function () {
       mockController = new MockController({
         emitter: emitter,
         remainingResponses: 3,
-        expected: {
-          player: player2.getClientObject()
-        },
         events: {
           'respond': function doneAfterAllRespond() {
             var remaining = --this.options.remainingResponses;
@@ -158,13 +147,27 @@ describe('GameState', function () {
             emitter.emit('respond');
           },
           'new turn': function newTurn(options) {
-            for (var key in options) {
-              if (key === 'destination') {
-                continue;
-              }
-              expect(this.expected[key]).to.deep.equal(options[key]);
-            }
+            expect(player2.getClientObject()).to.deep.equal(options.player);
             emitter.emit('respond');
+          }
+        }
+      });
+
+      game.nextTurn();
+    });
+
+    it('should send the game data to all of its players', function (done) {
+      var mockController;
+
+      game.start();
+
+      mockController = new MockController({
+        emitter: emitter,
+        events: {
+          'push:game': function pushGame(options) {
+            expect(game.getClientObject()).to.deep.equal(options.game);
+            done();
+            this.stop();
           }
         }
       });

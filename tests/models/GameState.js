@@ -4,14 +4,18 @@ var expect = require('chai').expect,
 
 describe('GameState', function () {
   var game,
-      player,
-      player2;
+      players,
+      player1,
+      player2,
+      player3;
 
   beforeEach(function (done) {
     game = new GameState({ title: 'Test Game' });
-    player = new Player({ name: 'Frank' });
-    player2 = new Player({ name: 'Jesus' });
-
+    players = [
+      player1 = new Player({ name: 'Anne' }),
+      player2 = new Player({ name: 'Betty' }),
+      player3 = new Player({ name: 'Charlie' })
+    ];
     done();
   });
 
@@ -22,8 +26,10 @@ describe('GameState', function () {
   });
 
   describe('#addUser', function () {
+    var player;
 
     beforeEach(function (done) {
+      player = players.shift();
       game.addUser(player);
       done();
     });
@@ -40,7 +46,10 @@ describe('GameState', function () {
   });
 
   describe('#start', function () {
+    var player;
+
     beforeEach(function (done) {
+      player = players.shift();
       game.addUser(player);
       done();
     });
@@ -51,15 +60,48 @@ describe('GameState', function () {
     });
 
     it('should start if the game has more than one player', function () {
-      game.addUser(player2);
+      game.addUser(players.shift());
       game.start();
       expect(game.started).to.equal(true);
     });
 
+    it('should let the first player to join have the first turn', function () {
+      game.addUser(players.shift());
+      game.start();
+      expect(game.currentPlayer.name).to.equal(player1.name);
+    });
+
     it('should initialize the carousel', function () {
-      game.addUser(player2);
+      game.addUser(players.shift());
       game.start();
       expect(game.carousel).to.not.equal(null);
+    });
+  });
+
+  describe('#nextTurn', function () {
+    beforeEach(function (done) {
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+      done();
+    });
+
+    it('should not have any side effect if called before game.start', function () {
+      game.nextTurn();
+      expect(game.currentPlayer).to.equal(null);
+    });
+
+    it('should be called on game.start and set the currentPlayer',  function () {
+      game.start();
+      expect(game.currentPlayer).to.not.equal(null);
+    });
+
+    it('should skip over eliminated players', function () {
+      game.start();
+      expect(game.currentPlayer.name).to.equal(player1.name);
+      player2.eliminated = true;
+      game.nextTurn();
+      expect(game.currentPlayer.name).to.equal(player3.name);
     });
   });
 });

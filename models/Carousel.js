@@ -8,6 +8,13 @@ function Carousel(collection) {
       this.list.push(collection[key]);
     }
   }
+
+  // This uses an optional 'order' property
+  // to allow items to be sorted
+  // i.e. players who join a game first can go first.
+  this.list.sort(function (a, b) {
+    return a.order - b.order;
+  });
 }
 
 Carousel.prototype.next = function () {

@@ -49,10 +49,14 @@ GameState.prototype.start = function () {
 };
 
 GameState.prototype.nextTurn = function () {
+  if (!this.started) {
+    return;
+  }
   var players = this.players,
       currentPlayer;
 
-  // Get the next eligible player.
+  // Get the next eligible player and
+  // skip over eliminated players.
   do {
     this.currentPlayer = currentPlayer = this.carousel.next();
   } while (currentPlayer.eliminated);
@@ -104,7 +108,10 @@ GameState.prototype.won = function () {
 GameState.prototype.addUser = function (player) {
   if (!this.started) {
     this.players[player.id] = player;
+
+    player.order = this.userCount;
     player.influences = this.deck.drawRandom(2);
+
     this.userCount++;
     this.votesToStart++;
   }

@@ -12,6 +12,7 @@ function Player(options) {
   this.coins = options.coins || 2;
   this.influences = [];
   this.eliminated = false;
+  this.order = options.order || 0;
 }
 
 Player.prototype.hasInfluence = function (influenceName) {

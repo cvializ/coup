@@ -110,25 +110,63 @@ describe('GameState', function () {
       var expected = {
             winner: player2.getClientObject()
           },
-          mockController = new MockController({
-            emitter: emitter,
-            events: {
-              'game over': function gameOver(options) {
-                for (var key in options) {
-                  if (key === 'destination') {
-                    continue;
-                  }
-                  expect(expected[key]).to.deep.equal(options[key]);
-                }
-                mockController.stop();
-                done();
+          mockController;
+
+      mockController = new MockController({
+        emitter: emitter,
+        events: {
+          'game over': function gameOver(options) {
+            for (var key in options) {
+              if (key === 'destination') {
+                continue;
               }
+              expect(expected[key]).to.deep.equal(options[key]);
             }
-          });
+            mockController.stop();
+            done();
+          }
+        }
+      });
 
       game.start();
       player1.eliminated = true;
       player3.eliminated = true;
+      game.nextTurn();
+    });
+
+    it('should inform participants of new turns', function (done) {
+      var expected = {
+            player: player2.getClientObject()
+          },
+          mockController,
+          remaining = 3;
+
+      game.start();
+
+      mockController = new MockController({
+        emitter: emitter,
+        events: {
+          'doneAfterAllRespond': function doneAfterAllRespond(options) {
+            if (options.remaining === 0) {
+              done();
+              mockController.stop();
+            }
+          },
+          'my turn': function myTurn() {
+            emitter.emit('doneAfterAllRespond', { remaining: --remaining });
+          },
+          'new turn': function newTurn(options) {
+            for (var key in options) {
+              if (key === 'destination') {
+                continue;
+              }
+              expect(expected[key]).to.deep.equal(options[key]);
+            }
+            emitter.emit('doneAfterAllRespond', { remaining: --remaining });
+          }
+        }
+      });
+
       game.nextTurn();
     });
   });

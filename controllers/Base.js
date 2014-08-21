@@ -13,7 +13,11 @@ Base = ExtendBase.extend({
         events = this.events;
 
     for (var key in events) {
-      this.listeners[key] = (events[key] || this.createDefaultListener(key));
+      if (typeof(events[key]) !== 'function') {
+        this.listeners[key] = this.createDefaultListener(key);
+      } else {
+        this.listeners[key] = events[key];
+      }
       emitter.on(key, this.listeners[key]);
     }
   },
@@ -26,8 +30,6 @@ Base = ExtendBase.extend({
       emitter.removeListener(key, this.listeners[key]);
     }
   },
-
-  useDefaultListener: null,
 
   createDefaultListener: function createDefaultListener(eventName) {
     return function (options, callback) {

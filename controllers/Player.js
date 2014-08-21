@@ -2,7 +2,7 @@ var Base = require('./Base');
 
 var PlayerController = Base.extend({
   events: {
-    'select own influence': this.useDefaultListener
+    'select own influence': 'default'
   }
 });
 

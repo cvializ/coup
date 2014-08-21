@@ -34,7 +34,7 @@ describe('Carousel', function () {
       expect(carousel.next()).to.equal(carousel.list[0]);
     });
 
-    it('should return the first item on the (list.length)th call', function () {
+    it('should return the first item on the (list.length + 1)th call', function () {
       var first,
           nth,
           length = carousel.list.length,

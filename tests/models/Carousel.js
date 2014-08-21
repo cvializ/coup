@@ -4,9 +4,9 @@ var expect = require('chai').expect,
 describe('Carousel', function () {
   var carousel,
       collection = {
-        'Player1': { coins: 1 },
-        'Ralph': { coins: 2 },
-        'Frank': { coins: 3 }
+        'Player1': { coins: 1, order: 3 },
+        'Ralph': { coins: 2, order: 2 },
+        'Frank': { coins: 3, order: 1 }
       };
 
   beforeEach(function (done) {
@@ -17,10 +17,24 @@ describe('Carousel', function () {
   describe('#constructor', function () {
     it('should create a list of items from the given collection', function () {
       expect(carousel.list).to.deep.equal([
-          { coins: 1 },
-          { coins: 2 },
-          { coins: 3 }
+          { coins: 3, order: 1 },
+          { coins: 2, order: 2 },
+          { coins: 1, order: 3 }
       ]);
+    });
+
+    it('should sort the objects in the collection by their order property', function () {
+      var expectedUser = 'Frank';
+      expect(carousel.next()).to.equal(collection[expectedUser]);
+    });
+
+    it('should accept objects without an order property', function () {
+      carousel = new Carousel({
+        'A': { p: 1 },
+        'B': { p: 2 },
+        'C': { p: 3 }
+      });
+      expect(carousel.list.length).to.equal(3);
     });
   });
 

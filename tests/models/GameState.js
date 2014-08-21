@@ -80,6 +80,38 @@ describe('GameState', function () {
     });
   });
 
+  describe('#getRemainingPlayers', function () {
+    beforeEach(function (done) {
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+      game.start();
+      done();
+    });
+
+    it('should return a list of players with at least one non-eliminated card', function () {
+      var remainingPlayers;
+
+      player1.eliminated = true;
+      remainingPlayers = game.getRemainingPlayers();
+
+      expect(2).to.equal(remainingPlayers.length);
+      expect(-1).to.equal(remainingPlayers.indexOf(player1));
+    });
+  });
+
+  describe('#won', function () {
+    it('should be true if only one player remains', function () {
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+      game.addUser(players.shift());
+
+      player1.eliminated = player2.eliminated = true;
+
+      expect(true).to.equal(game.won());
+    });
+  });
+
   describe('#nextTurn', function () {
     beforeEach(function (done) {
       game.addUser(players.shift());
@@ -100,10 +132,10 @@ describe('GameState', function () {
 
     it('should skip over eliminated players', function () {
       game.start();
-      expect(game.currentPlayer.name).to.equal(player1.name);
+      expect(player1.name).to.equal(game.currentPlayer.name);
       player2.eliminated = true;
       game.nextTurn();
-      expect(game.currentPlayer.name).to.equal(player3.name);
+      expect(player3.name).to.equal(game.currentPlayer.name);
     });
 
     it('should inform participants that the last remaining player has won the game.', function (done) {
@@ -112,8 +144,8 @@ describe('GameState', function () {
       mockController = new MockController({
         emitter: emitter,
         events: {
-          'game over': function gameOver(options) {
-            expect(player2.getClientObject()).to.deep.equal(options.winner);
+          'game over': function gameOver(data) {
+            expect(data.winner).to.deep.equal(player2.getClientObject());
             done();
             this.stop();
           }
@@ -146,8 +178,8 @@ describe('GameState', function () {
           'my turn': function myTurn() {
             emitter.emit('respond');
           },
-          'new turn': function newTurn(options) {
-            expect(player2.getClientObject()).to.deep.equal(options.player);
+          'new turn': function newTurn(data) {
+            expect(player2.getClientObject()).to.deep.equal(data.player);
             emitter.emit('respond');
           }
         }
@@ -164,8 +196,8 @@ describe('GameState', function () {
       mockController = new MockController({
         emitter: emitter,
         events: {
-          'push:game': function pushGame(options) {
-            expect(game.getClientObject()).to.deep.equal(options.game);
+          'push:game': function pushGame(data) {
+            expect(game.getClientObject()).to.deep.equal(data.game);
             done();
             this.stop();
           }

@@ -68,6 +68,20 @@ describe('Player', function () {
     });
   });
 
+  describe('#canBlock', function () {
+    it('should return true if the player possesses a card that can block the given move', function () {
+      expect(player.canBlock('Assassin', 'Assassinate')).to.equal(true);
+    });
+
+    it('should return false if the player lacks a card that blocks the given move', function () {
+      expect(player.canBlock('Default', 'Foreign Aid')).to.equal(false);
+    });
+
+    it('should return false if the given influence or ability don\'t exist', function () {
+      expect(player.canBlock('Foo', 'Bar')).to.equal(false);
+    });
+  });
+
   describe('#eliminateCard', function () {
     it('should set the card with the given id to eliminated', function () {
       var ambassador = influences.filter(function (card) { return card.name === 'Ambassador'; }).pop();

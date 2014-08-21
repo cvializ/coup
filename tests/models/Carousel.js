@@ -81,7 +81,7 @@ describe('Carousel', function () {
 
   describe('#getNextIndex', function () {
     it('should return 0 on the first call', function () {
-      expect(0).to.equal(carousel.getNextIndex());
+      expect(carousel.getNextIndex()).to.equal(0);
     });
 
     it('should return 0 after (list.length) calls to #next', function () {

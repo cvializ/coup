@@ -4,15 +4,19 @@ var express = require('express'),
     io = require('socket.io')(server),
     port = process.env.PORT || 8000;
 
-server.listen(port, function () {
-  console.log('Server listening at port %d', port);
-});
-
-// Routing
-app.use(express.static(__dirname + '/app'));
-
 module.exports = {
   app: app,
   server: server,
-  io: io
+  io: io,
+  initialize: function (callback) {
+
+    // Routing
+    app.use(express.static(__dirname + '/app'));
+
+    server.listen(port, function () {
+      console.log('Server listening at port %d', port);
+      callback();
+    });
+
+  }
 };

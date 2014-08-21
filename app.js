@@ -18,20 +18,22 @@ var
     playerController = new PlayerController({ emitter: emitter }),
     gameStateController = new GameStateController({ emitter: emitter });
 
-io.on('connection', function (socket) {
-  socket.join('landing');
+server.initialize(function () {
+  io.on('connection', function (socket) {
+    socket.join('landing');
 
-  socket._gameDataController = gdc;
-  socket._playerController = playerController;
-  socket._gameStateController = gameStateController;
-  
-  // Create one each of these controllers, since they handle
-  // each client's socket events.
-  socket._landingController = new LandingController({ emitter: socket });
-  socket._playController = new PlayController({ emitter: socket });
+    socket._gameDataController = gdc;
+    socket._playerController = playerController;
+    socket._gameStateController = gameStateController;
 
-  socket.on('error', function (err) {
-    console.log('ERROR!');
-    console.log(err);
+    // Create one each of these controllers, since they handle
+    // each client's socket events.
+    socket._landingController = new LandingController({ emitter: socket });
+    socket._playController = new PlayController({ emitter: socket });
+
+    socket.on('error', function (err) {
+      console.log('ERROR!');
+      console.log(err);
+    });
   });
 });

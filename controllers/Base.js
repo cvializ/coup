@@ -3,12 +3,14 @@ var ExtendBase = require('class-extend'),
 
 Base = ExtendBase.extend({
   constructor: function (options) {
-    this.listeners = {};
     this.initialize(options);
   },
 
   initialize: function (options) {
     options = options || {};
+
+    this.listeners = {};
+
     var emitter = this.emitter = options.emitter,
         events = this.events;
 

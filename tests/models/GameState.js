@@ -1,6 +1,8 @@
 var expect = require('chai').expect,
     Player = require('../../models/Player'),
-    GameState = require('../../models/GameState');
+    GameState = require('../../models/GameState'),
+    MockController = require('../../controllers/Mock'),
+    emitter = require('../../emitter');
 
 describe('GameState', function () {
   var game,
@@ -102,6 +104,32 @@ describe('GameState', function () {
       player2.eliminated = true;
       game.nextTurn();
       expect(game.currentPlayer.name).to.equal(player3.name);
+    });
+
+    it('should inform participants that the last remaining player has won the game.', function (done) {
+      var expected = {
+            winner: player2.getClientObject()
+          },
+          mockController = new MockController({
+            emitter: emitter,
+            events: {
+              'game over': function gameOver(options) {
+                for (var key in options) {
+                  if (key === 'destination') {
+                    continue;
+                  }
+                  expect(expected[key]).to.deep.equal(options[key]);
+                }
+                mockController.stop();
+                done();
+              }
+            }
+          });
+
+      game.start();
+      player1.eliminated = true;
+      player3.eliminated = true;
+      game.nextTurn();
     });
   });
 });

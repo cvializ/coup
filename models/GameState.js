@@ -48,18 +48,23 @@ GameState.prototype.start = function () {
   }
 };
 
-GameState.prototype.nextTurn = function () {
+GameState.prototype.nextTurn = function (options) {
+  options = options || {};
+
   if (!this.started) {
     return;
   }
   var players = this.players,
-      currentPlayer;
+      currentPlayer = this.currentPlayer;
 
-  // Get the next eligible player and
-  // skip over eliminated players.
-  do {
-    this.currentPlayer = currentPlayer = this.carousel.next();
-  } while (currentPlayer.eliminated);
+  if(!options.restartTurn) {
+    // Get the next eligible player and
+    // skip over eliminated players.
+    do {
+      // assign both the original reference and the shortcut
+      this.currentPlayer = currentPlayer = this.carousel.next();
+    } while (currentPlayer && currentPlayer.eliminated);
+  }
 
   if (this.won()) {
     var winner = this.getRemainingPlayers().pop();
@@ -138,20 +143,30 @@ GameState.prototype.getClientObject = function () {
 GameState.prototype.removeUser = function (player) {
   delete this.players[player.id];
   this.userCount--;
-  this.votesToStart--;
+  this.carousel.remove(player);
+
+  if (!this.started) {
+    this.votesToStart = this.votesToStart - 1;
+  } else {
+    // Put the player's cards back in the deck
+    this.deck.putOnTopOfDeck(player.influences);
+    this.deck.shuffle();
+
+    if (!this.won()) {
+      if (player === this.currentPlayer) {
+        console.log('skip this guy');
+        this.nextTurn();
+      } else {
+        console.log('let\'s try this again');
+        this.nextTurn({ restartTurn: true });
+      }
+    }
+  }
 };
 
 GameState.prototype.setCurrentMove = function (currentMove) {
-  var activePlayerCount = 0,
-      key;
-  for (key in this.players) {
-    if (!this.players[key].eliminated) {
-      activePlayerCount++;
-    }
-  }
-
   this.currentMove = currentMove;
-  this.currentMove.responsesRemaining = activePlayerCount - 1;
+  this.currentMove.responsesRemaining = this.getRemainingPlayers().length - 1;
 };
 
 GameState.prototype.getCurrentMove = function () {

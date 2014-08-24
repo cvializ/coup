@@ -109,4 +109,28 @@ describe('Carousel', function () {
       expect(carousel.getNextIndex()).to.equal(0);
     });
   });
+
+  describe('#remove', function () {
+    it('should remove the item from the collection list', function () {
+      var toRemoveName = 'Frank',
+          toRemove = collection[toRemoveName];
+
+      expect(carousel.list.indexOf(toRemove)).to.not.equal(-1);
+      carousel.remove(toRemove);
+      expect(carousel.list.indexOf(toRemove)).to.equal(-1);
+    });
+
+    it('should advance the index if the removed item is the currently indexed item', function () {
+      var toRemoveName = 'Frank',
+          toRemove = collection[toRemoveName];
+
+      var current = carousel.next();
+
+      expect(current).to.equal(toRemove);
+      expect(carousel.index).to.equal(0);
+
+      carousel.remove(toRemove);
+      expect(carousel.index).to.equal(1);
+    });
+  });
 });

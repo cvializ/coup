@@ -17,6 +17,19 @@ function Carousel(collection) {
   });
 }
 
+Carousel.prototype.remove = function (element) {
+  var list = this.list,
+      elementIndex = list.indexOf(element);
+
+  if (~elementIndex) {
+    list.splice(elementIndex, 1);
+
+    if (this.index === elementIndex) {
+      this.index = this.getNextIndex();
+    }
+  }
+};
+
 Carousel.prototype.next = function () {
   var nextItem;
 

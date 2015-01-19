@@ -1,9 +1,10 @@
 function GameCollection() { }
 
-function exists(value, key) {
-  key = key || 'title';
-  for (var id in this) {
-    if(this[id][key] === value) {
+function exists(value, property) {
+  property = property || 'title';
+
+  for (var key in this) {
+    if(this[key][property] === value) {
       return true;
     }
   }
@@ -16,8 +17,8 @@ Object.defineProperty(GameCollection.prototype, 'gameExists', {
 
 function getClientObject() {
   var gameList = [];
-  for (var key in games) {
-    gameList.push(games[key].getClientObject());
+  for (var key in this) {
+    gameList.push(this[key].getClientObject());
   }
 
   return gameList;
@@ -27,6 +28,4 @@ Object.defineProperty(GameCollection.prototype, 'getClientObject', {
   enumerable: false
 });
 
-var games = new GameCollection();
-
-module.exports = games;
+module.exports = GameCollection;

@@ -7,7 +7,7 @@ var Base = require('./Base'),
 var PlayController = Base.extend({
   events: {
     'vote start': function voteStart(callback) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game;
 
       if (game.userCount === 1) {
@@ -26,7 +26,7 @@ var PlayController = Base.extend({
     },
 
     'make move': function makeMove(moveData, callback) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game,
           player = socket.player,
           move,
@@ -84,7 +84,7 @@ var PlayController = Base.extend({
     },
 
     'block move': function blockMove(data, callback) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game,
           players = game.players,
           myPlayer = socket.player,
@@ -115,7 +115,7 @@ var PlayController = Base.extend({
     },
 
     'doubt move': function doubtMove(data, callback) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game,
           move = game.getCurrentMove(),
           player = move.player,
@@ -155,14 +155,15 @@ var PlayController = Base.extend({
             }
           });
         } else {
+          io.sockets.in(socket.game.id).emit('move responded to', clientMove);
+
+          // The player was lying, so take away their card
           if (!data.noDoubleEliminate) {
             player.chooseEliminatedCard(function (err) {
               if (err) {
                 callback(err);
               } else {
                 callback();
-                // the player was lying.
-                // take away the player's card
                 io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
                 game.nextTurn();
               }
@@ -176,7 +177,7 @@ var PlayController = Base.extend({
     },
 
     'allow move': function allowMove(data, callback) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game,
           move = game.getCurrentMove();
 
@@ -204,7 +205,7 @@ var PlayController = Base.extend({
 
     'blocker doubt': function blockerDoubt(data) {
 
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game,
           move = game.getCurrentMove(),
           clientMove = move.getClientObject(),
@@ -247,7 +248,7 @@ var PlayController = Base.extend({
     },
 
     'blocker success': function blockerSuccess(data) {
-      var socket = this,
+      var socket = this.emitter,
           game = socket.game;
 
       // the blocker succeeds in blocking the action.
@@ -256,7 +257,7 @@ var PlayController = Base.extend({
     },
 
     'pull:game': function pullGame() {
-      var socket = this;
+      var socket = this.emitter;
 
       if (socket && socket.game) {
         emitter.emit('push:game', {
@@ -268,7 +269,7 @@ var PlayController = Base.extend({
 
     'pull:player': function pullPlayer(data, callback) {
       data = data || {};
-      var socket = this,
+      var socket = this.emitter,
           player = socket.player;
 
       if (data.id !== player.id) {

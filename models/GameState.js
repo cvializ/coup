@@ -9,7 +9,9 @@ var uuid = require('node-uuid').v4,
 function GameState(options) {
   options = options || {};
 
-  var influenceDeck = [];
+  var influenceDeck = [],
+      cardTypeCount = influenceTypes.length,
+      cardsPerType = options.cardsPerType || 3;
 
   if (!options.title) {
     throw 'Property "title" missing from GameState constructor\'s options arg';
@@ -28,8 +30,8 @@ function GameState(options) {
   this.carousel = null;
   this.currentPlayer = null;
 
-  for (var i = 0; i < 3; i++) {
-    for (var j = 0; j < 5; j++) {
+  for (var i = 0; i < cardsPerType; i++) {
+    for (var j = 0; j < cardTypeCount; j++) {
       influenceDeck.push(new Card({ name: influenceTypes[j] }));
     }
   }
@@ -38,34 +40,51 @@ function GameState(options) {
 }
 
 GameState.prototype.start = function () {
-  this.started = true;
-  this.carousel = new Carousel(this.players);
+  if (this.userCount > 1) {
+    this.started = true;
+    this.carousel = new Carousel(this.players);
 
-  this.nextTurn();
+    this.nextTurn();
+  }
 };
 
-GameState.prototype.nextTurn = function () {
-  var players = this.players,
-      currentPlayer;
+GameState.prototype.nextTurn = function (options) {
+  options = options || {};
 
-  // Get the next eligible player.
-  do {
-    this.currentPlayer = currentPlayer = this.carousel.next();
-  } while (currentPlayer.eliminated);
+  if (!this.started) {
+    return;
+  }
+  var players = this.players,
+      currentPlayer = this.currentPlayer;
+
+  if(!options.restartTurn) {
+    // Get the next eligible player and
+    // skip over eliminated players.
+    do {
+      // assign both the original reference and the shortcut
+      this.currentPlayer = currentPlayer = this.carousel.next();
+    } while (currentPlayer && currentPlayer.eliminated);
+  }
 
   if (this.won()) {
     var winner = this.getRemainingPlayers().pop();
-    io.sockets.to(this.id).emit('game over', { winner: winner.getClientObject() });
+    emitter.emit('game over', {
+      destination: io.sockets.to(this.id),
+      winner: winner.getClientObject()
+    });
   } else {
-    // Tell the current play it's their turn
-    currentPlayer.socket.emit('my turn');
+    if (this.userCount > 1) {
+      // Tell the current play it's their turn
+      emitter.emit('my turn', { destination: currentPlayer.socket });
 
-    // Tell everyone else that it's not their turn
-    for (var key in players) {
-      if (players[key] !== currentPlayer) {
-        players[key].socket.emit('new turn', {
-          player: currentPlayer.getClientObject()
-        });
+      // Tell everyone else that it's not their turn
+      for (var key in players) {
+        if (players[key] !== currentPlayer) {
+          emitter.emit('new turn', {
+            destination: players[key].socket,
+            player: currentPlayer.getClientObject()
+          });
+        }
       }
     }
   }
@@ -96,7 +115,10 @@ GameState.prototype.won = function () {
 GameState.prototype.addUser = function (player) {
   if (!this.started) {
     this.players[player.id] = player;
+
+    player.order = this.userCount;
     player.influences = this.deck.drawRandom(2);
+
     this.userCount++;
     this.votesToStart++;
   }
@@ -123,20 +145,34 @@ GameState.prototype.getClientObject = function () {
 GameState.prototype.removeUser = function (player) {
   delete this.players[player.id];
   this.userCount--;
-  this.votesToStart--;
+
+  if (!this.started) {
+    this.votesToStart = this.votesToStart - 1;
+    if (this.votesToStart === 0) {
+      this.start();
+    }
+  } else {
+    this.carousel.remove(player);
+
+    // Put the player's cards back in the deck
+    this.deck.putOnTopOfDeck(player.influences);
+    this.deck.shuffle();
+
+    if (!this.won()) {
+      if (player === this.currentPlayer) {
+        //console.log('skip this guy');
+        this.nextTurn();
+      } else {
+        //console.log('let\'s try this again');
+        this.nextTurn({ restartTurn: true });
+      }
+    }
+  }
 };
 
 GameState.prototype.setCurrentMove = function (currentMove) {
-  var activePlayerCount = 0,
-      key;
-  for (key in this.players) {
-    if (!this.players[key].eliminated) {
-      activePlayerCount++;
-    }
-  }
-
   this.currentMove = currentMove;
-  this.currentMove.responsesRemaining = activePlayerCount - 1;
+  this.currentMove.responsesRemaining = this.getRemainingPlayers().length - 1;
 };
 
 GameState.prototype.getCurrentMove = function () {

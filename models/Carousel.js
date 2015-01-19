@@ -1,24 +1,47 @@
 function Carousel(collection) {
   this.list = [];
-  this.index = 0;
+  // The index of the most recently returned item
+  this.index = -1;
 
   for (var key in collection) {
     if (collection.hasOwnProperty(key)) {
       this.list.push(collection[key]);
     }
   }
+
+  // This uses an optional 'order' property
+  // to allow items to be sorted
+  // i.e. players who join a game first can go first.
+  this.list.sort(function (a, b) {
+    return a.order - b.order;
+  });
 }
 
-Carousel.prototype.next = function () {
-  var len = this.list.length;
+Carousel.prototype.remove = function (element) {
+  var list = this.list,
+      elementIndex = list.indexOf(element);
 
-  if (len === 0) {
+  if (~elementIndex) {
+    list.splice(elementIndex, 1);
+
+    if (this.index === elementIndex) {
+      this.index = this.getNextIndex();
+    }
+  }
+};
+
+Carousel.prototype.next = function () {
+  var nextItem;
+
+  if (this.list.length === 0) {
     return null;
   }
 
   this.index = this.getNextIndex();
 
-  return this.list[this.index];
+  nextItem = this.list[this.index];
+
+  return nextItem;
 };
 
 Carousel.prototype.getNextIndex = function () {
@@ -26,7 +49,11 @@ Carousel.prototype.getNextIndex = function () {
 };
 
 Carousel.prototype.peek = function () {
-  return this.list[this.getNextIndex()];
+  if (this.list.length > 0) {
+    return this.list[this.getNextIndex()];
+  } else {
+    return null;
+  }
 };
 
 module.exports = Carousel;

@@ -1,4 +1,3 @@
-/* jshint unused: false */
 var
     // Server variables
     server = require('./server'),
@@ -9,21 +8,32 @@ var
     LandingController = require('./controllers/Landing'),
     PlayController = require('./controllers/Play'),
     GameDataController = require('./controllers/GameData'),
+    PlayerController = require('./controllers/Player'),
+    GameStateController = require('./controllers/GameState'),
 
-    // instantiate this controller only once, since it listens for
-    // server-side events only and thus only needs to be created once.
-    gdc = new GameDataController({ emitter: emitter });
+    // instantiate these controller only once, since they listen for
+    // server-side events only and all their dependencies are injected,
+    // thus they only need to be created once.
+    gdc = new GameDataController({ emitter: emitter }),
+    playerController = new PlayerController({ emitter: emitter }),
+    gameStateController = new GameStateController({ emitter: emitter });
 
-io.on('connection', function (socket) {
-  socket.join('landing');
+server.initialize(function () {
+  io.on('connection', function (socket) {
+    socket.join('landing');
 
-  // Create one each of these controllers, since they handle
-  // each client's socket events.
-  var lc = new LandingController({ emitter: socket }),
-      pc = new PlayController({ emitter: socket });
+    socket._gameDataController = gdc;
+    socket._playerController = playerController;
+    socket._gameStateController = gameStateController;
 
-  socket.on('error', function (err) {
-    console.log('ERROR!');
-    console.log(err);
+    // Create one each of these controllers, since they handle
+    // each client's socket events.
+    socket._landingController = new LandingController({ emitter: socket });
+    socket._playController = new PlayController({ emitter: socket });
+
+    socket.on('error', function (err) {
+      console.log('ERROR!');
+      console.log(err);
+    });
   });
 });

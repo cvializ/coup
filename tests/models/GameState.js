@@ -47,6 +47,15 @@ describe('GameState', function () {
     });
   });
 
+  describe('#removeUser', function () {
+    beforeEach(function (done) {
+      for (var i = 0; i < players.length; i++) {
+        game.addUser(players.shift());
+      }
+      done();
+    });
+  });
+
   describe('#start', function () {
     var player;
 

@@ -73,16 +73,18 @@ GameState.prototype.nextTurn = function (options) {
       winner: winner.getClientObject()
     });
   } else {
-    // Tell the current play it's their turn
-    emitter.emit('my turn', { destination: currentPlayer.socket });
+    if (this.userCount > 1) {
+      // Tell the current play it's their turn
+      emitter.emit('my turn', { destination: currentPlayer.socket });
 
-    // Tell everyone else that it's not their turn
-    for (var key in players) {
-      if (players[key] !== currentPlayer) {
-        emitter.emit('new turn', {
-          destination: players[key].socket,
-          player: currentPlayer.getClientObject()
-        });
+      // Tell everyone else that it's not their turn
+      for (var key in players) {
+        if (players[key] !== currentPlayer) {
+          emitter.emit('new turn', {
+            destination: players[key].socket,
+            player: currentPlayer.getClientObject()
+          });
+        }
       }
     }
   }
@@ -143,21 +145,25 @@ GameState.prototype.getClientObject = function () {
 GameState.prototype.removeUser = function (player) {
   delete this.players[player.id];
   this.userCount--;
-  this.carousel.remove(player);
 
   if (!this.started) {
     this.votesToStart = this.votesToStart - 1;
+    if (this.votesToStart === 0) {
+      this.start();
+    }
   } else {
+    this.carousel.remove(player);
+
     // Put the player's cards back in the deck
     this.deck.putOnTopOfDeck(player.influences);
     this.deck.shuffle();
 
     if (!this.won()) {
       if (player === this.currentPlayer) {
-        console.log('skip this guy');
+        //console.log('skip this guy');
         this.nextTurn();
       } else {
-        console.log('let\'s try this again');
+        //console.log('let\'s try this again');
         this.nextTurn({ restartTurn: true });
       }
     }

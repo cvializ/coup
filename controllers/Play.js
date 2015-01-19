@@ -155,14 +155,15 @@ var PlayController = Base.extend({
             }
           });
         } else {
+          io.sockets.in(socket.game.id).emit('move responded to', clientMove);
+
+          // The player was lying, so take away their card
           if (!data.noDoubleEliminate) {
             player.chooseEliminatedCard(function (err) {
               if (err) {
                 callback(err);
               } else {
                 callback();
-                // the player was lying.
-                // take away the player's card
                 io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
                 game.nextTurn();
               }

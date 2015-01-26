@@ -80,7 +80,7 @@ var LandingController = Base.extend({
 
     REMOVE_USER: logout,
 
-    DISCONNECT: logout
+    disconnect: logout
   }
 });
 

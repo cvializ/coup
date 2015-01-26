@@ -224,7 +224,7 @@ var PlayController = Base.extend({
             console.log(err);
           } else {
             // The doubter needs to give up a card because they were wrong.
-            io.sockets.in(socket.game.id).emit(ServerConstantstants.BLOCK_DOUBTER_FAILED, clientMove);
+            io.sockets.in(socket.game.id).emit(self.constants.BLOCK_DOUBTER_FAILED, clientMove);
             game.nextTurn();
           }
         });

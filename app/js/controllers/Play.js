@@ -17,7 +17,9 @@ define([
   'views/action/Pending',
   'views/action/Standby',
   'views/widgets/ChoosePlayer',
-  'views/widgets/ChooseCard'
+  'views/widgets/ChooseCard',
+  'constants/socket',
+  'constants/client'
 ], function (Marionette,
              mainRegion,
              vent,
@@ -36,7 +38,9 @@ define([
              PendingActionView,
              StandbyActionView,
              ChoosePlayerView,
-             ChooseCardView) {
+             ChooseCardView,
+             socketConstants,
+             clientConstants) {
 
   var PlayController = Marionette.Controller.extend({
     socket: null,
@@ -65,7 +69,7 @@ define([
 
       self.socket = options.socket;
 
-      vent.on('play:init', function loadController() {
+      vent.on(clientConstants.PLAY_INIT, function loadController() {
 
         self.playView = new PlayView({ model: new PlayModel({ player: self.socket.player }) });
         self.playersCollection = new PlayerCollectionModel();
@@ -80,8 +84,8 @@ define([
         updateGameData();
       });
 
-      vent.on('play:start:ready', function ready() {
-        self.socket.emit('vote start', function (err) {
+      vent.on(clientConstants.PLAY_START_READY, function ready() {
+        self.socket.emit(socketConstants.VOTE_START, function (err) {
           if (err) {
             self.handleError(err);
           } else {
@@ -92,7 +96,7 @@ define([
 
       function makePrimaryMove(moveData) {
         self.playView.result.empty();
-        self.socket.emit('make move', moveData, function moveMade(err, move) {
+        self.socket.emit(socketConstants.MAKE_MOVE, moveData, function moveMade(err, move) {
           if (err) {
             self.handleError(err);
             self.playView.action.show(new PrimaryActionView());
@@ -108,7 +112,7 @@ define([
         return player.id !== self.socket.player.id && !player.get('eliminated');
       }
 
-      vent.on('play:move:primary', function primaryMove(moveData) {
+      vent.on(clientConstants.PLAY_MOVE_PRIMARY, function primaryMove(moveData) {
         var chooseCollection,
             chooseView;
         if (moveData.needsTarget) {
@@ -118,20 +122,20 @@ define([
           self.playView.action.show(chooseView);
 
           // Wait for the user to select their choice
-          vent.on('play:move:primary:choice', function playerChosen(data) {
+          vent.on(clientConstants.PLAY_MOVE_PRIMARY_CHOICE, function playerChosen(data) {
             moveData.target = data.choice;
             makePrimaryMove(moveData);
-            vent.off('play:move:primary:choice'); // this doesn't seem right
+            vent.off(clientConstants.PLAY_MOVE_PRIMARY_CHOICE); // this doesn't seem right
           });
         } else {
           makePrimaryMove(moveData);
         }
       });
 
-      vent.on('play:move:secondary', function secondaryMove(moveData) {
+      vent.on(clientConstants.PLAY_MOVE_SECONDARY, function secondaryMove(moveData) {
         moveData = moveData || {};
         if (moveData.type === 'allow') {
-          self.socket.emit('allow move', moveData, function (err) {
+          self.socket.emit(socketConstants.ALLOW_MOVE, moveData, function (err) {
             if (err) {
               self.handleError(err);
             } else {
@@ -139,7 +143,7 @@ define([
             }
           });
         } else if (moveData.type === 'block') {
-          self.socket.emit('block move', moveData, function (err) {
+          self.socket.emit(socketConstants.BLOCK_MOVE, moveData, function (err) {
             if (err) {
               self.handleError(err);
             } else {
@@ -147,7 +151,7 @@ define([
             }
           });
         } else if (moveData.type === 'doubt') {
-          self.socket.emit('doubt move', moveData, function (err) {
+          self.socket.emit(socketConstants.DOUBT_MOVE, moveData, function (err) {
             if (err) {
               self.handleError(err);
             }
@@ -157,29 +161,29 @@ define([
         }
       });
 
-      vent.on('play:move:tertiary', function tertiaryMove(moveData) {
+      vent.on(clientConstants.PLAY_MOVE_TERTIARY, function tertiaryMove(moveData) {
         moveData = moveData || {};
         if (moveData.type === 'concede') {
-          self.socket.emit('blocker success');
+          self.socket.emit(socketConstants.BLOCKER_SUCCESS);
         } else if (moveData.type === 'doubt') {
-          self.socket.emit('blocker doubt');
+          self.socket.emit(socketConstants.BLOCKER_DOUBT);
         } else {
           throw 'Unrecognized tertiary move type.';
         }
       });
 
       function updateGameData() {
-        self.socket.emit('pull:game');
+        self.socket.emit(socketConstants.PULL_GAME);
       }
 
-      self.socket.on('push:game', function gameDataPushed(data) {
+      self.socket.on(socketConstants.PUSH_GAME, function gameDataPushed(data) {
         self.game = data;
 
         if (self.playersCollection) {
           self.playersCollection.reset(self.game.players);
         }
 
-        self.socket.emit('pull:player', { id: self.socket.player.id }, function (err, playerData) {
+        self.socket.emit(socketConstants.PULL_PLAYER, { id: self.socket.player.id }, function (err, playerData) {
           // update the player in their own socket
           self.socket.player = playerData;
 
@@ -194,26 +198,26 @@ define([
         });
       });
 
-      self.socket.on('push:player', function playerPushed(data) {
+      self.socket.on(socketConstants.PUSH_PLAYER, function playerPushed(data) {
         self.socket.player = data.player;
       });
 
-      self.socket.on('user left', function userLeft() {
+      self.socket.on(socketConstants.USER_LEFT, function userLeft() {
         if (self.game.players.length > 2) {
           updateGameData();
         }
       });
 
-      self.socket.on('force quit', function gameAbandoned() {
+      self.socket.on(socketConstants.FORCE_QUIT, function gameAbandoned() {
         self.socket.emit('remove user');
-        vent.trigger('play:end');
+        vent.trigger(clientConstants.PLAY_END);
       });
 
-      self.socket.on('my turn', function myTurn() {
+      self.socket.on(socketConstants.MY_TURN, function myTurn() {
         self.playView.action.show(new PrimaryActionView());
       });
 
-      self.socket.on('new turn', function newTurn(turnData) {
+      self.socket.on(socketConstants.NEW_TURN, function newTurn(turnData) {
         turnData = turnData || {};
         var socket = this,
             player = turnData.player,
@@ -222,7 +226,7 @@ define([
         self.playView.action.show(new StandbyActionView({ text: text }));
       });
 
-      self.socket.on('move attempted', function moveAttempted(moveData) {
+      self.socket.on(socketConstants.MOVE_ATTEMPTED, function moveAttempted(moveData) {
         var ability,
             text,
             canBlock = true;
@@ -251,7 +255,7 @@ define([
         }
       });
 
-      self.socket.on('move responded to', function beatToThePunch(moveData) {
+      self.socket.on(socketConstants.MOVE_RESPONDED_TO, function beatToThePunch(moveData) {
         if (!moveData) {
           self.handleError('move is undefined!');
         } else {
@@ -263,14 +267,14 @@ define([
         }
       });
 
-      self.socket.on('move blocked', function myMoveBlocked(moveData) {
+      self.socket.on(socketConstants.MOVE_BLOCKED, function myMoveBlocked(moveData) {
         var message = moveData.detractor.name + ' is attempting to block you from being able to ' +
                       moveData.ability.name;
         self.showResult({ title: 'Block Attempted', message: message });
         self.playView.action.show(new TertiaryActionView());
       });
 
-      self.socket.on('block succeeded', function blockSucceeded(moveData) {
+      self.socket.on(socketConstants.BLOCK_SUCCEEDED, function blockSucceeded(moveData) {
         var message = moveData.detractor.name + ' successfully blocked '+
                       moveData.player.name + '\'s ability to ' +
                       moveData.ability.name;
@@ -278,7 +282,7 @@ define([
         self.showResult({ title: 'Blocked', message: message });
       });
 
-      self.socket.on('move succeeded', function moveSucceeded(moveData) {
+      self.socket.on(socketConstants.MOVE_SUCCEEDED, function moveSucceeded(moveData) {
         var options = {
           title: moveData.ability.name + ' Succeeded!',
           message: moveData.player.name + ' was able to ' + moveData.ability.name
@@ -291,7 +295,7 @@ define([
         self.showResult(options);
       });
 
-      self.socket.on('move doubter succeeded', function moveDoubterSucceeded(moveData) {
+      self.socket.on(socketConstants.MOVE_DOUBTER_SUCCEEDED, function moveDoubterSucceeded(moveData) {
         var doubted = moveData.player.name,
             doubter = moveData.detractor.name,
             message = doubted + ' was doubted by ' +
@@ -302,7 +306,7 @@ define([
         self.showResult({ title: 'Move Doubted!', message: message });
       });
 
-      self.socket.on('move doubter failed', function moveDoubterFailed(moveData) {
+      self.socket.on(socketConstants.MOVE_DOUBTER_FAILED, function moveDoubterFailed(moveData) {
         var doubted = moveData.player.name,
             doubter = moveData.detractor.name,
             message = doubted + ' was doubted by ' +
@@ -313,7 +317,7 @@ define([
         self.showResult({ title: 'Move Doubted!', message: message });
       });
 
-      self.socket.on('block doubter succeeded', function blockDoubterSucceeded(moveData) {
+      self.socket.on(socketConstants.BLOCK_DOUBTER_SUCCEEDED, function blockDoubterSucceeded(moveData) {
         var blocker = moveData.detractor.name,
             blocked = moveData.player.name,
             ability = moveData.ability.name,
@@ -326,7 +330,7 @@ define([
         self.showResult({ title: 'Block Doubted!', message: message });
       });
 
-      self.socket.on('block doubter failed', function blockDoubterFailed(moveData) {
+      self.socket.on(socketConstants.BLOCK_DOUBTER_FAILED, function blockDoubterFailed(moveData) {
         var blocker = moveData.detractor.name,
             blocked = moveData.player.name,
             message = blocked + ' doubted ' +
@@ -338,23 +342,23 @@ define([
         self.showResult({ title: 'Block Doubted!', message: message });
       });
 
-      self.socket.on('select own influence', function selectInfluence(moveData, callback) {
+      self.socket.on(socketConstants.SELECT_OWN_INFLUENCE, function selectInfluence(moveData, callback) {
         self.playView.action.show(new ChooseCardView({ collection: new CardCollectionModel(self.socket.player.influences) }));// Wait for the user to select their choice
-        vent.on('play:move:select:influence', function influenceChosen(data) {
+        vent.on(clientConstants.PLAY_MOVE_SELECT_INFLUENCE, function influenceChosen(data) {
           // Let the server know which influence the user chose
           callback(undefined, data);
           // Remove the listener.
-          vent.off('play:move:select:influence');
+          vent.off(clientConstants.PLAY_MOVE_SELECT_INFLUENCE);
         });
       });
 
-      self.socket.on('game over', function gameOver(data) {
+      self.socket.on(socketConstants.GAME_OVER, function gameOver(data) {
         data = data || {};
         var winner = data.winner;
 
         alert(winner.name + ' has WON THE GAME!');
-        self.socket.emit('remove user');
-        vent.trigger('play:end');
+        self.socket.emit(socketConstants.REMOVE_USER);
+        vent.trigger(clientConstants.PLAY_END);
       });
     },
 

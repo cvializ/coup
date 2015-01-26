@@ -1,27 +1,30 @@
-var Base = require('./Base');
+var Base = require('./Base'),
+    ServerConstants = require('../app/js/constants/server'),
+    SocketConstants = require('../app/js/constants/socket');
 
 var GameDataController = Base.extend({
+  constants: ServerConstants,
   events: {
-    'push:game': function pushGame(options) {
+    PUSH_GAME: function pushGame(options) {
       options = options || {};
 
       if (options.destination) {
-        options.destination.emit('push:game', options.game);
+        options.destination.emit(SocketConstants.PUSH_GAME, options.game);
       }
     },
 
-    'push:game:collection': function pushGameCollection(options) {
+    PUSH_GAME_COLLECTION: function pushGameCollection(options) {
       options = options || {};
 
       if (options.destination) {
-        options.destination.emit('push:games', options.games);
+        options.destination.emit(SocketConstants.PUSH_GAMES, options.games);
       }
     },
 
-    'push:player': function pushPlayer(options) {
+    PUSH_PLAYER: function pushPlayer(options) {
       options = options || {};
 
-      options.destination.emit('push:player', { player: options.player });
+      options.destination.emit(SocketConstants.PUSH_PLAYER, { player: options.player });
     }
   }
 });

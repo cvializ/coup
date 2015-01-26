@@ -1,8 +1,9 @@
 define([
   'views/widgets/Choose',
   'views/landing/Game',
-  'hbs!templates/landing/login'
-], function (ChooseView, GameView, loginTemplate) {
+  'constants/client',
+  'hbs!templates/landing/login',
+], function (ChooseView, GameView, clientConstants, loginTemplate) {
   var LoginView = ChooseView.extend({
     className: 'c-login-view c-choose-view c-group',
     template: loginTemplate,
@@ -13,7 +14,7 @@ define([
       select: 'input[type="button"]'
     },
     choiceKey: 'id',
-    selectEvent: 'landing:game:join'
+    selectEvent: clientConstants.LANDING_GAME_JOIN
   });
 
   return LoginView;

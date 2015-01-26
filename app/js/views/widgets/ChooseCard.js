@@ -1,10 +1,11 @@
 define([
   'views/widgets/Choose',
-  'views/widgets/CardChoice'
-], function (ChooseView, CardChoiceView) {
+  'views/widgets/CardChoice',
+  'constants/client'
+], function (ChooseView, CardChoiceView, clientConstants) {
   var ChooseCardView = ChooseView.extend({
     childView: CardChoiceView,
-    selectEvent: 'play:move:select:influence',
+    selectEvent: clientConstants.PLAY_MOVE_SELECT_INFLUENCE,
     choiceKey: 'id'
   });
 

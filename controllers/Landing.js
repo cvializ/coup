@@ -6,8 +6,9 @@ var Base = require('./Base'),
     io = require('../server').io;
 
 var LandingController = Base.extend({
+  constants: require('../app/js/constants/socket'),
   events: {
-    'create game': function createGame(data, callback) {
+    CREATE_GAME: function createGame(data, callback) {
       data = data || {};
 
       if (!data.title) {
@@ -24,16 +25,16 @@ var LandingController = Base.extend({
       }
     },
 
-    'ready': function ready() {
+    READY: function ready() {
       var socket = this.emitter;
 
-      emitter.emit('push:game:collection', {
+      emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
         destination: socket,
         games: games.getClientObject()
       });
     },
 
-    'join user': function joinUser(data, callback) {
+    JOIN_USER: function joinUser(data, callback) {
       data = data || {};
 
       var socket = this.emitter,
@@ -58,10 +59,10 @@ var LandingController = Base.extend({
         socket.game.addUser(socket.player);
 
         // Give the user everything they need to know about themselves
-        socket.emit('user joined', { player: socket.player.getClientObject({ privileged: true }) });
+        socket.emit(this.constants.USER_JOINED, { player: socket.player.getClientObject({ privileged: true }) });
 
         // Push the game to the player AFTER they've connected.
-        emitter.emit('push:game', {
+        emitter.emit(this.constants.PUSH_GAME, {
           destination: io.sockets.to(socket.game.id),
           game: games[socket.game.id].getClientObject()
         });
@@ -70,16 +71,16 @@ var LandingController = Base.extend({
         callback();
 
         // Let everyone know a user joined a game.
-        emitter.emit('push:game:collection', {
+        emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
           destination: io.sockets.to('landing'),
           games: games.getClientObject()
         });
       }
     },
 
-    'remove user': logout,
+    REMOVE_USER: logout,
 
-    'disconnect': logout
+    DISCONNECT: logout
   }
 });
 
@@ -94,19 +95,19 @@ function logout() {
     game.removeUser(socket.player);
 
     if (game.userCount <= 1) {
-      socket.broadcast.to(game.id).emit('force quit');
+      socket.broadcast.to(game.id).emit(this.constants.FORCE_QUIT);
       delete games[game.id];
     }
 
     // tell the game's members that an opponent left
-    socket.broadcast.to(game.id).emit('user left', {
+    socket.broadcast.to(game.id).emit(this.constants.USER_LEFT, {
       username: socket.player.name
     });
 
     socket.leave(game.id);
     delete socket.game;
 
-    emitter.emit('push:game:collection', {
+    emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
       destination: io.sockets.to('landing'),
       games: games.getClientObject()
     });

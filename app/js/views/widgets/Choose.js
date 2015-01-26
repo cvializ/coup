@@ -2,8 +2,9 @@ define([
   'jquery',
   'marionette',
   'Vent',
+  'constants/client',
   'hbs!templates/widgets/choose'
-], function ($, Marionette, vent, chooseTemplate) {
+], function ($, Marionette, vent, clientConstants, chooseTemplate) {
   var ChooseView = Marionette.CompositeView.extend({
     className: 'c-choose-view c-group',
     template: chooseTemplate,
@@ -34,7 +35,7 @@ define([
         }
         data[this.choiceKey] = this.getChoice();
 
-        vent.trigger(this.selectEvent, data);
+        vent.trigger(clientConstants[this.selectEvent], data);
       }
     }
   });

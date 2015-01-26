@@ -1,4 +1,5 @@
 var ExtendBase = require('class-extend'),
+    SocketConstants = require('../app/js/constants/socket'),
     Base;
 
 Base = ExtendBase.extend({
@@ -21,7 +22,7 @@ Base = ExtendBase.extend({
       }
 
       this.listeners[key] = this.bindListener(events[key]);
-      emitter.on(key, this.listeners[key]);
+      emitter.on(this.constants[key], this.listeners[key]);
     }
   },
 
@@ -31,7 +32,7 @@ Base = ExtendBase.extend({
         listeners = this.listeners;
 
     for (var key in events) {
-      emitter.removeListener(key, listeners[key]);
+      emitter.removeListener(SocketConstants[key], listeners[key]);
     }
   },
 
@@ -53,7 +54,7 @@ Base = ExtendBase.extend({
 
       if (destination) {
         delete options.destination;
-        destination.emit(eventName, options, callback);
+        destination.emit(SocketConstants[eventName], options, callback);
       }
     };
   }

@@ -1,8 +1,9 @@
 var Base = require('./Base');
 
 var PlayerController = Base.extend({
+  constants: require('../app/js/constants/server'),
   events: {
-    'select own influence': 'default'
+    SELECT_OWN_INFLUENCE: 'default'
   }
 });
 

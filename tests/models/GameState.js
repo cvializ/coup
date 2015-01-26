@@ -2,7 +2,8 @@ var expect = require('chai').expect,
     Player = require('../../models/Player'),
     GameState = require('../../models/GameState'),
     MockController = require('../../controllers/Mock'),
-    emitter = require('../../emitter');
+    emitter = require('../../emitter'),
+    SocketConstants = require('../../app/js/constants/socket');
 
 describe('GameState', function () {
   var game,
@@ -148,12 +149,13 @@ describe('GameState', function () {
     });
 
     it('should inform participants that the last remaining player has won the game.', function (done) {
-      var mockController;
+      var Controller;
 
       mockController = new MockController({
+        constants: SocketConstants,
         emitter: emitter,
         events: {
-          'game over': function gameOver(data) {
+          GAME_OVER: function gameOver(data) {
             expect(data.winner).to.deep.equal(player2.getClientObject());
             done();
             this.stop();
@@ -173,10 +175,11 @@ describe('GameState', function () {
       game.start();
 
       mockController = new MockController({
+        constants: SocketConstants,
         emitter: emitter,
         remainingResponses: 3,
         events: {
-          'respond': function doneAfterAllRespond() {
+          RESPOND: function doneAfterAllRespond() {
             var remaining = --this.options.remainingResponses;
             if (remaining === 0) {
               // Success!
@@ -184,12 +187,12 @@ describe('GameState', function () {
               this.stop();
             }
           },
-          'my turn': function myTurn() {
-            emitter.emit('respond');
+          MY_TURN: function myTurn() {
+            emitter.emit(SocketConstants.MOCK);
           },
-          'new turn': function newTurn(data) {
+          NEW_TURN: function newTurn(data) {
             expect(player2.getClientObject()).to.deep.equal(data.player);
-            emitter.emit('respond');
+            emitter.emit(SocketConstants.MOCK);
           }
         }
       });
@@ -203,9 +206,10 @@ describe('GameState', function () {
       game.start();
 
       mockController = new MockController({
+        constants: SocketConstants,
         emitter: emitter,
         events: {
-          'push:game': function pushGame(data) {
+          PUSH_GAME: function pushGame(data) {
             expect(game.getClientObject()).to.deep.equal(data.game);
             done();
             this.stop();

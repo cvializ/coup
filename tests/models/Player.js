@@ -2,6 +2,8 @@ var expect = require('chai').expect,
     Player = require('../../models/Player'),
     Card = require('../../models/Card'),
     MockController = require('../../controllers/Mock'),
+    SocketConstants = require('../../app/js/constants/socket');
+
     emitter = require('../../emitter');
 
 describe('Player', function () {
@@ -22,9 +24,10 @@ describe('Player', function () {
   describe('#chooseEliminatedCard', function () {
     it('should offer the user a choice of which card to remove', function (done) {
       var mockController = new MockController({
+        constants: SocketConstants,
         emitter: emitter,
         events: {
-          'select own influence': function selectInfluence(options, callback) {
+          SELECT_OWN_INFLUENCE: function selectInfluence(options, callback) {
             var influences = player.influences,
                 key;
 

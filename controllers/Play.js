@@ -5,8 +5,9 @@ var Base = require('./Base'),
     io = require('../server').io;
 
 var PlayController = Base.extend({
+  constants: require('../app/js/constants/socket'),
   events: {
-    'vote start': function voteStart(callback) {
+    VOTE_START: function voteStart(callback) {
       var socket = this.emitter,
           game = socket.game;
 
@@ -25,10 +26,11 @@ var PlayController = Base.extend({
       }
     },
 
-    'make move': function makeMove(moveData, callback) {
+    MAKE_MOVE: function makeMove(moveData, callback) {
       var socket = this.emitter,
           game = socket.game,
           player = socket.player,
+          self = this,
           move,
           ability,
           target;
@@ -68,14 +70,14 @@ var PlayController = Base.extend({
               if (err) {
                 callback(err);
               } else {
-                pushPlayer(socket);
-                io.sockets.to(game.id).emit('move succeeded', move.getClientObject());
+                pushPlayer.bind(self)(socket);
+                io.sockets.to(game.id).emit(self.constants.MOVE_SUCCEEDED, move.getClientObject());
                 game.nextTurn();
               }
             });
           } else {
             game.setCurrentMove(move);
-            socket.broadcast.to(socket.game.id).emit('move attempted', move.getClientObject());
+            socket.broadcast.to(socket.game.id).emit(self.constants.MOVE_ATTEMPTED, move.getClientObject());
           }
           // Let the user know no errors occured.
           callback(undefined, move.getClientObject());
@@ -83,7 +85,7 @@ var PlayController = Base.extend({
       }
     },
 
-    'block move': function blockMove(data, callback) {
+    BLOCK_MOVE: function blockMove(data, callback) {
       var socket = this.emitter,
           game = socket.game,
           players = game.players,
@@ -101,12 +103,12 @@ var PlayController = Base.extend({
         move.detractor = myPlayer;
 
         // tell the target someone is attempting to block them
-        blockedPlayer.socket.emit('move blocked', move.getClientObject());
+        blockedPlayer.socket.emit(this.constants.MOVE_BLOCKED, move.getClientObject());
 
         // tell everyone else that someone has beat them to blocking
         for (key in players) {
           if (players[key] !== myPlayer && players[key] !== blockedPlayer) {
-            players[key].socket.emit('move responded to', move.getClientObject());
+            players[key].socket.emit(this.constants.MOVE_RESPONDED_TO, move.getClientObject());
           }
         }
 
@@ -114,8 +116,9 @@ var PlayController = Base.extend({
       }
     },
 
-    'doubt move': function doubtMove(data, callback) {
+    DOUBT_MOVE: function doubtMove(data, callback) {
       var socket = this.emitter,
+          self = this,
           game = socket.game,
           move = game.getCurrentMove(),
           player = move.player,
@@ -137,8 +140,8 @@ var PlayController = Base.extend({
             if (err) {
               callback(err);
             } else {
-              pushPlayer(socket);
-              io.sockets.in(socket.game.id).emit('move doubter failed', clientMove);
+              pushPlayer.bind(self)(socket);
+              io.sockets.in(socket.game.id).emit(self.constants.MOVE_DOUBTER_FAILED, clientMove);
 
               if (!data.noDoubleEliminate) {
                 detractor.chooseEliminatedCard(function (err) {
@@ -155,7 +158,7 @@ var PlayController = Base.extend({
             }
           });
         } else {
-          io.sockets.in(socket.game.id).emit('move responded to', clientMove);
+          io.sockets.in(socket.game.id).emit(this.constants.MOVE_RESPONDED_TO, clientMove);
 
           // The player was lying, so take away their card
           if (!data.noDoubleEliminate) {
@@ -164,7 +167,7 @@ var PlayController = Base.extend({
                 callback(err);
               } else {
                 callback();
-                io.sockets.in(socket.game.id).emit('move doubter succeeded', clientMove);
+                io.sockets.in(socket.game.id).emit(self.constants.MOVE_DOUBTER_SUCCEEDED, clientMove);
                 game.nextTurn();
               }
             });
@@ -176,8 +179,9 @@ var PlayController = Base.extend({
       }
     },
 
-    'allow move': function allowMove(data, callback) {
+    ALLOW_MOVE: function allowMove(data, callback) {
       var socket = this.emitter,
+          self = this,
           game = socket.game,
           move = game.getCurrentMove();
 
@@ -192,8 +196,8 @@ var PlayController = Base.extend({
               callback(err);
             } else {
               callback();
-              pushPlayer(socket);
-              io.sockets.in(game.id).emit('move succeeded', move.getClientObject());
+              pushPlayer.bind(self)(socket);
+              io.sockets.in(game.id).emit(self.constants.MOVE_SUCCEEDED, move.getClientObject());
               game.nextTurn();
             }
           });
@@ -203,9 +207,9 @@ var PlayController = Base.extend({
       }
     },
 
-    'blocker doubt': function blockerDoubt(data) {
-
+    BLOCKER_DOUBT: function blockerDoubt(data) {
       var socket = this.emitter,
+          self = this,
           game = socket.game,
           move = game.getCurrentMove(),
           clientMove = move.getClientObject(),
@@ -220,7 +224,7 @@ var PlayController = Base.extend({
             console.log(err);
           } else {
             // The doubter needs to give up a card because they were wrong.
-            io.sockets.in(socket.game.id).emit('block doubter failed', clientMove);
+            io.sockets.in(socket.game.id).emit(ServerConstantstants.BLOCK_DOUBTER_FAILED, clientMove);
             game.nextTurn();
           }
         });
@@ -231,9 +235,9 @@ var PlayController = Base.extend({
           if (err) {
             console.log('move success error ' + err);
           } else {
-            pushPlayer(socket);
+            pushPlayer.bind(self)(socket);
             // The liar blocker needs to give up an influence.
-            io.sockets.in(socket.game.id).emit('block doubter succeeded', clientMove);
+            io.sockets.in(socket.game.id).emit(self.constants.BLOCK_DOUBTER_SUCCEEDED, clientMove);
 
             if (!data.noDoubleEliminate) {
               detractor.chooseEliminatedCard(function (err) {
@@ -247,27 +251,27 @@ var PlayController = Base.extend({
       }
     },
 
-    'blocker success': function blockerSuccess(data) {
+    BLOCKER_SUCCESS: function blockerSuccess(data) {
       var socket = this.emitter,
           game = socket.game;
 
       // the blocker succeeds in blocking the action.
-      io.sockets.in(game.id).emit('block succeeded', game.getCurrentMove().getClientObject());
+      io.sockets.in(game.id).emit(this.constants.BLOCK_SUCCEEDED, game.getCurrentMove().getClientObject());
       game.nextTurn();
     },
 
-    'pull:game': function pullGame() {
+    PULL_GAME: function pullGame() {
       var socket = this.emitter;
 
       if (socket && socket.game) {
-        emitter.emit('push:game', {
+        emitter.emit(this.constants.PUSH_GAME, {
           destination: socket,
           game: socket.game.getClientObject()
         });
       }
     },
 
-    'pull:player': function pullPlayer(data, callback) {
+    PULL_PLAYER: function pullPlayer(data, callback) {
       data = data || {};
       var socket = this.emitter,
           player = socket.player;
@@ -282,7 +286,7 @@ var PlayController = Base.extend({
 });
 
 function pushPlayer(socket) {
-  emitter.emit('push:player', {
+  emitter.emit(this.constants.PUSH_PLAYER, {
     destination: socket,
     player: socket.player.getClientObject({ privileged: true })
   });

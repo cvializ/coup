@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha tests/**/*.js",
-    "start": "node app.js"
+    "start_old": "node app.js",
+    "start": "node ./server & gulp watchify"
   },
   "author": "",
   "license": "ISC",
@@ -15,10 +16,19 @@
     "extend": "^1.3.0",
     "node-uuid": "~1.4.1",
     "shuffle": "~0.2.1",
-    "socket.io": "^1.0.5"
+    "socket.io": "^1.0.5",
+    "keymirror": "~0.1.1",
+    "amdefine": "~0.1.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",
-    "mocha": "^1.21.4"
+    "mocha": "^1.21.4",
+    "gulp": "~3.8.10",
+    "gulp-util": "~3.0.2",
+    "vinyl-source-stream": "~1.0.0",
+    "vinyl-buffer": "~1.0.0",
+    "gulp-sourcemaps": "~1.3.0",
+    "browserify": "~8.1.1",
+    "watchify": "~2.2.1"
   }
 }

@@ -1,17 +1,18 @@
 define([
   'Vent',
   'views/action/Action',
-  'models/action/Tertiary'
-], function (vent, ActionView, TertiaryActionModel) {
+  'models/action/Tertiary',
+  'constants/client'
+], function (vent, ActionView, TertiaryActionModel, clientConstants) {
   var TertiaryAction = ActionView.extend({
     actionModel: TertiaryActionModel,
 
     events: {
       'click #tertiary-allow': function allow() {
-        vent.trigger('play:move:tertiary', { type: 'concede' });
+        vent.trigger(clientConstants.PLAY_MOVE_TERTIARY, { type: 'concede' });
       },
       'click #tertiary-doubt': function doubt() {
-        vent.trigger('play:move:tertiary', { type: 'doubt' });
+        vent.trigger(clientConstants.PLAY_MOVE_TERTIARY, { type: 'doubt' });
       }
     }
   });

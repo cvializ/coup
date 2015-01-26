@@ -5,7 +5,9 @@ define([
   'models/landing/Login',
   'views/landing/Login',
   'views/landing/Landing',
-  'views/landing/Create'
+  'views/landing/Create',
+  'constants/socket',
+  'constants/client'
 ],
 function (Marionette,
           mainRegion,
@@ -13,7 +15,9 @@ function (Marionette,
           LoginCollectionModel,
           LoginView,
           LandingView,
-          CreateView) {
+          CreateView,
+          socketConstants,
+          clientConstants) {
 
   var CoupController = Marionette.Controller.extend({
 
@@ -34,7 +38,7 @@ function (Marionette,
 
       self.socket = options.socket;
 
-      vent.on('landing:init', function loadController() {
+      vent.on(clientConstants.LANDING_INIT, function loadController() {
         self.games = new LoginCollectionModel();
 
         self.loginView = new LoginView({ collection: self.games });
@@ -45,11 +49,11 @@ function (Marionette,
         self.landingView.login.show(self.loginView);
         self.landingView.create.show(new CreateView());
 
-        self.socket.emit('ready');
+        self.socket.emit(socketConstants.READY);
       });
 
-      vent.on('landing:game:create', function createNewGame(data) {
-        self.socket.emit('create game', data, gameCreated);
+      vent.on(clientConstants.LANDING_GAME_CREATE, function createNewGame(data) {
+        self.socket.emit(socketConstants.CREATE_GAME, data, gameCreated);
       });
 
       function gameCreated(err, data) {
@@ -58,31 +62,31 @@ function (Marionette,
         } else {
           // The callback is passed the new game's ID,
           // just like if we chose it from the list
-          vent.trigger('landing:game:join', data);
+          vent.trigger(clientConstants.LANDING_GAME_JOIN, data);
         }
       }
 
-      vent.on('landing:game:join', function joinExistingGame(data) {
-        self.socket.emit('join user', data, userJoined);
+      vent.on(clientConstants.LANDING_GAME_JOIN, function joinExistingGame(data) {
+        self.socket.emit(socketConstants.JOIN_USER , data, userJoined);
       });
 
       function userJoined(err, data) {
         if (err) {
           self.errorHandler(err);
         } else {
-          vent.trigger('play:init');
+          vent.trigger(clientConstants.PLAY_INIT);
         }
       }
 
-      vent.on('play:end', function reloadController(data) {
-        vent.trigger('landing:init');
+      vent.on(clientConstants.PLAY_END, function reloadController(data) {
+        vent.trigger(clientConstants.LANDING_INIT);
       });
 
-      self.socket.on('push:games', function updateGameData(data) {
+      self.socket.on(socketConstants.PUSH_GAMES, function updateGameData(data) {
         self.games.reset(data);
       });
 
-      self.socket.on('user joined', function joinedAGame(data) {
+      self.socket.on(socketConstants.USER_JOINED, function joinedAGame(data) {
         self.socket.player = data.player;
       });
     }

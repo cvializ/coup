@@ -3,6 +3,7 @@ var Base = require('./Base'),
       constructor: function (options) {
         options = options || {};
         this.options = options;
+        this.constants = options.constants || {};
         this.expected = options.expected || {};
         this.events = options.events || {};
         this.initialize(options);

@@ -1,20 +1,21 @@
 define([
   'Vent',
   'views/action/Action',
-  'models/action/Secondary'
-], function (vent, ActionView, SecondaryActionModel) {
+  'models/action/Secondary',
+  'constants/client'
+], function (vent, ActionView, SecondaryActionModel, clientConstants) {
   var SecondaryAction = ActionView.extend({
     actionModel: SecondaryActionModel,
 
     events: {
       'click #secondary-allow': function allow() {
-        vent.trigger('play:move:secondary', { type: 'allow' });
+        vent.trigger(clientConstants.PLAY_MOVE_SECONDARY, { type: 'allow' });
       },
       'click #secondary-block': function block() {
-        vent.trigger('play:move:secondary', { type: 'block' });
+        vent.trigger(clientConstants.PLAY_MOVE_SECONDARY, { type: 'block' });
       },
       'click #secondary-doubt': function doubt() {
-        vent.trigger('play:move:secondary', { type: 'doubt' });
+        vent.trigger(clientConstants.PLAY_MOVE_SECONDARY, { type: 'doubt' });
       }
     }
   });

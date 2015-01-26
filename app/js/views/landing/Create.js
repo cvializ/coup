@@ -1,8 +1,9 @@
 define([
   'marionette',
   'Vent',
+  'constants/client',
   'hbs!templates/landing/create'
-], function (Marionette, vent, createTemplate) {
+], function (Marionette, vent, clientConstants, createTemplate) {
   var CreateView = Marionette.ItemView.extend({
     className: 'c-create-view',
     template: createTemplate,
@@ -14,7 +15,7 @@ define([
     },
     events: {
       'click @ui.create': function createButton() {
-        vent.trigger('landing:game:create', {
+        vent.trigger(clientConstants.LANDING_GAME_CREATE, {
           username: this.ui.username.val(),
           title: this.ui.title.val(),
           capacity: this.ui.capacity.val()

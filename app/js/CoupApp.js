@@ -3,8 +3,9 @@ define([
   'MainRegion',
   'Vent',
   'controllers/Landing',
-  'controllers/Play'
-], function (Marionette, mainRegion, vent, LandingController, PlayController) {
+  'controllers/Play',
+  'constants/client'
+], function (Marionette, mainRegion, vent, LandingController, PlayController, clientConstants) {
   var CoupApp = new Marionette.Application(),
       landingController,
       playController;
@@ -18,7 +19,7 @@ define([
     landingController = new LandingController({ socket: options.socket });
     playController = new PlayController({ socket: options.socket });
 
-    vent.trigger('landing:init');
+    vent.trigger(clientConstants.LANDING_INIT);
   });
 
   return CoupApp;

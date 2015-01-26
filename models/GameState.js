@@ -4,6 +4,7 @@ var uuid = require('node-uuid').v4,
     Carousel = require('./Carousel'),
     io = require('../server').io,
     emitter = require('../emitter'),
+    ServerConstants = require('../app/js/constants/server'),
     influenceTypes = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
 
 function GameState(options) {
@@ -68,19 +69,19 @@ GameState.prototype.nextTurn = function (options) {
 
   if (this.won()) {
     var winner = this.getRemainingPlayers().pop();
-    emitter.emit('game over', {
+    emitter.emit(ServerConstants.GAME_OVER, {
       destination: io.sockets.to(this.id),
       winner: winner.getClientObject()
     });
   } else {
     if (this.userCount > 1) {
       // Tell the current play it's their turn
-      emitter.emit('my turn', { destination: currentPlayer.socket });
+      emitter.emit(ServerConstants.MY_TURN, { destination: currentPlayer.socket });
 
       // Tell everyone else that it's not their turn
       for (var key in players) {
         if (players[key] !== currentPlayer) {
-          emitter.emit('new turn', {
+          emitter.emit(ServerConstants.NEW_TURN, {
             destination: players[key].socket,
             player: currentPlayer.getClientObject()
           });
@@ -89,7 +90,7 @@ GameState.prototype.nextTurn = function (options) {
     }
   }
 
-  emitter.emit('push:game', {
+  emitter.emit(ServerConstants.PUSH_GAME, {
     destination: io.sockets.to(this.id),
     game: this.getClientObject()
   });

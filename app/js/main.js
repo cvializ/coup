@@ -8,6 +8,7 @@ require.config({
     knockout: 'ext/knockout-3.1.0',
     'socket.io': '/socket.io/socket.io',
     'backbone.wreqr' : 'ext/backbone.wreqr',
+    keymirror: 'ext/keymirror',
 
     // plugins
     hbs: 'ext/require-handlebars-plugin/hbs',

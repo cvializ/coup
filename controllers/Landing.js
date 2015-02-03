@@ -3,6 +3,7 @@ var Base = require('./Base'),
     Player = require('../models/Player'),
     games = require('../games'),
     emitter = require('../emitter'),
+    ServerConstants = require('../app/js/constants/server'),
     io = require('../server').io;
 
 var LandingController = Base.extend({
@@ -27,6 +28,8 @@ var LandingController = Base.extend({
 
     READY: function ready() {
       var socket = this.emitter;
+
+      socket.join('landing');
 
       emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
         destination: socket,
@@ -62,7 +65,7 @@ var LandingController = Base.extend({
         socket.emit(this.constants.USER_JOINED, { player: socket.player.getClientObject({ privileged: true }) });
 
         // Push the game to the player AFTER they've connected.
-        emitter.emit(this.constants.PUSH_GAME, {
+        emitter.emit(ServerConstants.PUSH_GAME, {
           destination: io.sockets.to(socket.game.id),
           game: games[socket.game.id].getClientObject()
         });
@@ -71,7 +74,7 @@ var LandingController = Base.extend({
         callback();
 
         // Let everyone know a user joined a game.
-        emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
+        emitter.emit(ServerConstants.PUSH_GAME_COLLECTION, {
           destination: io.sockets.to('landing'),
           games: games.getClientObject()
         });
@@ -107,7 +110,7 @@ function logout() {
     socket.leave(game.id);
     delete socket.game;
 
-    emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
+    emitter.emit(ServerConstants.PUSH_GAME_COLLECTION, {
       destination: io.sockets.to('landing'),
       games: games.getClientObject()
     });

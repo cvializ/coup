@@ -83,7 +83,7 @@ function (Marionette,
       });
 
       self.socket.on(socketConstants.PUSH_GAMES, function updateGameData(data) {
-        self.games.reset(data);
+        self.games.reset(data.games);
       });
 
       self.socket.on(socketConstants.USER_JOINED, function joinedAGame(data) {

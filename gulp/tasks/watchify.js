@@ -6,7 +6,7 @@ var buffer = require('vinyl-buffer');
 var watchify = require('watchify');
 var browserify = require('browserify');
 
-var bundler = watchify(browserify('./app/js/main.js', watchify.args));
+var bundler = watchify(browserify('./client/main.jsx', watchify.args));
 
 function bundle() {
   return bundler.bundle()
@@ -18,7 +18,7 @@ function bundle() {
   .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
   .pipe(sourcemaps.write('./')) // writes .map file
   //
-  .pipe(gulp.dest('./app'));
+  .pipe(gulp.dest('./client'));
 }
 
 // add any other browserify options or transforms here

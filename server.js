@@ -11,7 +11,7 @@ module.exports = {
   initialize: function (callback) {
 
     // Routing
-    app.use(express.static(__dirname + '/app'));
+    app.use(express.static(__dirname + '/client'));
 
     server.listen(port, function () {
       console.log('Server listening at port %d', port);

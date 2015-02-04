@@ -18,7 +18,6 @@ var GameDataController = Base.extend({
 
       if (options.destination) {
         options.destination.emit(SocketConstants.PUSH_GAMES, { games: options.games });
-        console.log('PUSH GAMES');
       }
     },
 

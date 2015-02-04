@@ -14,11 +14,11 @@ module.exports = PlayActions = {
   readyToStart: function () {
     // PLAY_START_READY
 
-    socketClient.voteStart({
+    SocketClient.voteStart({
       // no payload
     }).then(function (payload) {
       this.dispatch(ClientConstants.PLAY_START_READY_RECEIVED);
-    }).except(function (err) {
+    }).catch(function (err) {
       alert(err);
     });
   },

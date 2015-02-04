@@ -6,6 +6,7 @@ module.exports = Fluxxor.createStore({
   initialize: function() {
     this.gameState = {};
     this.isPlaying = false;
+    this.phase =
 
     this.bindActions(
       ClientConstants.PLAY_INIT, this.onPlayInit,

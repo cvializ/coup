@@ -1,6 +1,7 @@
 var React = require('react');
 var Fluxxor = require('fluxxor');
 var Player = require('./Player.jsx');
+var ReadyAction = require('./PlayerActions/Ready.jsx');
 
 module.exports = React.createClass({
 
@@ -29,6 +30,9 @@ module.exports = React.createClass({
       <div className="c-play">
         <div className="c-players">
           {players}
+        </div>
+        <div className="c-actions">
+            <ReadyAction />
         </div>
       </div>
     );

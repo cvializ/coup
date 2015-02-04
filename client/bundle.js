@@ -18,7 +18,7 @@ SocketClient.init({ flux: flux });
 React.render(React.createElement(Application, {flux: flux}), document.getElementById('app'));
 
 
-},{"./SocketClient":"/home/cv/coup/client/SocketClient.js","./actions":"/home/cv/coup/client/actions/index.js","./components/CoupApp.jsx":"/home/cv/coup/client/components/CoupApp.jsx","./stores":"/home/cv/coup/client/stores/index.js","fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js","react":"/home/cv/coup/node_modules/react/react.js"}],"/home/cv/coup/client/SocketClient.js":[function(require,module,exports){
+},{"./SocketClient":"/Users/cvializ/coup/client/SocketClient.js","./actions":"/Users/cvializ/coup/client/actions/index.js","./components/CoupApp.jsx":"/Users/cvializ/coup/client/components/CoupApp.jsx","./stores":"/Users/cvializ/coup/client/stores/index.js","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js","react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/SocketClient.js":[function(require,module,exports){
 var Socket = require('socket.io-client');
 var Bluebird = require('bluebird');
 var Constants = require('./constants/socket');
@@ -108,14 +108,14 @@ SocketClient.prototype.ready = function (payload) {
 };
 
 
-},{"./constants/socket":"/home/cv/coup/client/constants/socket.js","bluebird":"/home/cv/coup/node_modules/bluebird/js/browser/bluebird.js","socket.io-client":"/home/cv/coup/node_modules/socket.io-client/index.js"}],"/home/cv/coup/client/actions/index.js":[function(require,module,exports){
+},{"./constants/socket":"/Users/cvializ/coup/client/constants/socket.js","bluebird":"/Users/cvializ/coup/node_modules/bluebird/js/browser/bluebird.js","socket.io-client":"/Users/cvializ/coup/node_modules/socket.io-client/index.js"}],"/Users/cvializ/coup/client/actions/index.js":[function(require,module,exports){
 module.exports = {
   landing: require('./landing'),
   play: require('./play')
 };
 
 
-},{"./landing":"/home/cv/coup/client/actions/landing.js","./play":"/home/cv/coup/client/actions/play.js"}],"/home/cv/coup/client/actions/landing.js":[function(require,module,exports){
+},{"./landing":"/Users/cvializ/coup/client/actions/landing.js","./play":"/Users/cvializ/coup/client/actions/play.js"}],"/Users/cvializ/coup/client/actions/landing.js":[function(require,module,exports){
 var SocketClient = require('../SocketClient');
 var ClientConstants = require('../constants/client');
 var LandingActions;
@@ -169,7 +169,7 @@ module.exports = LandingActions = {
 };
 
 
-},{"../SocketClient":"/home/cv/coup/client/SocketClient.js","../constants/client":"/home/cv/coup/client/constants/client.js"}],"/home/cv/coup/client/actions/play.js":[function(require,module,exports){
+},{"../SocketClient":"/Users/cvializ/coup/client/SocketClient.js","../constants/client":"/Users/cvializ/coup/client/constants/client.js"}],"/Users/cvializ/coup/client/actions/play.js":[function(require,module,exports){
 var SocketClient = require('../SocketClient');
 var ClientConstants = require('../constants/client');
 var PlayActions;
@@ -186,11 +186,11 @@ module.exports = PlayActions = {
   readyToStart: function () {
     // PLAY_START_READY
 
-    socketClient.voteStart({
+    SocketClient.voteStart({
       // no payload
     }).then(function (payload) {
       this.dispatch(ClientConstants.PLAY_START_READY_RECEIVED);
-    }).except(function (err) {
+    }).catch(function (err) {
       alert(err);
     });
   },
@@ -220,7 +220,7 @@ module.exports = PlayActions = {
 };
 
 
-},{"../SocketClient":"/home/cv/coup/client/SocketClient.js","../constants/client":"/home/cv/coup/client/constants/client.js"}],"/home/cv/coup/client/components/CoupApp.jsx":[function(require,module,exports){
+},{"../SocketClient":"/Users/cvializ/coup/client/SocketClient.js","../constants/client":"/Users/cvializ/coup/client/constants/client.js"}],"/Users/cvializ/coup/client/components/CoupApp.jsx":[function(require,module,exports){
 var React = require('react');
 var Fluxxor = require('fluxxor');
 var Landing = require('./Landing.jsx');
@@ -261,7 +261,7 @@ App = React.createClass({displayName: "App",
 module.exports = App;
 
 
-},{"./Landing.jsx":"/home/cv/coup/client/components/Landing.jsx","./Play.jsx":"/home/cv/coup/client/components/Play.jsx","fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js","react":"/home/cv/coup/node_modules/react/react.js"}],"/home/cv/coup/client/components/Landing.jsx":[function(require,module,exports){
+},{"./Landing.jsx":"/Users/cvializ/coup/client/components/Landing.jsx","./Play.jsx":"/Users/cvializ/coup/client/components/Play.jsx","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js","react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/components/Landing.jsx":[function(require,module,exports){
 var Fluxxor = require('fluxxor');
 var React = require('react');
 
@@ -417,10 +417,11 @@ var CreateForm = React.createClass({displayName: "CreateForm",
 })
 
 
-},{"fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js","react":"/home/cv/coup/node_modules/react/react.js"}],"/home/cv/coup/client/components/Play.jsx":[function(require,module,exports){
+},{"fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js","react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/components/Play.jsx":[function(require,module,exports){
 var React = require('react');
 var Fluxxor = require('fluxxor');
 var Player = require('./Player.jsx');
+var ReadyAction = require('./PlayerActions/Ready.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 
@@ -449,6 +450,9 @@ module.exports = React.createClass({displayName: "exports",
       React.createElement("div", {className: "c-play"}, 
         React.createElement("div", {className: "c-players"}, 
           players
+        ), 
+        React.createElement("div", {className: "c-actions"}, 
+            React.createElement(ReadyAction, null)
         )
       )
     );
@@ -456,7 +460,7 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 
-},{"./Player.jsx":"/home/cv/coup/client/components/Player.jsx","fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js","react":"/home/cv/coup/node_modules/react/react.js"}],"/home/cv/coup/client/components/Player.jsx":[function(require,module,exports){
+},{"./Player.jsx":"/Users/cvializ/coup/client/components/Player.jsx","./PlayerActions/Ready.jsx":"/Users/cvializ/coup/client/components/PlayerActions/Ready.jsx","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js","react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/components/Player.jsx":[function(require,module,exports){
 var React = require('react');
 var Player;
 var Influence;
@@ -502,7 +506,118 @@ module.exports = Player = React.createClass({displayName: "Player",
 });
 
 
-},{"react":"/home/cv/coup/node_modules/react/react.js"}],"/home/cv/coup/client/constants/client.js":[function(require,module,exports){
+},{"react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/components/PlayerActions/Action.jsx":[function(require,module,exports){
+var React = require('react');
+var Action;
+
+module.exports = Action = React.createClass({displayName: "Action",
+  getDefaultProps: function () {
+    return {
+      title: 'Untitled Action',
+      text: 'This action doesn\'t do anything!',
+      choices: [
+        { title: 'OK',  id: 'action-ok' }
+      ],
+      ability: null,
+      conditions: null
+    };
+  },
+
+  getAvailableChoices: function () {
+
+    var conditions = this.props.conditions;
+    var ability = this.props.ability;
+    var i;
+    var condition;
+
+    var choices = this.props.choices.slice();
+
+    if (ability) {
+      for (i = 0; i < choices.length; i++) {
+        condition = choices[i].condition;
+
+        if ((ability && ability[condition] === false) ||
+            (conditions && conditions[condition] === false)) {
+          choices.splice(i, 1);
+        }
+      }
+    }
+
+    return choices;
+  },
+
+  renderChoice: function (choice, index) {
+    return (
+      React.createElement("button", {ref: choice.ref, key: index, id: choice.id, onClick: choice.onClick}, choice.title)
+    );
+  },
+
+  render: function () {
+    var availableChoices = this.getAvailableChoices().map(this.renderChoice);
+
+    return (
+      React.createElement("div", {className: "c-action"}, 
+        React.createElement("h2", null, this.props.title), 
+        React.createElement("p", null, this.props.text), 
+        React.createElement("div", {class: "c-action-button-list"}, 
+          availableChoices
+        )
+      )
+    );
+  }
+});
+
+
+},{"react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/components/PlayerActions/Ready.jsx":[function(require,module,exports){
+var React = require('react');
+var Fluxxor = require('fluxxor');
+var Action = require('./Action.jsx');
+var Ready;
+
+module.exports = Ready = React.createClass({displayName: "Ready",
+  mixins: [
+    Fluxxor.FluxMixin(React)
+  ],
+
+  getDefaultProps: function () {
+    return {
+      title: 'Ready to Play',
+      text: 'Click "Start Play" when all players have joined.',
+      choices: [
+        {
+          title: 'Start Play',
+          id: 'ready-start-play'
+        }
+      ]
+    };
+  },
+
+  onReady: function () {
+
+    var playActions = this.getFlux().actions.play;
+
+    playActions.readyToStart();
+  },
+
+  render: function () {
+    return (
+      React.createElement(Action, {
+        ref: "action", 
+        title: this.props.title, 
+        text: this.props.text, 
+        choices: [
+            {
+              title: 'Start Play',
+              onClick: this.onReady
+            }
+          ]}
+      )
+    );
+  }
+});
+
+
+},{"./Action.jsx":"/Users/cvializ/coup/client/components/PlayerActions/Action.jsx","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js","react":"/Users/cvializ/coup/node_modules/react/react.js"}],"/Users/cvializ/coup/client/constants/client.js":[function(require,module,exports){
 var keyMirror = require('keymirror');
 var socket;
 
@@ -528,7 +643,7 @@ module.exports = client = keyMirror({
 });
 
 
-},{"keymirror":"/home/cv/coup/node_modules/keymirror/index.js"}],"/home/cv/coup/client/constants/socket.js":[function(require,module,exports){
+},{"keymirror":"/Users/cvializ/coup/node_modules/keymirror/index.js"}],"/Users/cvializ/coup/client/constants/socket.js":[function(require,module,exports){
 var keyMirror = require('keymirror');
 var socket;
 
@@ -574,7 +689,7 @@ module.exports = socket = keyMirror({
 });
 
 
-},{"keymirror":"/home/cv/coup/node_modules/keymirror/index.js"}],"/home/cv/coup/client/stores/Landing.js":[function(require,module,exports){
+},{"keymirror":"/Users/cvializ/coup/node_modules/keymirror/index.js"}],"/Users/cvializ/coup/client/stores/Landing.js":[function(require,module,exports){
 var Fluxxor   = require('fluxxor');
 var ClientConstants = require('../constants/client');
 var SocketClient = require('../SocketClient');
@@ -595,7 +710,7 @@ module.exports = Fluxxor.createStore({
 });
 
 
-},{"../SocketClient":"/home/cv/coup/client/SocketClient.js","../constants/client":"/home/cv/coup/client/constants/client.js","fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js"}],"/home/cv/coup/client/stores/Play.js":[function(require,module,exports){
+},{"../SocketClient":"/Users/cvializ/coup/client/SocketClient.js","../constants/client":"/Users/cvializ/coup/client/constants/client.js","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js"}],"/Users/cvializ/coup/client/stores/Play.js":[function(require,module,exports){
 var Fluxxor   = require('fluxxor');
 var ClientConstants = require('../constants/client');
 var SocketClient = require('../SocketClient');
@@ -604,6 +719,7 @@ module.exports = Fluxxor.createStore({
   initialize: function() {
     this.gameState = {};
     this.isPlaying = false;
+    this.phase =
 
     this.bindActions(
       ClientConstants.PLAY_INIT, this.onPlayInit,
@@ -623,7 +739,7 @@ module.exports = Fluxxor.createStore({
 });
 
 
-},{"../SocketClient":"/home/cv/coup/client/SocketClient.js","../constants/client":"/home/cv/coup/client/constants/client.js","fluxxor":"/home/cv/coup/node_modules/fluxxor/index.js"}],"/home/cv/coup/client/stores/index.js":[function(require,module,exports){
+},{"../SocketClient":"/Users/cvializ/coup/client/SocketClient.js","../constants/client":"/Users/cvializ/coup/client/constants/client.js","fluxxor":"/Users/cvializ/coup/node_modules/fluxxor/index.js"}],"/Users/cvializ/coup/client/stores/index.js":[function(require,module,exports){
 var LandingStore = require('./Landing');
 var PlayStore = require('./Play');
 
@@ -633,7 +749,7 @@ module.exports = {
 };
 
 
-},{"./Landing":"/home/cv/coup/client/stores/Landing.js","./Play":"/home/cv/coup/client/stores/Play.js"}],"/home/cv/coup/node_modules/bluebird/js/browser/bluebird.js":[function(require,module,exports){
+},{"./Landing":"/Users/cvializ/coup/client/stores/Landing.js","./Play":"/Users/cvializ/coup/client/stores/Play.js"}],"/Users/cvializ/coup/node_modules/bluebird/js/browser/bluebird.js":[function(require,module,exports){
 (function (process,global){
 /* @preserve
  * The MIT License (MIT)
@@ -660,7 +776,7 @@ module.exports = {
  * 
  */
 /**
- * bluebird build version 2.9.3
+ * bluebird build version 2.9.6
  * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, progress, cancel, using, filter, any, each, timers
 */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -898,17 +1014,21 @@ var getMethodCaller;
 var getGetter;
 if (!true) {
 var makeMethodCaller = function (methodName) {
-    return new Function("obj", "                                             \n\
-        'use strict'                                                         \n\
-        var len = this.length;                                               \n\
-        switch(len) {                                                        \n\
-            case 1: return obj.methodName(this[0]);                          \n\
-            case 2: return obj.methodName(this[0], this[1]);                 \n\
-            case 3: return obj.methodName(this[0], this[1], this[2]);        \n\
-            case 0: return obj.methodName();                                 \n\
-            default: return obj.methodName.apply(obj, this);                 \n\
-        }                                                                    \n\
-        ".replace(/methodName/g, methodName));
+    return new Function("ensureMethod", "                                    \n\
+        return function(obj) {                                               \n\
+            'use strict'                                                     \n\
+            var len = this.length;                                           \n\
+            ensureMethod(obj, 'methodName');                                 \n\
+            switch(len) {                                                    \n\
+                case 1: return obj.methodName(this[0]);                      \n\
+                case 2: return obj.methodName(this[0], this[1]);             \n\
+                case 3: return obj.methodName(this[0], this[1], this[2]);    \n\
+                case 0: return obj.methodName();                             \n\
+                default:                                                     \n\
+                    return obj.methodName.apply(obj, this);                  \n\
+            }                                                                \n\
+        };                                                                   \n\
+        ".replace(/methodName/g, methodName))(ensureMethod);
 };
 
 var makeGetter = function (propertyName) {
@@ -945,8 +1065,21 @@ getGetter = function(name) {
 };
 }
 
+function ensureMethod(obj, methodName) {
+    var fn;
+    if (obj != null) fn = obj[methodName];
+    if (typeof fn !== "function") {
+        var message = "Object " + util.classString(obj) + " has no method '" +
+            util.toString(methodName) + "'";
+        throw new Promise.TypeError(message);
+    }
+    return fn;
+}
+
 function caller(obj) {
-    return obj[this.pop()].apply(obj, this);
+    var methodName = this.pop();
+    var fn = ensureMethod(obj, methodName);
+    return fn.apply(obj, this);
 }
 Promise.prototype.call = function (methodName) {
     var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
@@ -1041,7 +1174,7 @@ Promise.prototype.fork = function (didFulfill, didReject, didProgress) {
 "use strict";
 module.exports = function() {
 var async = _dereq_("./async.js");
-var inherits = _dereq_("./util.js").inherits;
+var util = _dereq_("./util.js");
 var bluebirdFramePattern =
     /[\\\/]bluebird[\\\/]js[\\\/](main|debug|zalgo|instrumented)/;
 var stackFramePattern = null;
@@ -1054,7 +1187,7 @@ function CapturedTrace(parent) {
     captureStackTrace(this, CapturedTrace);
     if (length > 32) this.uncycle();
 }
-inherits(CapturedTrace, Error);
+util.inherits(CapturedTrace, Error);
 
 CapturedTrace.prototype.uncycle = function() {
     var length = this._length;
@@ -1451,9 +1584,7 @@ var captureStackTrace = (function stackDetection() {
 
 var fireDomEvent;
 var fireGlobalEvent = (function() {
-    if (typeof process !== "undefined" &&
-        typeof process.version === "string" &&
-        typeof window === "undefined") {
+    if (util.isNode) {
         return function(name, reason, promise) {
             if (name === "rejectionHandled") {
                 return process.emit(name, promise);
@@ -1630,17 +1761,14 @@ return createContext;
 "use strict";
 module.exports = function(Promise, CapturedTrace) {
 var async = _dereq_("./async.js");
+var Warning = _dereq_("./errors.js").Warning;
 var util = _dereq_("./util.js");
 var canAttachTrace = util.canAttachTrace;
 var unhandledRejectionHandled;
 var possiblyUnhandledRejection;
-var debugging = false || !!(
-    typeof process !== "undefined" &&
-    typeof process.execPath === "string" &&
-    typeof process.env === "object" &&
-    (process.env["BLUEBIRD_DEBUG"] ||
-        process.env["NODE_ENV"] === "development")
-);
+var debugging = false || (util.isNode &&
+                    (!!process.env["BLUEBIRD_DEBUG"] ||
+                     process.env["NODE_ENV"] === "development"));
 
 Promise.prototype._ensurePossibleRejectionHandled = function () {
     this._setRejectionIsUnhandled();
@@ -1727,6 +1855,18 @@ Promise.prototype._attachExtraTrace = function (error, ignoreSelf) {
     }
 };
 
+Promise.prototype._warn = function(message) {
+    var warning = new Warning(message);
+    var ctx = this._peekContext();
+    if (ctx) {
+        ctx.attachExtraTrace(warning);
+    } else {
+        var parsed = CapturedTrace.parseStackAndMessage(warning);
+        warning.stack = parsed.message + "\n" + parsed.stack.join("\n");
+    }
+    CapturedTrace.formatAndLogError(warning, "");
+};
+
 Promise.onPossiblyUnhandledRejection = function (fn) {
     possiblyUnhandledRejection = typeof fn === "function" ? fn : undefined;
 };
@@ -1758,7 +1898,7 @@ return function() {
 };
 };
 
-},{"./async.js":2,"./util.js":38}],11:[function(_dereq_,module,exports){
+},{"./async.js":2,"./errors.js":13,"./util.js":38}],11:[function(_dereq_,module,exports){
 "use strict";
 var util = _dereq_("./util.js");
 var isPrimitive = util.isPrimitive;
@@ -1843,6 +1983,8 @@ function subError(nameProperty, defaultMessage) {
         notEnumerableProp(this, "name", nameProperty);
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, this.constructor);
+        } else {
+            Error.call(this);
         }
     }
     inherits(SubError, Error);
@@ -1850,6 +1992,7 @@ function subError(nameProperty, defaultMessage) {
 }
 
 var _TypeError, _RangeError;
+var Warning = subError("Warning", "warning");
 var CancellationError = subError("CancellationError", "cancellation error");
 var TimeoutError = subError("TimeoutError", "timeout error");
 var AggregateError = subError("AggregateError", "aggregate error");
@@ -1928,7 +2071,8 @@ module.exports = {
     CancellationError: errorTypes.CancellationError,
     OperationalError: errorTypes.OperationalError,
     TimeoutError: errorTypes.TimeoutError,
-    AggregateError: errorTypes.AggregateError
+    AggregateError: errorTypes.AggregateError,
+    Warning: Warning
 };
 
 },{"./es5.js":14,"./util.js":38}],14:[function(_dereq_,module,exports){
@@ -2721,7 +2865,6 @@ var PromiseResolver = _dereq_("./promise_resolver.js");
 var nodebackForPromise = PromiseResolver._nodebackForPromise;
 var errorObj = util.errorObj;
 var tryCatch = util.tryCatch;
-
 function Promise(resolver) {
     if (typeof resolver !== "function") {
         throw new TypeError("the promise constructor requires a resolver function\u000a\u000a    See http://goo.gl/EC22Yn\u000a");
@@ -2772,10 +2915,19 @@ Promise.prototype.reflect = function () {
 };
 
 Promise.prototype.then = function (didFulfill, didReject, didProgress) {
+    if (isDebugging() && arguments.length > 0 &&
+        typeof didFulfill !== "function" &&
+        typeof didReject !== "function") {
+        var msg = ".then() only accepts functions but was passed: " +
+                util.classString(didFulfill);
+        if (arguments.length > 1) {
+            msg += ", " + util.classString(didReject);
+        }
+        this._warn(msg);
+    }
     return this._then(didFulfill, didReject, didProgress,
         undefined, undefined);
 };
-
 
 Promise.prototype.done = function (didFulfill, didReject, didProgress) {
     var promise = this._then(didFulfill, didReject, didProgress,
@@ -4344,7 +4496,7 @@ Promise.reduce = function (promises, fn, initialValue, _each) {
 },{"./util.js":38}],31:[function(_dereq_,module,exports){
 "use strict";
 var schedule;
-if (typeof process === "object" && typeof process.version === "string") {
+if (_dereq_("./util.js").isNode) {
     var version = process.version.split(".").map(Number);
     schedule = (version[0] === 0 && version[1] > 10) || (version[0] > 0)
         ? global.setImmediate : process.nextTick;
@@ -4370,7 +4522,7 @@ else {
 }
 module.exports = schedule;
 
-},{}],32:[function(_dereq_,module,exports){
+},{"./util.js":38}],32:[function(_dereq_,module,exports){
 "use strict";
 module.exports =
     function(Promise, PromiseArray) {
@@ -4763,12 +4915,16 @@ Promise.prototype.delay = function (ms) {
 };
 
 function successClear(value) {
-    clearTimeout(+this);
+    var handle = this;
+    if (handle instanceof Number) handle = +handle;
+    clearTimeout(handle);
     return value;
 }
 
 function failureClear(reason) {
-    clearTimeout(+this);
+    var handle = this;
+    if (handle instanceof Number) handle = +handle;
+    clearTimeout(handle);
     throw reason;
 }
 
@@ -5222,6 +5378,10 @@ var ensureErrorObject = (function() {
     }
 })();
 
+function classString(obj) {
+    return {}.toString.call(obj);
+}
+
 var ret = {
     isClass: isClass,
     isIdentifier: isIdentifier,
@@ -5247,7 +5407,10 @@ var ret = {
     canAttachTrace: canAttachTrace,
     ensureErrorObject: ensureErrorObject,
     originatesFromRejection: originatesFromRejection,
-    markAsOriginatingFromRejection: markAsOriginatingFromRejection
+    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
+    classString: classString,
+    isNode: typeof process !== "undefined" &&
+        classString(process).toLowerCase() === "[object process]"
 };
 try {throw new Error(); } catch (e) {ret.lastLineError = e;}
 module.exports = ret;
@@ -5255,1572 +5418,7 @@ module.exports = ret;
 },{"./es5.js":14}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/browserify/node_modules/buffer/index.js":[function(require,module,exports){
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-var base64 = require('base64-js')
-var ieee754 = require('ieee754')
-var isArray = require('is-array')
-
-exports.Buffer = Buffer
-exports.SlowBuffer = SlowBuffer
-exports.INSPECT_MAX_BYTES = 50
-Buffer.poolSize = 8192 // not used by this implementation
-
-var kMaxLength = 0x3fffffff
-var rootParent = {}
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Note:
- *
- * - Implementation must support adding new properties to `Uint8Array` instances.
- *   Firefox 4-29 lacked support, fixed in Firefox 30+.
- *   See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *  - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *  - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *    incorrect length in some situations.
- *
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they will
- * get the Object implementation, which is slower but will work correctly.
- */
-Buffer.TYPED_ARRAY_SUPPORT = (function () {
-  try {
-    var buf = new ArrayBuffer(0)
-    var arr = new Uint8Array(buf)
-    arr.foo = function () { return 42 }
-    return 42 === arr.foo() && // typed array instances can be augmented
-        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-        new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-  } catch (e) {
-    return false
-  }
-})()
-
-/**
- * Class: Buffer
- * =============
- *
- * The Buffer constructor returns instances of `Uint8Array` that are augmented
- * with function properties for all the node `Buffer` API functions. We use
- * `Uint8Array` so that square bracket notation works as expected -- it returns
- * a single octet.
- *
- * By augmenting the instances, we can avoid modifying the `Uint8Array`
- * prototype.
- */
-function Buffer (subject, encoding, noZero) {
-  if (!(this instanceof Buffer))
-    return new Buffer(subject, encoding, noZero)
-
-  var type = typeof subject
-
-  // Find the length
-  var length
-  if (type === 'number')
-    length = subject > 0 ? subject >>> 0 : 0
-  else if (type === 'string') {
-    length = Buffer.byteLength(subject, encoding)
-  } else if (type === 'object' && subject !== null) { // assume object is array-like
-    if (subject.type === 'Buffer' && isArray(subject.data))
-      subject = subject.data
-    length = +subject.length > 0 ? Math.floor(+subject.length) : 0
-  } else
-    throw new TypeError('must start with number, buffer, array or string')
-
-  if (length > kMaxLength)
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-      'size: 0x' + kMaxLength.toString(16) + ' bytes')
-
-  var buf
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Preferred: Return an augmented `Uint8Array` instance for best performance
-    buf = Buffer._augment(new Uint8Array(length))
-  } else {
-    // Fallback: Return THIS instance of Buffer (created by `new`)
-    buf = this
-    buf.length = length
-    buf._isBuffer = true
-  }
-
-  var i
-  if (Buffer.TYPED_ARRAY_SUPPORT && typeof subject.byteLength === 'number') {
-    // Speed optimization -- use set if we're copying from a typed array
-    buf._set(subject)
-  } else if (isArrayish(subject)) {
-    // Treat array-ish objects as a byte array
-    if (Buffer.isBuffer(subject)) {
-      for (i = 0; i < length; i++)
-        buf[i] = subject.readUInt8(i)
-    } else {
-      for (i = 0; i < length; i++)
-        buf[i] = ((subject[i] % 256) + 256) % 256
-    }
-  } else if (type === 'string') {
-    buf.write(subject, 0, encoding)
-  } else if (type === 'number' && !Buffer.TYPED_ARRAY_SUPPORT && !noZero) {
-    for (i = 0; i < length; i++) {
-      buf[i] = 0
-    }
-  }
-
-  if (length > 0 && length <= Buffer.poolSize)
-    buf.parent = rootParent
-
-  return buf
-}
-
-function SlowBuffer(subject, encoding, noZero) {
-  if (!(this instanceof SlowBuffer))
-    return new SlowBuffer(subject, encoding, noZero)
-
-  var buf = new Buffer(subject, encoding, noZero)
-  delete buf.parent
-  return buf
-}
-
-Buffer.isBuffer = function (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer.compare = function (a, b) {
-  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b))
-    throw new TypeError('Arguments must be Buffers')
-
-  var x = a.length
-  var y = b.length
-  for (var i = 0, len = Math.min(x, y); i < len && a[i] === b[i]; i++) {}
-  if (i !== len) {
-    x = a[i]
-    y = b[i]
-  }
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-Buffer.isEncoding = function (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'binary':
-    case 'base64':
-    case 'raw':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-}
-
-Buffer.concat = function (list, totalLength) {
-  if (!isArray(list)) throw new TypeError('Usage: Buffer.concat(list[, length])')
-
-  if (list.length === 0) {
-    return new Buffer(0)
-  } else if (list.length === 1) {
-    return list[0]
-  }
-
-  var i
-  if (totalLength === undefined) {
-    totalLength = 0
-    for (i = 0; i < list.length; i++) {
-      totalLength += list[i].length
-    }
-  }
-
-  var buf = new Buffer(totalLength)
-  var pos = 0
-  for (i = 0; i < list.length; i++) {
-    var item = list[i]
-    item.copy(buf, pos)
-    pos += item.length
-  }
-  return buf
-}
-
-Buffer.byteLength = function (str, encoding) {
-  var ret
-  str = str + ''
-  switch (encoding || 'utf8') {
-    case 'ascii':
-    case 'binary':
-    case 'raw':
-      ret = str.length
-      break
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      ret = str.length * 2
-      break
-    case 'hex':
-      ret = str.length >>> 1
-      break
-    case 'utf8':
-    case 'utf-8':
-      ret = utf8ToBytes(str).length
-      break
-    case 'base64':
-      ret = base64ToBytes(str).length
-      break
-    default:
-      ret = str.length
-  }
-  return ret
-}
-
-// pre-set for values that may exist in the future
-Buffer.prototype.length = undefined
-Buffer.prototype.parent = undefined
-
-// toString(encoding, start=0, end=buffer.length)
-Buffer.prototype.toString = function (encoding, start, end) {
-  var loweredCase = false
-
-  start = start >>> 0
-  end = end === undefined || end === Infinity ? this.length : end >>> 0
-
-  if (!encoding) encoding = 'utf8'
-  if (start < 0) start = 0
-  if (end > this.length) end = this.length
-  if (end <= start) return ''
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'binary':
-        return binarySlice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase)
-          throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-Buffer.prototype.equals = function (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  return Buffer.compare(this, b) === 0
-}
-
-Buffer.prototype.inspect = function () {
-  var str = ''
-  var max = exports.INSPECT_MAX_BYTES
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
-    if (this.length > max)
-      str += ' ... '
-  }
-  return '<Buffer ' + str + '>'
-}
-
-Buffer.prototype.compare = function (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  return Buffer.compare(this, b)
-}
-
-// `get` will be removed in Node 0.13+
-Buffer.prototype.get = function (offset) {
-  console.log('.get() is deprecated. Access using array indexes instead.')
-  return this.readUInt8(offset)
-}
-
-// `set` will be removed in Node 0.13+
-Buffer.prototype.set = function (v, offset) {
-  console.log('.set() is deprecated. Access using array indexes instead.')
-  return this.writeUInt8(v, offset)
-}
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0
-  var remaining = buf.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length
-  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2
-  }
-  for (var i = 0; i < length; i++) {
-    var byte = parseInt(string.substr(i * 2, 2), 16)
-    if (isNaN(byte)) throw new Error('Invalid hex string')
-    buf[offset + i] = byte
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  var charsWritten = blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-  return charsWritten
-}
-
-function asciiWrite (buf, string, offset, length) {
-  var charsWritten = blitBuffer(asciiToBytes(string), buf, offset, length)
-  return charsWritten
-}
-
-function binaryWrite (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  var charsWritten = blitBuffer(base64ToBytes(string), buf, offset, length)
-  return charsWritten
-}
-
-function utf16leWrite (buf, string, offset, length) {
-  var charsWritten = blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length, 2)
-  return charsWritten
-}
-
-Buffer.prototype.write = function (string, offset, length, encoding) {
-  // Support both (string, offset, length, encoding)
-  // and the legacy (string, encoding, offset, length)
-  if (isFinite(offset)) {
-    if (!isFinite(length)) {
-      encoding = length
-      length = undefined
-    }
-  } else {  // legacy
-    var swap = encoding
-    encoding = offset
-    offset = length
-    length = swap
-  }
-
-  offset = Number(offset) || 0
-
-  if (length < 0 || offset < 0 || offset > this.length)
-    throw new RangeError('attempt to write outside buffer bounds');
-
-  var remaining = this.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-  encoding = String(encoding || 'utf8').toLowerCase()
-
-  var ret
-  switch (encoding) {
-    case 'hex':
-      ret = hexWrite(this, string, offset, length)
-      break
-    case 'utf8':
-    case 'utf-8':
-      ret = utf8Write(this, string, offset, length)
-      break
-    case 'ascii':
-      ret = asciiWrite(this, string, offset, length)
-      break
-    case 'binary':
-      ret = binaryWrite(this, string, offset, length)
-      break
-    case 'base64':
-      ret = base64Write(this, string, offset, length)
-      break
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      ret = utf16leWrite(this, string, offset, length)
-      break
-    default:
-      throw new TypeError('Unknown encoding: ' + encoding)
-  }
-  return ret
-}
-
-Buffer.prototype.toJSON = function () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-}
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return base64.fromByteArray(buf)
-  } else {
-    return base64.fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  var res = ''
-  var tmp = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    if (buf[i] <= 0x7F) {
-      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
-      tmp = ''
-    } else {
-      tmp += '%' + buf[i].toString(16)
-    }
-  }
-
-  return res + decodeUtf8Char(tmp)
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    ret += String.fromCharCode(buf[i] & 0x7F)
-  }
-  return ret
-}
-
-function binarySlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    ret += String.fromCharCode(buf[i])
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length
-
-  if (!start || start < 0) start = 0
-  if (!end || end < 0 || end > len) end = len
-
-  var out = ''
-  for (var i = start; i < end; i++) {
-    out += toHex(buf[i])
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
-  }
-  return res
-}
-
-Buffer.prototype.slice = function (start, end) {
-  var len = this.length
-  start = ~~start
-  end = end === undefined ? len : ~~end
-
-  if (start < 0) {
-    start += len;
-    if (start < 0)
-      start = 0
-  } else if (start > len) {
-    start = len
-  }
-
-  if (end < 0) {
-    end += len
-    if (end < 0)
-      end = 0
-  } else if (end > len) {
-    end = len
-  }
-
-  if (end < start)
-    end = start
-
-  var newBuf
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    newBuf = Buffer._augment(this.subarray(start, end))
-  } else {
-    var sliceLen = end - start
-    newBuf = new Buffer(sliceLen, undefined, true)
-    for (var i = 0; i < sliceLen; i++) {
-      newBuf[i] = this[i + start]
-    }
-  }
-
-  if (newBuf.length)
-    newBuf.parent = this.parent || this
-
-  return newBuf
-}
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0)
-    throw new RangeError('offset is not uint')
-  if (offset + ext > length)
-    throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100))
-    val += this[offset + i] * mul
-
-  return val
-}
-
-Buffer.prototype.readUIntBE = function (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset + --byteLength]
-  var mul = 1
-  while (byteLength > 0 && (mul *= 0x100))
-    val += this[offset + --byteLength] * mul;
-
-  return val
-}
-
-Buffer.prototype.readUInt8 = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 1, this.length)
-  return this[offset]
-}
-
-Buffer.prototype.readUInt16LE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 2, this.length)
-  return this[offset] | (this[offset + 1] << 8)
-}
-
-Buffer.prototype.readUInt16BE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 2, this.length)
-  return (this[offset] << 8) | this[offset + 1]
-}
-
-Buffer.prototype.readUInt32LE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-}
-
-Buffer.prototype.readUInt32BE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-
-  return (this[offset] * 0x1000000) +
-      ((this[offset + 1] << 16) |
-      (this[offset + 2] << 8) |
-      this[offset + 3])
-}
-
-Buffer.prototype.readIntLE = function (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100))
-    val += this[offset + i] * mul
-  mul *= 0x80
-
-  if (val >= mul)
-    val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readIntBE = function (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkOffset(offset, byteLength, this.length)
-
-  var i = byteLength
-  var mul = 1
-  var val = this[offset + --i]
-  while (i > 0 && (mul *= 0x100))
-    val += this[offset + --i] * mul
-  mul *= 0x80
-
-  if (val >= mul)
-    val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readInt8 = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 1, this.length)
-  if (!(this[offset] & 0x80))
-    return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-}
-
-Buffer.prototype.readInt16LE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 2, this.length)
-  var val = this[offset] | (this[offset + 1] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt16BE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 2, this.length)
-  var val = this[offset + 1] | (this[offset] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt32LE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-
-  return (this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16) |
-      (this[offset + 3] << 24)
-}
-
-Buffer.prototype.readInt32BE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-
-  return (this[offset] << 24) |
-      (this[offset + 1] << 16) |
-      (this[offset + 2] << 8) |
-      (this[offset + 3])
-}
-
-Buffer.prototype.readFloatLE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, true, 23, 4)
-}
-
-Buffer.prototype.readFloatBE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, false, 23, 4)
-}
-
-Buffer.prototype.readDoubleLE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, true, 52, 8)
-}
-
-Buffer.prototype.readDoubleBE = function (offset, noAssert) {
-  if (!noAssert)
-    checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, false, 52, 8)
-}
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('value is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-
-  var mul = 1
-  var i = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100))
-    this[offset + i] = (value / mul) >>> 0 & 0xFF
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUIntBE = function (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-
-  var i = byteLength - 1
-  var mul = 1
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100))
-    this[offset + i] = (value / mul) >>> 0 & 0xFF
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUInt8 = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 1, 0xff, 0)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = value
-  return offset + 1
-}
-
-function objectWriteUInt16 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8
-  }
-}
-
-Buffer.prototype.writeUInt16LE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-  } else objectWriteUInt16(this, value, offset, true)
-  return offset + 2
-}
-
-Buffer.prototype.writeUInt16BE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = value
-  } else objectWriteUInt16(this, value, offset, false)
-  return offset + 2
-}
-
-function objectWriteUInt32 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
-  }
-}
-
-Buffer.prototype.writeUInt32LE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 1] = (value >>> 8)
-    this[offset] = value
-  } else objectWriteUInt32(this, value, offset, true)
-  return offset + 4
-}
-
-Buffer.prototype.writeUInt32BE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
-  } else objectWriteUInt32(this, value, offset, false)
-  return offset + 4
-}
-
-Buffer.prototype.writeIntLE = function (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    checkInt(this,
-             value,
-             offset,
-             byteLength,
-             Math.pow(2, 8 * byteLength - 1) - 1,
-             -Math.pow(2, 8 * byteLength - 1))
-  }
-
-  var i = 0
-  var mul = 1
-  var sub = value < 0 ? 1 : 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100))
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeIntBE = function (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    checkInt(this,
-             value,
-             offset,
-             byteLength,
-             Math.pow(2, 8 * byteLength - 1) - 1,
-             -Math.pow(2, 8 * byteLength - 1))
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  var sub = value < 0 ? 1 : 0
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100))
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeInt8 = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 1, 0x7f, -0x80)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  if (value < 0) value = 0xff + value + 1
-  this[offset] = value
-  return offset + 1
-}
-
-Buffer.prototype.writeInt16LE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-  } else objectWriteUInt16(this, value, offset, true)
-  return offset + 2
-}
-
-Buffer.prototype.writeInt16BE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = value
-  } else objectWriteUInt16(this, value, offset, false)
-  return offset + 2
-}
-
-Buffer.prototype.writeInt32LE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 3] = (value >>> 24)
-  } else objectWriteUInt32(this, value, offset, true)
-  return offset + 4
-}
-
-Buffer.prototype.writeInt32BE = function (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert)
-    checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (value < 0) value = 0xffffffff + value + 1
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
-  } else objectWriteUInt32(this, value, offset, false)
-  return offset + 4
-}
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (value > max || value < min) throw new RangeError('value is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('index out of range')
-  if (offset < 0) throw new RangeError('index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert)
-    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
-  ieee754.write(buf, value, offset, littleEndian, 23, 4)
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeFloatBE = function (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-}
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert)
-    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
-  ieee754.write(buf, value, offset, littleEndian, 52, 8)
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeDoubleBE = function (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-}
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function (target, target_start, start, end) {
-  var source = this
-
-  if (!start) start = 0
-  if (!end && end !== 0) end = this.length
-  if (target_start >= target.length) target_start = target.length
-  if (!target_start) target_start = 0
-  if (end > 0 && end < start) end = start
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || source.length === 0) return 0
-
-  // Fatal error conditions
-  if (target_start < 0)
-    throw new RangeError('targetStart out of bounds')
-  if (start < 0 || start >= source.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length)
-    end = this.length
-  if (target.length - target_start < end - start)
-    end = target.length - target_start + start
-
-  var len = end - start
-
-  if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < len; i++) {
-      target[i + target_start] = this[i + start]
-    }
-  } else {
-    target._set(this.subarray(start, start + len), target_start)
-  }
-
-  return len
-}
-
-// fill(value, start=0, end=buffer.length)
-Buffer.prototype.fill = function (value, start, end) {
-  if (!value) value = 0
-  if (!start) start = 0
-  if (!end) end = this.length
-
-  if (end < start) throw new RangeError('end < start')
-
-  // Fill 0 bytes; we're done
-  if (end === start) return
-  if (this.length === 0) return
-
-  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
-  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
-
-  var i
-  if (typeof value === 'number') {
-    for (i = start; i < end; i++) {
-      this[i] = value
-    }
-  } else {
-    var bytes = utf8ToBytes(value.toString())
-    var len = bytes.length
-    for (i = start; i < end; i++) {
-      this[i] = bytes[i % len]
-    }
-  }
-
-  return this
-}
-
-/**
- * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
- * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
- */
-Buffer.prototype.toArrayBuffer = function () {
-  if (typeof Uint8Array !== 'undefined') {
-    if (Buffer.TYPED_ARRAY_SUPPORT) {
-      return (new Buffer(this)).buffer
-    } else {
-      var buf = new Uint8Array(this.length)
-      for (var i = 0, len = buf.length; i < len; i += 1) {
-        buf[i] = this[i]
-      }
-      return buf.buffer
-    }
-  } else {
-    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
-  }
-}
-
-// HELPER FUNCTIONS
-// ================
-
-var BP = Buffer.prototype
-
-/**
- * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
- */
-Buffer._augment = function (arr) {
-  arr.constructor = Buffer
-  arr._isBuffer = true
-
-  // save reference to original Uint8Array get/set methods before overwriting
-  arr._get = arr.get
-  arr._set = arr.set
-
-  // deprecated, will be removed in node 0.13+
-  arr.get = BP.get
-  arr.set = BP.set
-
-  arr.write = BP.write
-  arr.toString = BP.toString
-  arr.toLocaleString = BP.toString
-  arr.toJSON = BP.toJSON
-  arr.equals = BP.equals
-  arr.compare = BP.compare
-  arr.copy = BP.copy
-  arr.slice = BP.slice
-  arr.readUIntLE = BP.readUIntLE
-  arr.readUIntBE = BP.readUIntBE
-  arr.readUInt8 = BP.readUInt8
-  arr.readUInt16LE = BP.readUInt16LE
-  arr.readUInt16BE = BP.readUInt16BE
-  arr.readUInt32LE = BP.readUInt32LE
-  arr.readUInt32BE = BP.readUInt32BE
-  arr.readIntLE = BP.readIntLE
-  arr.readIntBE = BP.readIntBE
-  arr.readInt8 = BP.readInt8
-  arr.readInt16LE = BP.readInt16LE
-  arr.readInt16BE = BP.readInt16BE
-  arr.readInt32LE = BP.readInt32LE
-  arr.readInt32BE = BP.readInt32BE
-  arr.readFloatLE = BP.readFloatLE
-  arr.readFloatBE = BP.readFloatBE
-  arr.readDoubleLE = BP.readDoubleLE
-  arr.readDoubleBE = BP.readDoubleBE
-  arr.writeUInt8 = BP.writeUInt8
-  arr.writeUIntLE = BP.writeUIntLE
-  arr.writeUIntBE = BP.writeUIntBE
-  arr.writeUInt16LE = BP.writeUInt16LE
-  arr.writeUInt16BE = BP.writeUInt16BE
-  arr.writeUInt32LE = BP.writeUInt32LE
-  arr.writeUInt32BE = BP.writeUInt32BE
-  arr.writeIntLE = BP.writeIntLE
-  arr.writeIntBE = BP.writeIntBE
-  arr.writeInt8 = BP.writeInt8
-  arr.writeInt16LE = BP.writeInt16LE
-  arr.writeInt16BE = BP.writeInt16BE
-  arr.writeInt32LE = BP.writeInt32LE
-  arr.writeInt32BE = BP.writeInt32BE
-  arr.writeFloatLE = BP.writeFloatLE
-  arr.writeFloatBE = BP.writeFloatBE
-  arr.writeDoubleLE = BP.writeDoubleLE
-  arr.writeDoubleBE = BP.writeDoubleBE
-  arr.fill = BP.fill
-  arr.inspect = BP.inspect
-  arr.toArrayBuffer = BP.toArrayBuffer
-
-  return arr
-}
-
-var INVALID_BASE64_RE = /[^+\/0-9A-z\-]/g
-
-function base64clean (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '='
-  }
-  return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function isArrayish (subject) {
-  return isArray(subject) || Buffer.isBuffer(subject) ||
-      subject && typeof subject === 'object' &&
-      typeof subject.length === 'number'
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes(string, units) {
-  var codePoint, length = string.length
-  var leadSurrogate = null
-  units = units || Infinity
-  var bytes = []
-  var i = 0
-
-  for (; i<length; i++) {
-    codePoint = string.charCodeAt(i)
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-
-      // last char was a lead
-      if (leadSurrogate) {
-
-        // 2 leads in a row
-        if (codePoint < 0xDC00) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          leadSurrogate = codePoint
-          continue
-        }
-
-        // valid surrogate pair
-        else {
-          codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
-          leadSurrogate = null
-        }
-      }
-
-      // no lead yet
-      else {
-
-        // unexpected trail
-        if (codePoint > 0xDBFF) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        }
-
-        // unpaired lead
-        else if (i + 1 === length) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        }
-
-        // valid lead
-        else {
-          leadSurrogate = codePoint
-          continue
-        }
-      }
-    }
-
-    // valid bmp char, but last char was a lead
-    else if (leadSurrogate) {
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-      leadSurrogate = null
-    }
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint)
-    }
-    else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      );
-    }
-    else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    }
-    else if (codePoint < 0x200000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    }
-    else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; i++) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF)
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo
-  var byteArray = []
-  for (var i = 0; i < str.length; i++) {
-
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i)
-    hi = c >> 8
-    lo = c % 256
-    byteArray.push(lo)
-    byteArray.push(hi)
-  }
-
-  return byteArray
-}
-
-function base64ToBytes (str) {
-  return base64.toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length, unitSize) {
-  if (unitSize) length -= length % unitSize;
-  for (var i = 0; i < length; i++) {
-    if ((i + offset >= dst.length) || (i >= src.length))
-      break
-    dst[i + offset] = src[i]
-  }
-  return i
-}
-
-function decodeUtf8Char (str) {
-  try {
-    return decodeURIComponent(str)
-  } catch (err) {
-    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-  }
-}
-
-},{"base64-js":"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","ieee754":"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","is-array":"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/is-array/index.js"}],"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js":[function(require,module,exports){
-var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-;(function (exports) {
-	'use strict';
-
-  var Arr = (typeof Uint8Array !== 'undefined')
-    ? Uint8Array
-    : Array
-
-	var PLUS   = '+'.charCodeAt(0)
-	var SLASH  = '/'.charCodeAt(0)
-	var NUMBER = '0'.charCodeAt(0)
-	var LOWER  = 'a'.charCodeAt(0)
-	var UPPER  = 'A'.charCodeAt(0)
-	var PLUS_URL_SAFE = '-'.charCodeAt(0)
-	var SLASH_URL_SAFE = '_'.charCodeAt(0)
-
-	function decode (elt) {
-		var code = elt.charCodeAt(0)
-		if (code === PLUS ||
-		    code === PLUS_URL_SAFE)
-			return 62 // '+'
-		if (code === SLASH ||
-		    code === SLASH_URL_SAFE)
-			return 63 // '/'
-		if (code < NUMBER)
-			return -1 //no match
-		if (code < NUMBER + 10)
-			return code - NUMBER + 26 + 26
-		if (code < UPPER + 26)
-			return code - UPPER
-		if (code < LOWER + 26)
-			return code - LOWER + 26
-	}
-
-	function b64ToByteArray (b64) {
-		var i, j, l, tmp, placeHolders, arr
-
-		if (b64.length % 4 > 0) {
-			throw new Error('Invalid string. Length must be a multiple of 4')
-		}
-
-		// the number of equal signs (place holders)
-		// if there are two placeholders, than the two characters before it
-		// represent one byte
-		// if there is only one, then the three characters before it represent 2 bytes
-		// this is just a cheap hack to not do indexOf twice
-		var len = b64.length
-		placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
-
-		// base64 is 4/3 + up to two characters of the original data
-		arr = new Arr(b64.length * 3 / 4 - placeHolders)
-
-		// if there are placeholders, only get up to the last complete 4 chars
-		l = placeHolders > 0 ? b64.length - 4 : b64.length
-
-		var L = 0
-
-		function push (v) {
-			arr[L++] = v
-		}
-
-		for (i = 0, j = 0; i < l; i += 4, j += 3) {
-			tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-			push((tmp & 0xFF0000) >> 16)
-			push((tmp & 0xFF00) >> 8)
-			push(tmp & 0xFF)
-		}
-
-		if (placeHolders === 2) {
-			tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-			push(tmp & 0xFF)
-		} else if (placeHolders === 1) {
-			tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-			push((tmp >> 8) & 0xFF)
-			push(tmp & 0xFF)
-		}
-
-		return arr
-	}
-
-	function uint8ToBase64 (uint8) {
-		var i,
-			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-			output = "",
-			temp, length
-
-		function encode (num) {
-			return lookup.charAt(num)
-		}
-
-		function tripletToBase64 (num) {
-			return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-		}
-
-		// go through the array every three bytes, we'll deal with trailing stuff later
-		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-			output += tripletToBase64(temp)
-		}
-
-		// pad the end with zeros, but make sure to not forget the extra bytes
-		switch (extraBytes) {
-			case 1:
-				temp = uint8[uint8.length - 1]
-				output += encode(temp >> 2)
-				output += encode((temp << 4) & 0x3F)
-				output += '=='
-				break
-			case 2:
-				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-				output += encode(temp >> 10)
-				output += encode((temp >> 4) & 0x3F)
-				output += encode((temp << 2) & 0x3F)
-				output += '='
-				break
-		}
-
-		return output
-	}
-
-	exports.toByteArray = b64ToByteArray
-	exports.fromByteArray = uint8ToBase64
-}(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
-
-},{}],"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js":[function(require,module,exports){
-exports.read = function(buffer, offset, isLE, mLen, nBytes) {
-  var e, m,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      nBits = -7,
-      i = isLE ? (nBytes - 1) : 0,
-      d = isLE ? -1 : 1,
-      s = buffer[offset + i];
-
-  i += d;
-
-  e = s & ((1 << (-nBits)) - 1);
-  s >>= (-nBits);
-  nBits += eLen;
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
-
-  m = e & ((1 << (-nBits)) - 1);
-  e >>= (-nBits);
-  nBits += mLen;
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
-
-  if (e === 0) {
-    e = 1 - eBias;
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity);
-  } else {
-    m = m + Math.pow(2, mLen);
-    e = e - eBias;
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
-};
-
-exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-      i = isLE ? 0 : (nBytes - 1),
-      d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
-
-  value = Math.abs(value);
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0;
-    e = eMax;
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2);
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--;
-      c *= 2;
-    }
-    if (e + eBias >= 1) {
-      value += rt / c;
-    } else {
-      value += rt * Math.pow(2, 1 - eBias);
-    }
-    if (value * c >= 2) {
-      e++;
-      c /= 2;
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0;
-      e = eMax;
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen);
-      e = e + eBias;
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-      e = 0;
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
-
-  e = (e << mLen) | m;
-  eLen += mLen;
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
-
-  buffer[offset + i - d] |= s * 128;
-};
-
-},{}],"/home/cv/coup/node_modules/browserify/node_modules/buffer/node_modules/is-array/index.js":[function(require,module,exports){
-
-/**
- * isArray
- */
-
-var isArray = Array.isArray;
-
-/**
- * toString
- */
-
-var str = Object.prototype.toString;
-
-/**
- * Whether or not the given `val`
- * is an array.
- *
- * example:
- *
- *        isArray([]);
- *        // > true
- *        isArray(arguments);
- *        // > false
- *        isArray('');
- *        // > false
- *
- * @param {mixed} val
- * @return {bool}
- */
-
-module.exports = isArray || function (val) {
-  return !! val && '[object Array]' == str.call(val);
-};
-
-},{}],"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
+},{"_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -6879,7 +5477,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],"/home/cv/coup/node_modules/fluxxor/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/index.js":[function(require,module,exports){
 var Dispatcher = require("./lib/dispatcher"),
     Flux = require("./lib/flux"),
     FluxMixin = require("./lib/flux_mixin"),
@@ -6899,9 +5497,9 @@ var Fluxxor = {
 
 module.exports = Fluxxor;
 
-},{"./lib/create_store":"/home/cv/coup/node_modules/fluxxor/lib/create_store.js","./lib/dispatcher":"/home/cv/coup/node_modules/fluxxor/lib/dispatcher.js","./lib/flux":"/home/cv/coup/node_modules/fluxxor/lib/flux.js","./lib/flux_child_mixin":"/home/cv/coup/node_modules/fluxxor/lib/flux_child_mixin.js","./lib/flux_mixin":"/home/cv/coup/node_modules/fluxxor/lib/flux_mixin.js","./lib/store_watch_mixin":"/home/cv/coup/node_modules/fluxxor/lib/store_watch_mixin.js","./version":"/home/cv/coup/node_modules/fluxxor/version.js"}],"/home/cv/coup/node_modules/fluxxor/lib/create_store.js":[function(require,module,exports){
-var _each = require("lodash-node/modern/collections/forEach"),
-    _isFunction = require("lodash-node/modern/objects/isFunction"),
+},{"./lib/create_store":"/Users/cvializ/coup/node_modules/fluxxor/lib/create_store.js","./lib/dispatcher":"/Users/cvializ/coup/node_modules/fluxxor/lib/dispatcher.js","./lib/flux":"/Users/cvializ/coup/node_modules/fluxxor/lib/flux.js","./lib/flux_child_mixin":"/Users/cvializ/coup/node_modules/fluxxor/lib/flux_child_mixin.js","./lib/flux_mixin":"/Users/cvializ/coup/node_modules/fluxxor/lib/flux_mixin.js","./lib/store_watch_mixin":"/Users/cvializ/coup/node_modules/fluxxor/lib/store_watch_mixin.js","./version":"/Users/cvializ/coup/node_modules/fluxxor/version.js"}],"/Users/cvializ/coup/node_modules/fluxxor/lib/create_store.js":[function(require,module,exports){
+var _each = require("lodash-node/modern/collection/forEach"),
+    _isFunction = require("lodash-node/modern/lang/isFunction"),
     Store = require("./store"),
     inherits = require("inherits");
 
@@ -6941,17 +5539,17 @@ var createStore = function(spec) {
 
 module.exports = createStore;
 
-},{"./store":"/home/cv/coup/node_modules/fluxxor/lib/store.js","inherits":"/home/cv/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/collections/forEach":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js","lodash-node/modern/objects/isFunction":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js"}],"/home/cv/coup/node_modules/fluxxor/lib/dispatcher.js":[function(require,module,exports){
-var _clone = require("lodash-node/modern/objects/clone"),
-    _mapValues = require("lodash-node/modern/objects/mapValues"),
-    _forOwn = require("lodash-node/modern/objects/forOwn"),
-    _intersection = require("lodash-node/modern/arrays/intersection"),
-    _keys = require("lodash-node/modern/objects/keys"),
-    _map = require("lodash-node/modern/collections/map"),
-    _each = require("lodash-node/modern/collections/forEach"),
-    _size = require("lodash-node/modern/collections/size"),
-    _findKey = require("lodash-node/modern/objects/findKey"),
-    _uniq = require("lodash-node/modern/arrays/uniq");
+},{"./store":"/Users/cvializ/coup/node_modules/fluxxor/lib/store.js","inherits":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/collection/forEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/forEach.js","lodash-node/modern/lang/isFunction":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isFunction.js"}],"/Users/cvializ/coup/node_modules/fluxxor/lib/dispatcher.js":[function(require,module,exports){
+var _clone = require("lodash-node/modern/lang/clone"),
+    _mapValues = require("lodash-node/modern/object/mapValues"),
+    _forOwn = require("lodash-node/modern/object/forOwn"),
+    _intersection = require("lodash-node/modern/array/intersection"),
+    _keys = require("lodash-node/modern/object/keys"),
+    _map = require("lodash-node/modern/collection/map"),
+    _each = require("lodash-node/modern/collection/forEach"),
+    _size = require("lodash-node/modern/collection/size"),
+    _findKey = require("lodash-node/modern/object/findKey"),
+    _uniq = require("lodash-node/modern/array/uniq");
 
 var Dispatcher = function(stores) {
   this.stores = {};
@@ -7087,14 +5685,14 @@ Dispatcher.prototype.waitForStores = function(store, stores, fn) {
 
 module.exports = Dispatcher;
 
-},{"lodash-node/modern/arrays/intersection":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/arrays/intersection.js","lodash-node/modern/arrays/uniq":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/arrays/uniq.js","lodash-node/modern/collections/forEach":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js","lodash-node/modern/collections/map":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/map.js","lodash-node/modern/collections/size":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/size.js","lodash-node/modern/objects/clone":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/clone.js","lodash-node/modern/objects/findKey":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/findKey.js","lodash-node/modern/objects/forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js","lodash-node/modern/objects/keys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js","lodash-node/modern/objects/mapValues":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/mapValues.js"}],"/home/cv/coup/node_modules/fluxxor/lib/flux.js":[function(require,module,exports){
+},{"lodash-node/modern/array/intersection":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/array/intersection.js","lodash-node/modern/array/uniq":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/array/uniq.js","lodash-node/modern/collection/forEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/forEach.js","lodash-node/modern/collection/map":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/map.js","lodash-node/modern/collection/size":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/size.js","lodash-node/modern/lang/clone":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/clone.js","lodash-node/modern/object/findKey":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/findKey.js","lodash-node/modern/object/forOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/forOwn.js","lodash-node/modern/object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js","lodash-node/modern/object/mapValues":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/mapValues.js"}],"/Users/cvializ/coup/node_modules/fluxxor/lib/flux.js":[function(require,module,exports){
 var EventEmitter = require("eventemitter3"),
     inherits = require("inherits"),
     objectPath = require("object-path"),
-    _each = require("lodash-node/modern/collections/forEach"),
-    _reduce = require("lodash-node/modern/collections/reduce"),
-    _isFunction = require("lodash-node/modern/objects/isFunction"),
-    _isString = require("lodash-node/modern/objects/isString");
+    _each = require("lodash-node/modern/collection/forEach"),
+    _reduce = require("lodash-node/modern/collection/reduce"),
+    _isFunction = require("lodash-node/modern/lang/isFunction"),
+    _isString = require("lodash-node/modern/lang/isString");
 
 var Dispatcher = require("./dispatcher");
 
@@ -7208,7 +5806,7 @@ Flux.prototype.addStores = function(stores) {
 
 module.exports = Flux;
 
-},{"./dispatcher":"/home/cv/coup/node_modules/fluxxor/lib/dispatcher.js","eventemitter3":"/home/cv/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js","inherits":"/home/cv/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/collections/forEach":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js","lodash-node/modern/collections/reduce":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/reduce.js","lodash-node/modern/objects/isFunction":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js","lodash-node/modern/objects/isString":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isString.js","object-path":"/home/cv/coup/node_modules/fluxxor/node_modules/object-path/index.js"}],"/home/cv/coup/node_modules/fluxxor/lib/flux_child_mixin.js":[function(require,module,exports){
+},{"./dispatcher":"/Users/cvializ/coup/node_modules/fluxxor/lib/dispatcher.js","eventemitter3":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js","inherits":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/collection/forEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/forEach.js","lodash-node/modern/collection/reduce":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/reduce.js","lodash-node/modern/lang/isFunction":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isFunction.js","lodash-node/modern/lang/isString":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isString.js","object-path":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/object-path/index.js"}],"/Users/cvializ/coup/node_modules/fluxxor/lib/flux_child_mixin.js":[function(require,module,exports){
 var FluxChildMixin = function(React) {
   return {
     componentWillMount: function() {
@@ -7237,7 +5835,7 @@ FluxChildMixin.componentWillMount = function() {
 
 module.exports = FluxChildMixin;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/lib/flux_mixin.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/lib/flux_mixin.js":[function(require,module,exports){
 var FluxMixin = function(React) {
   return {
     componentWillMount: function() {
@@ -7269,16 +5867,16 @@ var FluxMixin = function(React) {
 
 FluxMixin.componentWillMount = function() {
   throw new Error("Fluxxor.FluxMixin is a function that takes React as a " +
-    "parameter and returns the mixin, e.g.: mixins[Fluxxor.FluxMixin(React)]");
+    "parameter and returns the mixin, e.g.: mixins: [Fluxxor.FluxMixin(React)]");
 };
 
 module.exports = FluxMixin;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/lib/store.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/lib/store.js":[function(require,module,exports){
 var EventEmitter = require("eventemitter3"),
     inherits = require("inherits"),
-    _isFunction = require("lodash-node/modern/objects/isFunction"),
-    _isObject = require("lodash-node/modern/objects/isObject");
+    _isFunction = require("lodash-node/modern/lang/isFunction"),
+    _isObject = require("lodash-node/modern/lang/isObject");
 
 function Store(dispatcher) {
   this.dispatcher = dispatcher;
@@ -7346,8 +5944,8 @@ Store.prototype.waitFor = function(stores, fn) {
 
 module.exports = Store;
 
-},{"eventemitter3":"/home/cv/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js","inherits":"/home/cv/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/objects/isFunction":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js","lodash-node/modern/objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js"}],"/home/cv/coup/node_modules/fluxxor/lib/store_watch_mixin.js":[function(require,module,exports){
-var _each = require("lodash-node/modern/collections/forEach");
+},{"eventemitter3":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js","inherits":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js","lodash-node/modern/lang/isFunction":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isFunction.js","lodash-node/modern/lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/lib/store_watch_mixin.js":[function(require,module,exports){
+var _each = require("lodash-node/modern/collection/forEach");
 
 var StoreWatchMixin = function() {
   var storeNames = Array.prototype.slice.call(arguments);
@@ -7381,12 +5979,12 @@ var StoreWatchMixin = function() {
 StoreWatchMixin.componentWillMount = function() {
   throw new Error("Fluxxor.StoreWatchMixin is a function that takes one or more " +
     "store names as parameters and returns the mixin, e.g.: " +
-    "mixins[Fluxxor.StoreWatchMixin(\"Store1\", \"Store2\")]");
+    "mixins: [Fluxxor.StoreWatchMixin(\"Store1\", \"Store2\")]");
 };
 
 module.exports = StoreWatchMixin;
 
-},{"lodash-node/modern/collections/forEach":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js":[function(require,module,exports){
+},{"lodash-node/modern/collection/forEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/forEach.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/eventemitter3/index.js":[function(require,module,exports){
 'use strict';
 
 /**
@@ -7617,7 +6215,7 @@ EventEmitter.EventEmitter3 = EventEmitter;
 //
 module.exports = EventEmitter;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/inherits/inherits_browser.js":[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -7642,34 +6240,27 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/arrays/intersection.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseIndexOf = require('../internals/baseIndexOf'),
-    cacheIndexOf = require('../internals/cacheIndexOf'),
-    createCache = require('../internals/createCache'),
-    getArray = require('../internals/getArray'),
-    isArguments = require('../objects/isArguments'),
-    isArray = require('../objects/isArray'),
-    largeArraySize = require('../internals/largeArraySize'),
-    releaseArray = require('../internals/releaseArray'),
-    releaseObject = require('../internals/releaseObject');
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/array/intersection.js":[function(require,module,exports){
+var baseIndexOf = require('../internal/baseIndexOf'),
+    cacheIndexOf = require('../internal/cacheIndexOf'),
+    createCache = require('../internal/createCache'),
+    isArguments = require('../lang/isArguments'),
+    isArray = require('../lang/isArray');
 
 /**
- * Creates an array of unique values present in all provided arrays using
- * strict equality for comparisons, i.e. `===`.
+ * Creates an array of unique values in all provided arrays using `SameValueZero`
+ * for equality comparisons.
+ *
+ * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+ * e.g. `===`, except that `NaN` matches `NaN`. See the
+ * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+ * for more details.
  *
  * @static
  * @memberOf _
- * @category Arrays
- * @param {...Array} [array] The arrays to inspect.
- * @returns {Array} Returns an array of shared values.
+ * @category Array
+ * @param {...Array} [arrays] The arrays to inspect.
+ * @returns {Array} Returns the new array of shared values.
  * @example
  *
  * _.intersection([1, 2, 3], [5, 2, 1, 4], [2, 1]);
@@ -7679,343 +6270,267 @@ function intersection() {
   var args = [],
       argsIndex = -1,
       argsLength = arguments.length,
-      caches = getArray(),
+      caches = [],
       indexOf = baseIndexOf,
-      trustIndexOf = indexOf === baseIndexOf,
-      seen = getArray();
+      isCommon = true;
 
   while (++argsIndex < argsLength) {
     var value = arguments[argsIndex];
     if (isArray(value) || isArguments(value)) {
       args.push(value);
-      caches.push(trustIndexOf && value.length >= largeArraySize &&
-        createCache(argsIndex ? args[argsIndex] : seen));
+      caches.push(isCommon && value.length >= 120 && createCache(argsIndex && value));
     }
   }
+  argsLength = args.length;
   var array = args[0],
       index = -1,
       length = array ? array.length : 0,
-      result = [];
+      result = [],
+      seen = caches[0];
 
   outer:
   while (++index < length) {
-    var cache = caches[0];
     value = array[index];
-
-    if ((cache ? cacheIndexOf(cache, value) : indexOf(seen, value)) < 0) {
+    if ((seen ? cacheIndexOf(seen, value) : indexOf(result, value)) < 0) {
       argsIndex = argsLength;
-      (cache || seen).push(value);
       while (--argsIndex) {
-        cache = caches[argsIndex];
+        var cache = caches[argsIndex];
         if ((cache ? cacheIndexOf(cache, value) : indexOf(args[argsIndex], value)) < 0) {
           continue outer;
         }
       }
+      if (seen) {
+        seen.push(value);
+      }
       result.push(value);
     }
   }
-  while (argsLength--) {
-    cache = caches[argsLength];
-    if (cache) {
-      releaseObject(cache);
-    }
-  }
-  releaseArray(caches);
-  releaseArray(seen);
   return result;
 }
 
 module.exports = intersection;
 
-},{"../internals/baseIndexOf":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIndexOf.js","../internals/cacheIndexOf":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/cacheIndexOf.js","../internals/createCache":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/createCache.js","../internals/getArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getArray.js","../internals/largeArraySize":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/largeArraySize.js","../internals/releaseArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseArray.js","../internals/releaseObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseObject.js","../objects/isArguments":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isArguments.js","../objects/isArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isArray.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/arrays/uniq.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseUniq = require('../internals/baseUniq'),
-    createCallback = require('../functions/createCallback');
+},{"../internal/baseIndexOf":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIndexOf.js","../internal/cacheIndexOf":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/cacheIndexOf.js","../internal/createCache":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/createCache.js","../lang/isArguments":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArguments.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/array/uniq.js":[function(require,module,exports){
+var baseCallback = require('../internal/baseCallback'),
+    baseUniq = require('../internal/baseUniq'),
+    isIterateeCall = require('../internal/isIterateeCall'),
+    sortedUniq = require('../internal/sortedUniq');
 
 /**
- * Creates a duplicate-value-free version of an array using strict equality
- * for comparisons, i.e. `===`. If the array is sorted, providing
- * `true` for `isSorted` will use a faster algorithm. If a callback is provided
- * each element of `array` is passed through the callback before uniqueness
- * is computed. The callback is bound to `thisArg` and invoked with three
- * arguments; (value, index, array).
+ * Creates a duplicate-value-free version of an array using `SameValueZero`
+ * for equality comparisons. Providing `true` for `isSorted` performs a faster
+ * search algorithm for sorted arrays. If an iteratee function is provided it
+ * is invoked for each value in the array to generate the criterion by which
+ * uniqueness is computed. The `iteratee` is bound to `thisArg` and invoked
+ * with three arguments; (value, index, array).
  *
- * If a property name is provided for `callback` the created "_.pluck" style
- * callback will return the property value of the given element.
+ * If a property name is provided for `predicate` the created "_.property"
+ * style callback returns the property value of the given element.
  *
- * If an object is provided for `callback` the created "_.where" style callback
- * will return `true` for elements that have the properties of the given object,
- * else `false`.
+ * If an object is provided for `predicate` the created "_.matches" style
+ * callback returns `true` for elements that have the properties of the given
+ * object, else `false`.
+ *
+ * **Note:** `SameValueZero` comparisons are like strict equality comparisons,
+ * e.g. `===`, except that `NaN` matches `NaN`. See the
+ * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+ * for more details.
  *
  * @static
  * @memberOf _
  * @alias unique
- * @category Arrays
- * @param {Array} array The array to process.
- * @param {boolean} [isSorted=false] A flag to indicate that `array` is sorted.
- * @param {Function|Object|string} [callback=identity] The function called
- *  per iteration. If a property name or object is provided it will be used
- *  to create a "_.pluck" or "_.where" style callback, respectively.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Array} Returns a duplicate-value-free array.
+ * @category Array
+ * @param {Array} array The array to inspect.
+ * @param {boolean} [isSorted] Specify the array is sorted.
+ * @param {Function|Object|string} [iteratee] The function invoked per iteration.
+ *  If a property name or object is provided it is used to create a "_.property"
+ *  or "_.matches" style callback respectively.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
+ * @returns {Array} Returns the new duplicate-value-free array.
  * @example
  *
- * _.uniq([1, 2, 1, 3, 1]);
- * // => [1, 2, 3]
+ * _.uniq([1, 2, 1]);
+ * // => [1, 2]
  *
- * _.uniq([1, 1, 2, 2, 3], true);
- * // => [1, 2, 3]
+ * // using `isSorted`
+ * _.uniq([1, 1, 2], true);
+ * // => [1, 2]
  *
- * _.uniq(['A', 'b', 'C', 'a', 'B', 'c'], function(letter) { return letter.toLowerCase(); });
- * // => ['A', 'b', 'C']
+ * // using an iteratee function
+ * _.uniq([1, 2.5, 1.5, 2], function(n) { return this.floor(n); }, Math);
+ * // => [1, 2.5]
  *
- * _.uniq([1, 2.5, 3, 1.5, 2, 3.5], function(num) { return this.floor(num); }, Math);
- * // => [1, 2.5, 3]
- *
- * // using "_.pluck" callback shorthand
+ * // using the "_.property" callback shorthand
  * _.uniq([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
  * // => [{ 'x': 1 }, { 'x': 2 }]
  */
-function uniq(array, isSorted, callback, thisArg) {
-  // juggle arguments
+function uniq(array, isSorted, iteratee, thisArg) {
+  var length = array ? array.length : 0;
+  if (!length) {
+    return [];
+  }
+  // Juggle arguments.
   if (typeof isSorted != 'boolean' && isSorted != null) {
-    thisArg = callback;
-    callback = (typeof isSorted != 'function' && thisArg && thisArg[isSorted] === array) ? null : isSorted;
+    thisArg = iteratee;
+    iteratee = isIterateeCall(array, isSorted, thisArg) ? null : isSorted;
     isSorted = false;
   }
-  if (callback != null) {
-    callback = createCallback(callback, thisArg, 3);
-  }
-  return baseUniq(array, isSorted, callback);
+  iteratee = iteratee == null ? iteratee : baseCallback(iteratee, thisArg, 3);
+  return (isSorted)
+    ? sortedUniq(array, iteratee)
+    : baseUniq(array, iteratee);
 }
 
 module.exports = uniq;
 
-},{"../functions/createCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js","../internals/baseUniq":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseUniq.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('../internals/baseCreateCallback'),
-    forOwn = require('../objects/forOwn');
+},{"../internal/baseCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js","../internal/baseUniq":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseUniq.js","../internal/isIterateeCall":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIterateeCall.js","../internal/sortedUniq":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/sortedUniq.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/forEach.js":[function(require,module,exports){
+var arrayEach = require('../internal/arrayEach'),
+    baseEach = require('../internal/baseEach'),
+    bindCallback = require('../internal/bindCallback'),
+    isArray = require('../lang/isArray');
 
 /**
- * Iterates over elements of a collection, executing the callback for each
- * element. The callback is bound to `thisArg` and invoked with three arguments;
- * (value, index|key, collection). Callbacks may exit iteration early by
- * explicitly returning `false`.
+ * Iterates over elements of `collection` invoking `iteratee` for each element.
+ * The `iteratee` is bound to `thisArg` and invoked with three arguments;
+ * (value, index|key, collection). Iterator functions may exit iteration early
+ * by explicitly returning `false`.
  *
- * Note: As with other "Collections" methods, objects with a `length` property
+ * **Note:** As with other "Collections" methods, objects with a `length` property
  * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
  * may be used for object iteration.
  *
  * @static
  * @memberOf _
  * @alias each
- * @category Collections
+ * @category Collection
  * @param {Array|Object|string} collection The collection to iterate over.
- * @param {Function} [callback=identity] The function called per iteration.
- * @param {*} [thisArg] The `this` binding of `callback`.
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
  * @returns {Array|Object|string} Returns `collection`.
  * @example
  *
- * _([1, 2, 3]).forEach(function(num) { console.log(num); }).join(',');
- * // => logs each number and returns '1,2,3'
+ * _([1, 2, 3]).forEach(function(n) { console.log(n); }).value();
+ * // => logs each value from left to right and returns the array
  *
- * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { console.log(num); });
- * // => logs each number and returns the object (property order is not guaranteed across environments)
+ * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(n, key) { console.log(n, key); });
+ * // => logs each value-key pair and returns the object (iteration order is not guaranteed)
  */
-function forEach(collection, callback, thisArg) {
-  var index = -1,
-      length = collection ? collection.length : 0;
-
-  callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
-  if (typeof length == 'number') {
-    while (++index < length) {
-      if (callback(collection[index], index, collection) === false) {
-        break;
-      }
-    }
-  } else {
-    forOwn(collection, callback);
-  }
-  return collection;
+function forEach(collection, iteratee, thisArg) {
+  return (typeof iteratee == 'function' && typeof thisArg == 'undefined' && isArray(collection))
+    ? arrayEach(collection, iteratee)
+    : baseEach(collection, bindCallback(iteratee, thisArg, 3));
 }
 
 module.exports = forEach;
 
-},{"../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js","../objects/forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/map.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createCallback = require('../functions/createCallback'),
-    forOwn = require('../objects/forOwn');
+},{"../internal/arrayEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayEach.js","../internal/baseEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseEach.js","../internal/bindCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bindCallback.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/map.js":[function(require,module,exports){
+var arrayMap = require('../internal/arrayMap'),
+    baseCallback = require('../internal/baseCallback'),
+    baseMap = require('../internal/baseMap'),
+    isArray = require('../lang/isArray');
 
 /**
- * Creates an array of values by running each element in the collection
- * through the callback. The callback is bound to `thisArg` and invoked with
- * three arguments; (value, index|key, collection).
+ * Creates an array of values by running each element in `collection` through
+ * `iteratee`. The `iteratee` is bound to `thisArg` and invoked with three
+ * arguments; (value, index|key, collection).
  *
- * If a property name is provided for `callback` the created "_.pluck" style
- * callback will return the property value of the given element.
+ * If a property name is provided for `predicate` the created "_.property"
+ * style callback returns the property value of the given element.
  *
- * If an object is provided for `callback` the created "_.where" style callback
- * will return `true` for elements that have the properties of the given object,
- * else `false`.
+ * If an object is provided for `predicate` the created "_.matches" style
+ * callback returns `true` for elements that have the properties of the given
+ * object, else `false`.
  *
  * @static
  * @memberOf _
  * @alias collect
- * @category Collections
+ * @category Collection
  * @param {Array|Object|string} collection The collection to iterate over.
- * @param {Function|Object|string} [callback=identity] The function called
- *  per iteration. If a property name or object is provided it will be used
- *  to create a "_.pluck" or "_.where" style callback, respectively.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Array} Returns a new array of the results of each `callback` execution.
+ * @param {Function|Object|string} [iteratee=_.identity] The function invoked
+ *  per iteration. If a property name or object is provided it is used to
+ *  create a "_.property" or "_.matches" style callback respectively.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
+ * @returns {Array} Returns the new mapped array.
  * @example
  *
- * _.map([1, 2, 3], function(num) { return num * 3; });
+ * _.map([1, 2, 3], function(n) { return n * 3; });
  * // => [3, 6, 9]
  *
- * _.map({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { return num * 3; });
- * // => [3, 6, 9] (property order is not guaranteed across environments)
+ * _.map({ 'one': 1, 'two': 2, 'three': 3 }, function(n) { return n * 3; });
+ * // => [3, 6, 9] (iteration order is not guaranteed)
  *
- * var characters = [
- *   { 'name': 'barney', 'age': 36 },
- *   { 'name': 'fred',   'age': 40 }
+ * var users = [
+ *   { 'user': 'barney' },
+ *   { 'user': 'fred' }
  * ];
  *
- * // using "_.pluck" callback shorthand
- * _.map(characters, 'name');
+ * // using the "_.property" callback shorthand
+ * _.map(users, 'user');
  * // => ['barney', 'fred']
  */
-function map(collection, callback, thisArg) {
-  var index = -1,
-      length = collection ? collection.length : 0;
-
-  callback = createCallback(callback, thisArg, 3);
-  if (typeof length == 'number') {
-    var result = Array(length);
-    while (++index < length) {
-      result[index] = callback(collection[index], index, collection);
-    }
-  } else {
-    result = [];
-    forOwn(collection, function(value, key, collection) {
-      result[++index] = callback(value, key, collection);
-    });
-  }
-  return result;
+function map(collection, iteratee, thisArg) {
+  var func = isArray(collection) ? arrayMap : baseMap;
+  iteratee = baseCallback(iteratee, thisArg, 3);
+  return func(collection, iteratee);
 }
 
 module.exports = map;
 
-},{"../functions/createCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js","../objects/forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/reduce.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createCallback = require('../functions/createCallback'),
-    forOwn = require('../objects/forOwn');
+},{"../internal/arrayMap":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayMap.js","../internal/baseCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js","../internal/baseMap":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseMap.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/reduce.js":[function(require,module,exports){
+var arrayReduce = require('../internal/arrayReduce'),
+    baseCallback = require('../internal/baseCallback'),
+    baseEach = require('../internal/baseEach'),
+    baseReduce = require('../internal/baseReduce'),
+    isArray = require('../lang/isArray');
 
 /**
- * Reduces a collection to a value which is the accumulated result of running
- * each element in the collection through the callback, where each successive
- * callback execution consumes the return value of the previous execution. If
- * `accumulator` is not provided the first element of the collection will be
- * used as the initial `accumulator` value. The callback is bound to `thisArg`
- * and invoked with four arguments; (accumulator, value, index|key, collection).
+ * Reduces `collection` to a value which is the accumulated result of running
+ * each element in `collection` through `iteratee`, where each successive
+ * invocation is supplied the return value of the previous. If `accumulator`
+ * is not provided the first element of `collection` is used as the initial
+ * value. The `iteratee` is bound to `thisArg`and invoked with four arguments;
+ * (accumulator, value, index|key, collection).
  *
  * @static
  * @memberOf _
  * @alias foldl, inject
- * @category Collections
+ * @category Collection
  * @param {Array|Object|string} collection The collection to iterate over.
- * @param {Function} [callback=identity] The function called per iteration.
- * @param {*} [accumulator] Initial value of the accumulator.
- * @param {*} [thisArg] The `this` binding of `callback`.
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @param {*} [accumulator] The initial value.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
  * @returns {*} Returns the accumulated value.
  * @example
  *
- * var sum = _.reduce([1, 2, 3], function(sum, num) {
- *   return sum + num;
- * });
+ * var sum = _.reduce([1, 2, 3], function(sum, n) { return sum + n; });
  * // => 6
  *
- * var mapped = _.reduce({ 'a': 1, 'b': 2, 'c': 3 }, function(result, num, key) {
- *   result[key] = num * 3;
+ * var mapped = _.reduce({ 'a': 1, 'b': 2, 'c': 3 }, function(result, n, key) {
+ *   result[key] = n * 3;
  *   return result;
  * }, {});
- * // => { 'a': 3, 'b': 6, 'c': 9 }
+ * // => { 'a': 3, 'b': 6, 'c': 9 } (iteration order is not guaranteed)
  */
-function reduce(collection, callback, accumulator, thisArg) {
-  if (!collection) return accumulator;
-  var noaccum = arguments.length < 3;
-  callback = createCallback(callback, thisArg, 4);
-
-  var index = -1,
-      length = collection.length;
-
-  if (typeof length == 'number') {
-    if (noaccum) {
-      accumulator = collection[++index];
-    }
-    while (++index < length) {
-      accumulator = callback(accumulator, collection[index], index, collection);
-    }
-  } else {
-    forOwn(collection, function(value, index, collection) {
-      accumulator = noaccum
-        ? (noaccum = false, value)
-        : callback(accumulator, value, index, collection)
-    });
-  }
-  return accumulator;
+function reduce(collection, iteratee, accumulator, thisArg) {
+  var func = isArray(collection) ? arrayReduce : baseReduce;
+  return func(collection, baseCallback(iteratee, thisArg, 4), accumulator, arguments.length < 3, baseEach);
 }
 
 module.exports = reduce;
 
-},{"../functions/createCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js","../objects/forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/size.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var keys = require('../objects/keys');
+},{"../internal/arrayReduce":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayReduce.js","../internal/baseCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js","../internal/baseEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseEach.js","../internal/baseReduce":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseReduce.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collection/size.js":[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    keys = require('../object/keys');
 
 /**
- * Gets the size of the `collection` by returning `collection.length` for arrays
- * and array-like objects or the number of own enumerable properties for objects.
+ * Gets the size of `collection` by returning `collection.length` for
+ * array-like values or the number of own enumerable properties for objects.
  *
  * @static
  * @memberOf _
- * @category Collections
+ * @category Collection
  * @param {Array|Object|string} collection The collection to inspect.
- * @returns {number} Returns `collection.length` or number of own enumerable properties.
+ * @returns {number} Returns the size of `collection`.
  * @example
  *
  * _.size([1, 2]);
@@ -8029,600 +6544,463 @@ var keys = require('../objects/keys');
  */
 function size(collection) {
   var length = collection ? collection.length : 0;
-  return typeof length == 'number' ? length : keys(collection).length;
+  return isLength(length) ? length : keys(collection).length;
 }
 
 module.exports = size;
 
-},{"../objects/keys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/bind.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createWrapper = require('../internals/createWrapper'),
-    slice = require('../internals/slice');
+},{"../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/SetCache.js":[function(require,module,exports){
+(function (global){
+var cachePush = require('./cachePush'),
+    isNative = require('../lang/isNative');
+
+/** Native method references. */
+var Set = isNative(Set = global.Set) && Set;
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
 
 /**
- * Creates a function that, when called, invokes `func` with the `this`
- * binding of `thisArg` and prepends any additional `bind` arguments to those
- * provided to the bound function.
  *
- * @static
- * @memberOf _
- * @category Functions
- * @param {Function} func The function to bind.
- * @param {*} [thisArg] The `this` binding of `func`.
- * @param {...*} [arg] Arguments to be partially applied.
- * @returns {Function} Returns the new bound function.
- * @example
- *
- * var func = function(greeting) {
- *   return greeting + ' ' + this.name;
- * };
- *
- * func = _.bind(func, { 'name': 'fred' }, 'hi');
- * func();
- * // => 'hi fred'
- */
-function bind(func, thisArg) {
-  return arguments.length > 2
-    ? createWrapper(func, 17, slice(arguments, 2), null, thisArg)
-    : createWrapper(func, 1, null, null, thisArg);
-}
-
-module.exports = bind;
-
-},{"../internals/createWrapper":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/createWrapper.js","../internals/slice":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('../internals/baseCreateCallback'),
-    baseIsEqual = require('../internals/baseIsEqual'),
-    isObject = require('../objects/isObject'),
-    keys = require('../objects/keys'),
-    property = require('../utilities/property');
-
-/**
- * Produces a callback bound to an optional `thisArg`. If `func` is a property
- * name the created callback will return the property value for a given element.
- * If `func` is an object the created callback will return `true` for elements
- * that contain the equivalent object properties, otherwise it will return `false`.
- *
- * @static
- * @memberOf _
- * @category Utilities
- * @param {*} [func=identity] The value to convert to a callback.
- * @param {*} [thisArg] The `this` binding of the created callback.
- * @param {number} [argCount] The number of arguments the callback accepts.
- * @returns {Function} Returns a callback function.
- * @example
- *
- * var characters = [
- *   { 'name': 'barney', 'age': 36 },
- *   { 'name': 'fred',   'age': 40 }
- * ];
- *
- * // wrap to create custom callback shorthands
- * _.createCallback = _.wrap(_.createCallback, function(func, callback, thisArg) {
- *   var match = /^(.+?)__([gl]t)(.+)$/.exec(callback);
- *   return !match ? func(callback, thisArg) : function(object) {
- *     return match[2] == 'gt' ? object[match[1]] > match[3] : object[match[1]] < match[3];
- *   };
- * });
- *
- * _.filter(characters, 'age__gt38');
- * // => [{ 'name': 'fred', 'age': 40 }]
- */
-function createCallback(func, thisArg, argCount) {
-  var type = typeof func;
-  if (func == null || type == 'function') {
-    return baseCreateCallback(func, thisArg, argCount);
-  }
-  // handle "_.pluck" style callback shorthands
-  if (type != 'object') {
-    return property(func);
-  }
-  var props = keys(func),
-      key = props[0],
-      a = func[key];
-
-  // handle "_.where" style callback shorthands
-  if (props.length == 1 && a === a && !isObject(a)) {
-    // fast path the common case of providing an object with a single
-    // property containing a primitive value
-    return function(object) {
-      var b = object[key];
-      return a === b && (a !== 0 || (1 / a == 1 / b));
-    };
-  }
-  return function(object) {
-    var length = props.length,
-        result = false;
-
-    while (length--) {
-      if (!(result = baseIsEqual(object[props[length]], func[props[length]], null, true))) {
-        break;
-      }
-    }
-    return result;
-  };
-}
-
-module.exports = createCallback;
-
-},{"../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js","../internals/baseIsEqual":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIsEqual.js","../objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js","../objects/keys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js","../utilities/property":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/property.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/arrayPool.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to pool arrays and objects used internally */
-var arrayPool = [];
-
-module.exports = arrayPool;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseBind.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreate = require('./baseCreate'),
-    isObject = require('../objects/isObject'),
-    setBindData = require('./setBindData'),
-    slice = require('./slice');
-
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
-
-/** Native method shortcuts */
-var push = arrayRef.push;
-
-/**
- * The base implementation of `_.bind` that creates the bound function and
- * sets its meta data.
+ * Creates a cache object to store unique values.
  *
  * @private
- * @param {Array} bindData The bind data array.
- * @returns {Function} Returns the new bound function.
+ * @param {Array} [values] The values to cache.
  */
-function baseBind(bindData) {
-  var func = bindData[0],
-      partialArgs = bindData[2],
-      thisArg = bindData[4];
+function SetCache(values) {
+  var length = values ? values.length : 0;
 
-  function bound() {
-    // `Function#bind` spec
-    // http://es5.github.io/#x15.3.4.5
-    if (partialArgs) {
-      // avoid `arguments` object deoptimizations by using `slice` instead
-      // of `Array.prototype.slice.call` and not assigning `arguments` to a
-      // variable as a ternary expression
-      var args = slice(partialArgs);
-      push.apply(args, arguments);
-    }
-    // mimic the constructor's `return` behavior
-    // http://es5.github.io/#x13.2.2
-    if (this instanceof bound) {
-      // ensure `new bound` is an instance of `func`
-      var thisBinding = baseCreate(func.prototype),
-          result = func.apply(thisBinding, args || arguments);
-      return isObject(result) ? result : thisBinding;
-    }
-    return func.apply(thisArg, args || arguments);
+  this.data = { 'hash': nativeCreate(null), 'set': new Set };
+  while (length--) {
+    this.push(values[length]);
   }
-  setBindData(bound, bindData);
-  return bound;
 }
 
-module.exports = baseBind;
+// Add functions to the `Set` cache.
+SetCache.prototype.push = cachePush;
 
-},{"../objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js","./baseCreate":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreate.js","./setBindData":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/setBindData.js","./slice":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseClone.js":[function(require,module,exports){
+module.exports = SetCache;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js","./cachePush":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/cachePush.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayCopy.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * Copies the values of `source` to `array`.
+ *
+ * @private
+ * @param {Array} source The array to copy values from.
+ * @param {Array} [array=[]] The array to copy values to.
+ * @returns {Array} Returns `array`.
  */
-var assign = require('../objects/assign'),
-    forEach = require('../collections/forEach'),
-    forOwn = require('../objects/forOwn'),
-    getArray = require('./getArray'),
-    isArray = require('../objects/isArray'),
-    isObject = require('../objects/isObject'),
-    releaseArray = require('./releaseArray'),
-    slice = require('./slice');
+function arrayCopy(source, array) {
+  var index = -1,
+      length = source.length;
 
-/** Used to match regexp flags from their coerced string values */
-var reFlags = /\w*$/;
+  array || (array = Array(length));
+  while (++index < length) {
+    array[index] = source[index];
+  }
+  return array;
+}
 
-/** `Object#toString` result shortcuts */
-var argsClass = '[object Arguments]',
-    arrayClass = '[object Array]',
-    boolClass = '[object Boolean]',
-    dateClass = '[object Date]',
-    funcClass = '[object Function]',
-    numberClass = '[object Number]',
-    objectClass = '[object Object]',
-    regexpClass = '[object RegExp]',
-    stringClass = '[object String]';
+module.exports = arrayCopy;
 
-/** Used to identify object classifications that `_.clone` supports */
-var cloneableClasses = {};
-cloneableClasses[funcClass] = false;
-cloneableClasses[argsClass] = cloneableClasses[arrayClass] =
-cloneableClasses[boolClass] = cloneableClasses[dateClass] =
-cloneableClasses[numberClass] = cloneableClasses[objectClass] =
-cloneableClasses[regexpClass] = cloneableClasses[stringClass] = true;
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayEach.js":[function(require,module,exports){
+/**
+ * A specialized version of `_.forEach` for arrays without support for callback
+ * shorthands or `this` binding.
+ *
+ * @private
+ * @param {Array} array The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns `array`.
+ */
+function arrayEach(array, iteratee) {
+  var index = -1,
+      length = array.length;
 
-/** Used for native method references */
+  while (++index < length) {
+    if (iteratee(array[index], index, array) === false) {
+      break;
+    }
+  }
+  return array;
+}
+
+module.exports = arrayEach;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayMap.js":[function(require,module,exports){
+/**
+ * A specialized version of `_.map` for arrays without support for callback
+ * shorthands or `this` binding.
+ *
+ * @private
+ * @param {Array} array The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns the new mapped array.
+ */
+function arrayMap(array, iteratee) {
+  var index = -1,
+      length = array.length,
+      result = Array(length);
+
+  while (++index < length) {
+    result[index] = iteratee(array[index], index, array);
+  }
+  return result;
+}
+
+module.exports = arrayMap;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayReduce.js":[function(require,module,exports){
+/**
+ * A specialized version of `_.reduce` for arrays without support for callback
+ * shorthands or `this` binding.
+ *
+ * @private
+ * @param {Array} array The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {*} [accumulator] The initial value.
+ * @param {boolean} [initFromArray] Specify using the first element of `array`
+ *  as the initial value.
+ * @returns {*} Returns the accumulated value.
+ */
+function arrayReduce(array, iteratee, accumulator, initFromArray) {
+  var index = -1,
+      length = array.length;
+
+  if (initFromArray && length) {
+    accumulator = array[++index];
+  }
+  while (++index < length) {
+    accumulator = iteratee(accumulator, array[index], index, array);
+  }
+  return accumulator;
+}
+
+module.exports = arrayReduce;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js":[function(require,module,exports){
+var baseMatches = require('./baseMatches'),
+    baseProperty = require('./baseProperty'),
+    bindCallback = require('./bindCallback'),
+    identity = require('../utility/identity'),
+    isBindable = require('./isBindable');
+
+/**
+ * The base implementation of `_.callback` which supports specifying the
+ * number of arguments to provide to `func`.
+ *
+ * @private
+ * @param {*} [func=_.identity] The value to convert to a callback.
+ * @param {*} [thisArg] The `this` binding of `func`.
+ * @param {number} [argCount] The number of arguments to provide to `func`.
+ * @returns {Function} Returns the callback.
+ */
+function baseCallback(func, thisArg, argCount) {
+  var type = typeof func;
+  if (type == 'function') {
+    return (typeof thisArg != 'undefined' && isBindable(func))
+      ? bindCallback(func, thisArg, argCount)
+      : func;
+  }
+  if (func == null) {
+    return identity;
+  }
+  // Handle "_.property" and "_.matches" style callback shorthands.
+  return type == 'object'
+    ? baseMatches(func)
+    : baseProperty(func + '');
+}
+
+module.exports = baseCallback;
+
+},{"../utility/identity":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/identity.js","./baseMatches":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseMatches.js","./baseProperty":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseProperty.js","./bindCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bindCallback.js","./isBindable":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isBindable.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseClone.js":[function(require,module,exports){
+var arrayCopy = require('./arrayCopy'),
+    arrayEach = require('./arrayEach'),
+    baseCopy = require('./baseCopy'),
+    baseForOwn = require('./baseForOwn'),
+    initCloneArray = require('./initCloneArray'),
+    initCloneByTag = require('./initCloneByTag'),
+    initCloneObject = require('./initCloneObject'),
+    isArray = require('../lang/isArray'),
+    isObject = require('../lang/isObject'),
+    keys = require('../object/keys');
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to identify `toStringTag` values supported by `_.clone`. */
+var cloneableTags = {};
+cloneableTags[argsTag] = cloneableTags[arrayTag] =
+cloneableTags[arrayBufferTag] = cloneableTags[boolTag] =
+cloneableTags[dateTag] = cloneableTags[float32Tag] =
+cloneableTags[float64Tag] = cloneableTags[int8Tag] =
+cloneableTags[int16Tag] = cloneableTags[int32Tag] =
+cloneableTags[numberTag] = cloneableTags[objectTag] =
+cloneableTags[regexpTag] = cloneableTags[stringTag] =
+cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+cloneableTags[errorTag] = cloneableTags[funcTag] =
+cloneableTags[mapTag] = cloneableTags[setTag] =
+cloneableTags[weakMapTag] = false;
+
+/** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
-
-/** Native method shortcuts */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to lookup a built-in constructor by [[Class]] */
-var ctorByClass = {};
-ctorByClass[arrayClass] = Array;
-ctorByClass[boolClass] = Boolean;
-ctorByClass[dateClass] = Date;
-ctorByClass[funcClass] = Function;
-ctorByClass[objectClass] = Object;
-ctorByClass[numberClass] = Number;
-ctorByClass[regexpClass] = RegExp;
-ctorByClass[stringClass] = String;
+/**
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
 
 /**
- * The base implementation of `_.clone` without argument juggling or support
- * for `thisArg` binding.
+ * The base implementation of `_.clone` without support for argument juggling
+ * and `this` binding `customizer` functions.
  *
  * @private
  * @param {*} value The value to clone.
- * @param {boolean} [isDeep=false] Specify a deep clone.
- * @param {Function} [callback] The function to customize cloning values.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @param {Function} [customizer] The function to customize cloning values.
+ * @param {string} [key] The key of `value`.
+ * @param {Object} [object] The object `value` belongs to.
  * @param {Array} [stackA=[]] Tracks traversed source objects.
  * @param {Array} [stackB=[]] Associates clones with source counterparts.
  * @returns {*} Returns the cloned value.
  */
-function baseClone(value, isDeep, callback, stackA, stackB) {
-  if (callback) {
-    var result = callback(value);
-    if (typeof result != 'undefined') {
-      return result;
-    }
+function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
+  var result;
+  if (customizer) {
+    result = object ? customizer(value, key, object) : customizer(value);
   }
-  // inspect [[Class]]
-  var isObj = isObject(value);
-  if (isObj) {
-    var className = toString.call(value);
-    if (!cloneableClasses[className]) {
-      return value;
-    }
-    var ctor = ctorByClass[className];
-    switch (className) {
-      case boolClass:
-      case dateClass:
-        return new ctor(+value);
-
-      case numberClass:
-      case stringClass:
-        return new ctor(value);
-
-      case regexpClass:
-        result = ctor(value.source, reFlags.exec(value));
-        result.lastIndex = value.lastIndex;
-        return result;
-    }
-  } else {
+  if (typeof result != 'undefined') {
+    return result;
+  }
+  if (!isObject(value)) {
     return value;
   }
   var isArr = isArray(value);
-  if (isDeep) {
-    // check for circular references and return corresponding clone
-    var initedStack = !stackA;
-    stackA || (stackA = getArray());
-    stackB || (stackB = getArray());
-
-    var length = stackA.length;
-    while (length--) {
-      if (stackA[length] == value) {
-        return stackB[length];
-      }
-    }
-    result = isArr ? ctor(value.length) : {};
-  }
-  else {
-    result = isArr ? slice(value) : assign({}, value);
-  }
-  // add array properties assigned by `RegExp#exec`
   if (isArr) {
-    if (hasOwnProperty.call(value, 'index')) {
-      result.index = value.index;
+    result = initCloneArray(value);
+    if (!isDeep) {
+      return arrayCopy(value, result);
     }
-    if (hasOwnProperty.call(value, 'input')) {
-      result.input = value.input;
+  } else {
+    var tag = objToString.call(value),
+        isFunc = tag == funcTag;
+
+    if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
+      result = initCloneObject(isFunc ? {} : value);
+      if (!isDeep) {
+        return baseCopy(value, result, keys(value));
+      }
+    } else {
+      return cloneableTags[tag]
+        ? initCloneByTag(value, tag, isDeep)
+        : (object ? value : {});
     }
   }
-  // exit for shallow clone
-  if (!isDeep) {
-    return result;
+  // Check for circular references and return corresponding clone.
+  stackA || (stackA = []);
+  stackB || (stackB = []);
+
+  var length = stackA.length;
+  while (length--) {
+    if (stackA[length] == value) {
+      return stackB[length];
+    }
   }
-  // add the source value to the stack of traversed objects
-  // and associate it with its clone
+  // Add the source value to the stack of traversed objects and associate it with its clone.
   stackA.push(value);
   stackB.push(result);
 
-  // recursively populate clone (susceptible to call stack limits)
-  (isArr ? forEach : forOwn)(value, function(objValue, key) {
-    result[key] = baseClone(objValue, isDeep, callback, stackA, stackB);
+  // Recursively populate clone (susceptible to call stack limits).
+  (isArr ? arrayEach : baseForOwn)(value, function(subValue, key) {
+    result[key] = baseClone(subValue, isDeep, customizer, key, value, stackA, stackB);
   });
-
-  if (initedStack) {
-    releaseArray(stackA);
-    releaseArray(stackB);
-  }
   return result;
 }
 
 module.exports = baseClone;
 
-},{"../collections/forEach":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/collections/forEach.js","../objects/assign":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/assign.js","../objects/forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js","../objects/isArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isArray.js","../objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js","./getArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getArray.js","./releaseArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseArray.js","./slice":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreate.js":[function(require,module,exports){
-(function (global){
+},{"../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js","../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js","../object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js","./arrayCopy":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayCopy.js","./arrayEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/arrayEach.js","./baseCopy":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCopy.js","./baseForOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js","./initCloneArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneArray.js","./initCloneByTag":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneByTag.js","./initCloneObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCopy.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isNative = require('./isNative'),
-    isObject = require('../objects/isObject'),
-    noop = require('../utilities/noop');
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
-
-/**
- * The base implementation of `_.create` without support for assigning
- * properties to the created object.
+ * Copies the properties of `source` to `object`.
  *
  * @private
- * @param {Object} prototype The object to inherit from.
- * @returns {Object} Returns the new object.
+ * @param {Object} source The object to copy properties from.
+ * @param {Object} [object={}] The object to copy properties to.
+ * @param {Array} props The property names to copy.
+ * @returns {Object} Returns `object`.
  */
-function baseCreate(prototype, properties) {
-  return isObject(prototype) ? nativeCreate(prototype) : {};
-}
-// fallback for browsers without `Object.create`
-if (!nativeCreate) {
-  baseCreate = (function() {
-    function Object() {}
-    return function(prototype) {
-      if (isObject(prototype)) {
-        Object.prototype = prototype;
-        var result = new Object;
-        Object.prototype = null;
-      }
-      return result || global.Object();
-    };
-  }());
+function baseCopy(source, object, props) {
+  if (!props) {
+    props = object;
+    object = {};
+  }
+  var index = -1,
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+    object[key] = source[key];
+  }
+  return object;
 }
 
-module.exports = baseCreate;
+module.exports = baseCopy;
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js","../utilities/noop":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/noop.js","./isNative":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var bind = require('../functions/bind'),
-    identity = require('../utilities/identity'),
-    setBindData = require('./setBindData'),
-    support = require('../support');
-
-/** Used to detected named functions */
-var reFuncName = /^\s*function[ \n\r\t]+\w/;
-
-/** Used to detect functions containing a `this` reference */
-var reThis = /\bthis\b/;
-
-/** Native method shortcuts */
-var fnToString = Function.prototype.toString;
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseEach.js":[function(require,module,exports){
+var baseForOwn = require('./baseForOwn'),
+    isLength = require('./isLength'),
+    toObject = require('./toObject');
 
 /**
- * The base implementation of `_.createCallback` without support for creating
- * "_.pluck" or "_.where" style callbacks.
+ * The base implementation of `_.forEach` without support for callback
+ * shorthands and `this` binding.
  *
  * @private
- * @param {*} [func=identity] The value to convert to a callback.
- * @param {*} [thisArg] The `this` binding of the created callback.
- * @param {number} [argCount] The number of arguments the callback accepts.
- * @returns {Function} Returns a callback function.
+ * @param {Array|Object|string} collection The collection to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array|Object|string} Returns `collection`.
  */
-function baseCreateCallback(func, thisArg, argCount) {
-  if (typeof func != 'function') {
-    return identity;
+function baseEach(collection, iteratee) {
+  var length = collection ? collection.length : 0;
+  if (!isLength(length)) {
+    return baseForOwn(collection, iteratee);
   }
-  // exit early for no `thisArg` or already bound by `Function#bind`
-  if (typeof thisArg == 'undefined' || !('prototype' in func)) {
-    return func;
-  }
-  var bindData = func.__bindData__;
-  if (typeof bindData == 'undefined') {
-    if (support.funcNames) {
-      bindData = !func.name;
-    }
-    bindData = bindData || !support.funcDecomp;
-    if (!bindData) {
-      var source = fnToString.call(func);
-      if (!support.funcNames) {
-        bindData = !reFuncName.test(source);
-      }
-      if (!bindData) {
-        // checks if `func` references the `this` keyword and stores the result
-        bindData = reThis.test(source);
-        setBindData(func, bindData);
-      }
+  var index = -1,
+      iterable = toObject(collection);
+
+  while (++index < length) {
+    if (iteratee(iterable[index], index, iterable) === false) {
+      break;
     }
   }
-  // exit early if there are no `this` references or `func` is bound
-  if (bindData === false || (bindData !== true && bindData[1] & 1)) {
-    return func;
-  }
-  switch (argCount) {
-    case 1: return function(value) {
-      return func.call(thisArg, value);
-    };
-    case 2: return function(a, b) {
-      return func.call(thisArg, a, b);
-    };
-    case 3: return function(value, index, collection) {
-      return func.call(thisArg, value, index, collection);
-    };
-    case 4: return function(accumulator, value, index, collection) {
-      return func.call(thisArg, accumulator, value, index, collection);
-    };
-  }
-  return bind(func, thisArg);
+  return collection;
 }
 
-module.exports = baseCreateCallback;
+module.exports = baseEach;
 
-},{"../functions/bind":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/bind.js","../support":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js","../utilities/identity":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/identity.js","./setBindData":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/setBindData.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateWrapper.js":[function(require,module,exports){
+},{"./baseForOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js","./isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","./toObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/toObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseFind.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreate = require('./baseCreate'),
-    isObject = require('../objects/isObject'),
-    setBindData = require('./setBindData'),
-    slice = require('./slice');
-
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
-
-/** Native method shortcuts */
-var push = arrayRef.push;
-
-/**
- * The base implementation of `createWrapper` that creates the wrapper and
- * sets its meta data.
+ * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
+ * without support for callback shorthands and `this` binding, which iterates
+ * over `collection` using the provided `eachFunc`.
  *
  * @private
- * @param {Array} bindData The bind data array.
- * @returns {Function} Returns the new function.
+ * @param {Array|Object|string} collection The collection to search.
+ * @param {Function} predicate The function invoked per iteration.
+ * @param {Function} eachFunc The function to iterate over `collection`.
+ * @param {boolean} [retKey] Specify returning the key of the found element
+ *  instead of the element itself.
+ * @returns {*} Returns the found element or its key, else `undefined`.
  */
-function baseCreateWrapper(bindData) {
-  var func = bindData[0],
-      bitmask = bindData[1],
-      partialArgs = bindData[2],
-      partialRightArgs = bindData[3],
-      thisArg = bindData[4],
-      arity = bindData[5];
-
-  var isBind = bitmask & 1,
-      isBindKey = bitmask & 2,
-      isCurry = bitmask & 4,
-      isCurryBound = bitmask & 8,
-      key = func;
-
-  function bound() {
-    var thisBinding = isBind ? thisArg : this;
-    if (partialArgs) {
-      var args = slice(partialArgs);
-      push.apply(args, arguments);
+function baseFind(collection, predicate, eachFunc, retKey) {
+  var result;
+  eachFunc(collection, function(value, key, collection) {
+    if (predicate(value, key, collection)) {
+      result = retKey ? key : value;
+      return false;
     }
-    if (partialRightArgs || isCurry) {
-      args || (args = slice(arguments));
-      if (partialRightArgs) {
-        push.apply(args, partialRightArgs);
-      }
-      if (isCurry && args.length < arity) {
-        bitmask |= 16 & ~32;
-        return baseCreateWrapper([func, (isCurryBound ? bitmask : bitmask & ~3), args, null, thisArg, arity]);
-      }
-    }
-    args || (args = arguments);
-    if (isBindKey) {
-      func = thisBinding[key];
-    }
-    if (this instanceof bound) {
-      thisBinding = baseCreate(func.prototype);
-      var result = func.apply(thisBinding, args);
-      return isObject(result) ? result : thisBinding;
-    }
-    return func.apply(thisBinding, args);
-  }
-  setBindData(bound, bindData);
-  return bound;
+  });
+  return result;
 }
 
-module.exports = baseCreateWrapper;
+module.exports = baseFind;
 
-},{"../objects/isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js","./baseCreate":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreate.js","./setBindData":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/setBindData.js","./slice":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIndexOf.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseFor.js":[function(require,module,exports){
+var toObject = require('./toObject');
+
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * The base implementation of `baseForIn` and `baseForOwn` which iterates
+ * over `object` properties returned by `keysFunc` invoking `iteratee` for
+ * each property. Iterator functions may exit iteration early by explicitly
+ * returning `false`.
+ *
+ * @private
+ * @param {Object} object The object to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {Function} keysFunc The function to get the keys of `object`.
+ * @returns {Object} Returns `object`.
  */
+function baseFor(object, iteratee, keysFunc) {
+  var index = -1,
+      iterable = toObject(object),
+      props = keysFunc(object),
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+    if (iteratee(iterable[key], key, iterable) === false) {
+      break;
+    }
+  }
+  return object;
+}
+
+module.exports = baseFor;
+
+},{"./toObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/toObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js":[function(require,module,exports){
+var baseFor = require('./baseFor'),
+    keys = require('../object/keys');
 
 /**
- * The base implementation of `_.indexOf` without support for binary searches
- * or `fromIndex` constraints.
+ * The base implementation of `_.forOwn` without support for callback
+ * shorthands and `this` binding.
+ *
+ * @private
+ * @param {Object} object The object to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Object} Returns `object`.
+ */
+function baseForOwn(object, iteratee) {
+  return baseFor(object, iteratee, keys);
+}
+
+module.exports = baseForOwn;
+
+},{"../object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js","./baseFor":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseFor.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIndexOf.js":[function(require,module,exports){
+var indexOfNaN = require('./indexOfNaN');
+
+/**
+ * The base implementation of `_.indexOf` without support for binary searches.
  *
  * @private
  * @param {Array} array The array to search.
  * @param {*} value The value to search for.
  * @param {number} [fromIndex=0] The index to search from.
- * @returns {number} Returns the index of the matched value or `-1`.
+ * @returns {number} Returns the index of the matched value, else `-1`.
  */
 function baseIndexOf(array, value, fromIndex) {
+  if (value !== value) {
+    return indexOfNaN(array, fromIndex);
+  }
   var index = (fromIndex || 0) - 1,
-      length = array ? array.length : 0;
+      length = array.length;
 
   while (++index < length) {
     if (array[index] === value) {
@@ -8634,1330 +7012,1428 @@ function baseIndexOf(array, value, fromIndex) {
 
 module.exports = baseIndexOf;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIsEqual.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var forIn = require('../objects/forIn'),
-    getArray = require('./getArray'),
-    isFunction = require('../objects/isFunction'),
-    objectTypes = require('./objectTypes'),
-    releaseArray = require('./releaseArray');
-
-/** `Object#toString` result shortcuts */
-var argsClass = '[object Arguments]',
-    arrayClass = '[object Array]',
-    boolClass = '[object Boolean]',
-    dateClass = '[object Date]',
-    numberClass = '[object Number]',
-    objectClass = '[object Object]',
-    regexpClass = '[object RegExp]',
-    stringClass = '[object String]';
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
-
-/** Native method shortcuts */
-var hasOwnProperty = objectProto.hasOwnProperty;
+},{"./indexOfNaN":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/indexOfNaN.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsEqual.js":[function(require,module,exports){
+var baseIsEqualDeep = require('./baseIsEqualDeep');
 
 /**
- * The base implementation of `_.isEqual`, without support for `thisArg` binding,
- * that allows partial "_.where" style comparisons.
+ * The base implementation of `_.isEqual` without support for `this` binding
+ * `customizer` functions.
  *
  * @private
- * @param {*} a The value to compare.
- * @param {*} b The other value to compare.
- * @param {Function} [callback] The function to customize comparing values.
- * @param {Function} [isWhere=false] A flag to indicate performing partial comparisons.
- * @param {Array} [stackA=[]] Tracks traversed `a` objects.
- * @param {Array} [stackB=[]] Tracks traversed `b` objects.
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @param {Function} [customizer] The function to customize comparing values.
+ * @param {boolean} [isWhere] Specify performing partial comparisons.
+ * @param {Array} [stackA] Tracks traversed `value` objects.
+ * @param {Array} [stackB] Tracks traversed `other` objects.
  * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
  */
-function baseIsEqual(a, b, callback, isWhere, stackA, stackB) {
-  // used to indicate that when comparing objects, `a` has at least the properties of `b`
-  if (callback) {
-    var result = callback(a, b);
-    if (typeof result != 'undefined') {
-      return !!result;
-    }
+function baseIsEqual(value, other, customizer, isWhere, stackA, stackB) {
+  // Exit early for identical values.
+  if (value === other) {
+    // Treat `+0` vs. `-0` as not equal.
+    return value !== 0 || (1 / value == 1 / other);
   }
-  // exit early for identical values
-  if (a === b) {
-    // treat `+0` vs. `-0` as not equal
-    return a !== 0 || (1 / a == 1 / b);
+  var valType = typeof value,
+      othType = typeof other;
+
+  // Exit early for unlike primitive values.
+  if ((valType != 'function' && valType != 'object' && othType != 'function' && othType != 'object') ||
+      value == null || other == null) {
+    // Return `false` unless both values are `NaN`.
+    return value !== value && other !== other;
   }
-  var type = typeof a,
-      otherType = typeof b;
-
-  // exit early for unlike primitive values
-  if (a === a &&
-      !(a && objectTypes[type]) &&
-      !(b && objectTypes[otherType])) {
-    return false;
-  }
-  // exit early for `null` and `undefined` avoiding ES3's Function#call behavior
-  // http://es5.github.io/#x15.3.4.4
-  if (a == null || b == null) {
-    return a === b;
-  }
-  // compare [[Class]] names
-  var className = toString.call(a),
-      otherClass = toString.call(b);
-
-  if (className == argsClass) {
-    className = objectClass;
-  }
-  if (otherClass == argsClass) {
-    otherClass = objectClass;
-  }
-  if (className != otherClass) {
-    return false;
-  }
-  switch (className) {
-    case boolClass:
-    case dateClass:
-      // coerce dates and booleans to numbers, dates to milliseconds and booleans
-      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal
-      return +a == +b;
-
-    case numberClass:
-      // treat `NaN` vs. `NaN` as equal
-      return (a != +a)
-        ? b != +b
-        // but treat `+0` vs. `-0` as not equal
-        : (a == 0 ? (1 / a == 1 / b) : a == +b);
-
-    case regexpClass:
-    case stringClass:
-      // coerce regexes to strings (http://es5.github.io/#x15.10.6.4)
-      // treat string primitives and their corresponding object instances as equal
-      return a == String(b);
-  }
-  var isArr = className == arrayClass;
-  if (!isArr) {
-    // unwrap any `lodash` wrapped values
-    var aWrapped = hasOwnProperty.call(a, '__wrapped__'),
-        bWrapped = hasOwnProperty.call(b, '__wrapped__');
-
-    if (aWrapped || bWrapped) {
-      return baseIsEqual(aWrapped ? a.__wrapped__ : a, bWrapped ? b.__wrapped__ : b, callback, isWhere, stackA, stackB);
-    }
-    // exit for functions and DOM nodes
-    if (className != objectClass) {
-      return false;
-    }
-    // in older versions of Opera, `arguments` objects have `Array` constructors
-    var ctorA = a.constructor,
-        ctorB = b.constructor;
-
-    // non `Object` object instances with different constructors are not equal
-    if (ctorA != ctorB &&
-          !(isFunction(ctorA) && ctorA instanceof ctorA && isFunction(ctorB) && ctorB instanceof ctorB) &&
-          ('constructor' in a && 'constructor' in b)
-        ) {
-      return false;
-    }
-  }
-  // assume cyclic structures are equal
-  // the algorithm for detecting cyclic structures is adapted from ES 5.1
-  // section 15.12.3, abstract operation `JO` (http://es5.github.io/#x15.12.3)
-  var initedStack = !stackA;
-  stackA || (stackA = getArray());
-  stackB || (stackB = getArray());
-
-  var length = stackA.length;
-  while (length--) {
-    if (stackA[length] == a) {
-      return stackB[length] == b;
-    }
-  }
-  var size = 0;
-  result = true;
-
-  // add `a` and `b` to the stack of traversed objects
-  stackA.push(a);
-  stackB.push(b);
-
-  // recursively compare objects and arrays (susceptible to call stack limits)
-  if (isArr) {
-    // compare lengths to determine if a deep comparison is necessary
-    length = a.length;
-    size = b.length;
-    result = size == length;
-
-    if (result || isWhere) {
-      // deep compare the contents, ignoring non-numeric properties
-      while (size--) {
-        var index = length,
-            value = b[size];
-
-        if (isWhere) {
-          while (index--) {
-            if ((result = baseIsEqual(a[index], value, callback, isWhere, stackA, stackB))) {
-              break;
-            }
-          }
-        } else if (!(result = baseIsEqual(a[size], value, callback, isWhere, stackA, stackB))) {
-          break;
-        }
-      }
-    }
-  }
-  else {
-    // deep compare objects using `forIn`, instead of `forOwn`, to avoid `Object.keys`
-    // which, in this case, is more costly
-    forIn(b, function(value, key, b) {
-      if (hasOwnProperty.call(b, key)) {
-        // count the number of properties.
-        size++;
-        // deep compare each property value.
-        return (result = hasOwnProperty.call(a, key) && baseIsEqual(a[key], value, callback, isWhere, stackA, stackB));
-      }
-    });
-
-    if (result && !isWhere) {
-      // ensure both objects have the same number of properties
-      forIn(a, function(value, key, a) {
-        if (hasOwnProperty.call(a, key)) {
-          // `size` will be `-1` if `a` has more properties than `b`
-          return (result = --size > -1);
-        }
-      });
-    }
-  }
-  stackA.pop();
-  stackB.pop();
-
-  if (initedStack) {
-    releaseArray(stackA);
-    releaseArray(stackB);
-  }
-  return result;
+  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isWhere, stackA, stackB);
 }
 
 module.exports = baseIsEqual;
 
-},{"../objects/forIn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forIn.js","../objects/isFunction":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js","./getArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getArray.js","./objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js","./releaseArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseArray.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseUniq.js":[function(require,module,exports){
+},{"./baseIsEqualDeep":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsEqualDeep.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsEqualDeep.js":[function(require,module,exports){
+var equalArrays = require('./equalArrays'),
+    equalByTag = require('./equalByTag'),
+    equalObjects = require('./equalObjects'),
+    isArray = require('../lang/isArray'),
+    isTypedArray = require('../lang/isTypedArray');
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    objectTag = '[object Object]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
  */
+var objToString = objectProto.toString;
+
+/**
+ * A specialized version of `baseIsEqual` for arrays and objects which performs
+ * deep comparisons and tracks traversed objects enabling objects with circular
+ * references to be compared.
+ *
+ * @private
+ * @param {Object} object The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Function} [customizer] The function to customize comparing objects.
+ * @param {boolean} [isWhere] Specify performing partial comparisons.
+ * @param {Array} [stackA=[]] Tracks traversed `value` objects.
+ * @param {Array} [stackB=[]] Tracks traversed `other` objects.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+ */
+function baseIsEqualDeep(object, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var objIsArr = isArray(object),
+      othIsArr = isArray(other),
+      objTag = arrayTag,
+      othTag = arrayTag;
+
+  if (!objIsArr) {
+    objTag = objToString.call(object);
+    if (objTag == argsTag) {
+      objTag = objectTag;
+    } else if (objTag != objectTag) {
+      objIsArr = isTypedArray(object);
+    }
+  }
+  if (!othIsArr) {
+    othTag = objToString.call(other);
+    if (othTag == argsTag) {
+      othTag = objectTag;
+    } else if (othTag != objectTag) {
+      othIsArr = isTypedArray(other);
+    }
+  }
+  var objIsObj = objTag == objectTag,
+      othIsObj = othTag == objectTag,
+      isSameTag = objTag == othTag;
+
+  if (isSameTag && !(objIsArr || objIsObj)) {
+    return equalByTag(object, other, objTag);
+  }
+  var valWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+      othWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+
+  if (valWrapped || othWrapped) {
+    return equalFunc(valWrapped ? object.value() : object, othWrapped ? other.value() : other, customizer, isWhere, stackA, stackB);
+  }
+  if (!isSameTag) {
+    return false;
+  }
+  // Assume cyclic values are equal.
+  // For more information on detecting circular references see https://es5.github.io/#JO.
+  stackA || (stackA = []);
+  stackB || (stackB = []);
+
+  var length = stackA.length;
+  while (length--) {
+    if (stackA[length] == object) {
+      return stackB[length] == other;
+    }
+  }
+  // Add `object` and `other` to the stack of traversed objects.
+  stackA.push(object);
+  stackB.push(other);
+
+  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isWhere, stackA, stackB);
+
+  stackA.pop();
+  stackB.pop();
+
+  return result;
+}
+
+module.exports = baseIsEqualDeep;
+
+},{"../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js","../lang/isTypedArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isTypedArray.js","./equalArrays":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalArrays.js","./equalByTag":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalByTag.js","./equalObjects":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalObjects.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsMatch.js":[function(require,module,exports){
+var baseIsEqual = require('./baseIsEqual');
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * The base implementation of `_.isMatch` without support for callback
+ * shorthands or `this` binding.
+ *
+ * @private
+ * @param {Object} source The object to inspect.
+ * @param {Array} props The source property names to match.
+ * @param {Array} values The source values to match.
+ * @param {Array} strictCompareFlags Strict comparison flags for source values.
+ * @param {Function} [customizer] The function to customize comparing objects.
+ * @returns {boolean} Returns `true` if `object` is a match, else `false`.
+ */
+function baseIsMatch(object, props, values, strictCompareFlags, customizer) {
+  var length = props.length;
+  if (object == null) {
+    return !length;
+  }
+  var index = -1,
+      noCustomizer = !customizer;
+
+  while (++index < length) {
+    if ((noCustomizer && strictCompareFlags[index])
+          ? values[index] !== object[props[index]]
+          : !hasOwnProperty.call(object, props[index])
+        ) {
+      return false;
+    }
+  }
+  index = -1;
+  while (++index < length) {
+    var key = props[index];
+    if (noCustomizer && strictCompareFlags[index]) {
+      var result = hasOwnProperty.call(object, key);
+    } else {
+      var objValue = object[key],
+          srcValue = values[index];
+
+      result = customizer ? customizer(objValue, srcValue, key) : undefined;
+      if (typeof result == 'undefined') {
+        result = baseIsEqual(srcValue, objValue, customizer, true);
+      }
+    }
+    if (!result) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = baseIsMatch;
+
+},{"./baseIsEqual":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsEqual.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseMap.js":[function(require,module,exports){
+var baseEach = require('./baseEach');
+
+/**
+ * The base implementation of `_.map` without support for callback shorthands
+ * or `this` binding.
+ *
+ * @private
+ * @param {Array|Object|string} collection The collection to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns the new mapped array.
+ */
+function baseMap(collection, iteratee) {
+  var result = [];
+  baseEach(collection, function(value, key, collection) {
+    result.push(iteratee(value, key, collection));
+  });
+  return result;
+}
+
+module.exports = baseMap;
+
+},{"./baseEach":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseEach.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseMatches.js":[function(require,module,exports){
+var baseIsMatch = require('./baseIsMatch'),
+    isStrictComparable = require('./isStrictComparable'),
+    keys = require('../object/keys');
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * The base implementation of `_.matches` which supports specifying whether
+ * `source` should be cloned.
+ *
+ * @private
+ * @param {Object} source The object of property values to match.
+ * @returns {Function} Returns the new function.
+ */
+function baseMatches(source) {
+  var props = keys(source),
+      length = props.length;
+
+  if (length == 1) {
+    var key = props[0],
+        value = source[key];
+
+    if (isStrictComparable(value)) {
+      return function(object) {
+        return object != null && value === object[key] && hasOwnProperty.call(object, key);
+      };
+    }
+  }
+  var values = Array(length),
+      strictCompareFlags = Array(length);
+
+  while (length--) {
+    value = source[props[length]];
+    values[length] = value;
+    strictCompareFlags[length] = isStrictComparable(value);
+  }
+  return function(object) {
+    return baseIsMatch(object, props, values, strictCompareFlags);
+  };
+}
+
+module.exports = baseMatches;
+
+},{"../object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js","./baseIsMatch":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIsMatch.js","./isStrictComparable":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isStrictComparable.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseProperty.js":[function(require,module,exports){
+/**
+ * The base implementation of `_.property` which does not coerce `key` to a string.
+ *
+ * @private
+ * @param {string} key The key of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+module.exports = baseProperty;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseReduce.js":[function(require,module,exports){
+/**
+ * The base implementation of `_.reduce` and `_.reduceRight` without support
+ * for callback shorthands or `this` binding, which iterates over `collection`
+ * using the provided `eachFunc`.
+ *
+ * @private
+ * @param {Array|Object|string} collection The collection to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {*} accumulator The initial value.
+ * @param {boolean} initFromCollection Specify using the first or last element
+ *  of `collection` as the initial value.
+ * @param {Function} eachFunc The function to iterate over `collection`.
+ * @returns {*} Returns the accumulated value.
+ */
+function baseReduce(collection, iteratee, accumulator, initFromCollection, eachFunc) {
+  eachFunc(collection, function(value, index, collection) {
+    accumulator = initFromCollection
+      ? (initFromCollection = false, value)
+      : iteratee(accumulator, value, index, collection)
+  });
+  return accumulator;
+}
+
+module.exports = baseReduce;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseSetData.js":[function(require,module,exports){
+var identity = require('../utility/identity'),
+    metaMap = require('./metaMap');
+
+/**
+ * The base implementation of `setData` without support for hot loop detection.
+ *
+ * @private
+ * @param {Function} func The function to associate metadata with.
+ * @param {*} data The metadata.
+ * @returns {Function} Returns `func`.
+ */
+var baseSetData = !metaMap ? identity : function(func, data) {
+  metaMap.set(func, data);
+  return func;
+};
+
+module.exports = baseSetData;
+
+},{"../utility/identity":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/identity.js","./metaMap":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/metaMap.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseToString.js":[function(require,module,exports){
+/**
+ * Converts `value` to a string if it is not one. An empty string is returned
+ * for `null` or `undefined` values.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {string} Returns the string.
+ */
+function baseToString(value) {
+  if (typeof value == 'string') {
+    return value;
+  }
+  return value == null ? '' : (value + '');
+}
+
+module.exports = baseToString;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseUniq.js":[function(require,module,exports){
 var baseIndexOf = require('./baseIndexOf'),
     cacheIndexOf = require('./cacheIndexOf'),
-    createCache = require('./createCache'),
-    getArray = require('./getArray'),
-    largeArraySize = require('./largeArraySize'),
-    releaseArray = require('./releaseArray'),
-    releaseObject = require('./releaseObject');
+    createCache = require('./createCache');
 
 /**
  * The base implementation of `_.uniq` without support for callback shorthands
- * or `thisArg` binding.
+ * and `this` binding.
  *
  * @private
- * @param {Array} array The array to process.
- * @param {boolean} [isSorted=false] A flag to indicate that `array` is sorted.
- * @param {Function} [callback] The function called per iteration.
- * @returns {Array} Returns a duplicate-value-free array.
+ * @param {Array} array The array to inspect.
+ * @param {Function} [iteratee] The function invoked per iteration.
+ * @returns {Array} Returns the new duplicate-value-free array.
  */
-function baseUniq(array, isSorted, callback) {
+function baseUniq(array, iteratee) {
   var index = -1,
       indexOf = baseIndexOf,
-      length = array ? array.length : 0,
+      length = array.length,
+      isCommon = true,
+      isLarge = isCommon && length >= 200,
+      seen = isLarge && createCache(),
       result = [];
 
-  var isLarge = !isSorted && length >= largeArraySize,
-      seen = (callback || isLarge) ? getArray() : result;
-
-  if (isLarge) {
-    var cache = createCache(seen);
+  if (seen) {
     indexOf = cacheIndexOf;
-    seen = cache;
+    isCommon = false;
+  } else {
+    isLarge = false;
+    seen = iteratee ? [] : result;
   }
+  outer:
   while (++index < length) {
     var value = array[index],
-        computed = callback ? callback(value, index, array) : value;
+        computed = iteratee ? iteratee(value, index, array) : value;
 
-    if (isSorted
-          ? !index || seen[seen.length - 1] !== computed
-          : indexOf(seen, computed) < 0
-        ) {
-      if (callback || isLarge) {
+    if (isCommon && value === value) {
+      var seenIndex = seen.length;
+      while (seenIndex--) {
+        if (seen[seenIndex] === computed) {
+          continue outer;
+        }
+      }
+      if (iteratee) {
         seen.push(computed);
       }
       result.push(value);
     }
-  }
-  if (isLarge) {
-    releaseArray(seen.array);
-    releaseObject(seen);
-  } else if (callback) {
-    releaseArray(seen);
+    else if (indexOf(seen, computed) < 0) {
+      if (iteratee || isLarge) {
+        seen.push(computed);
+      }
+      result.push(value);
+    }
   }
   return result;
 }
 
 module.exports = baseUniq;
 
-},{"./baseIndexOf":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIndexOf.js","./cacheIndexOf":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/cacheIndexOf.js","./createCache":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/createCache.js","./getArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getArray.js","./largeArraySize":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/largeArraySize.js","./releaseArray":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseArray.js","./releaseObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseObject.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/cacheIndexOf.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseIndexOf = require('./baseIndexOf'),
-    keyPrefix = require('./keyPrefix');
+},{"./baseIndexOf":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseIndexOf.js","./cacheIndexOf":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/cacheIndexOf.js","./createCache":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/createCache.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bindCallback.js":[function(require,module,exports){
+var identity = require('../utility/identity');
 
 /**
- * An implementation of `_.contains` for cache objects that mimics the return
- * signature of `_.indexOf` by returning `0` if the value is found, else `-1`.
+ * A specialized version of `baseCallback` which only supports `this` binding
+ * and specifying the number of arguments to provide to `func`.
  *
  * @private
- * @param {Object} cache The cache object to inspect.
+ * @param {Function} func The function to bind.
+ * @param {*} thisArg The `this` binding of `func`.
+ * @param {number} [argCount] The number of arguments to provide to `func`.
+ * @returns {Function} Returns the callback.
+ */
+function bindCallback(func, thisArg, argCount) {
+  if (typeof func != 'function') {
+    return identity;
+  }
+  if (typeof thisArg == 'undefined') {
+    return func;
+  }
+  switch (argCount) {
+    case 1: return function(value) {
+      return func.call(thisArg, value);
+    };
+    case 3: return function(value, index, collection) {
+      return func.call(thisArg, value, index, collection);
+    };
+    case 4: return function(accumulator, value, index, collection) {
+      return func.call(thisArg, accumulator, value, index, collection);
+    };
+    case 5: return function(value, other, key, object, source) {
+      return func.call(thisArg, value, other, key, object, source);
+    };
+  }
+  return function() {
+    return func.apply(thisArg, arguments);
+  };
+}
+
+module.exports = bindCallback;
+
+},{"../utility/identity":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/identity.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bufferClone.js":[function(require,module,exports){
+(function (global){
+var constant = require('../utility/constant'),
+    isNative = require('../lang/isNative');
+
+/** Native method references. */
+var ArrayBuffer = isNative(ArrayBuffer = global.ArrayBuffer) && ArrayBuffer,
+    bufferSlice = isNative(bufferSlice = ArrayBuffer && new ArrayBuffer(0).slice) && bufferSlice,
+    floor = Math.floor,
+    Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
+
+/** Used to clone array buffers. */
+var Float64Array = (function() {
+  // Safari 5 errors when using an array buffer to initialize a typed array
+  // where the array buffer's `byteLength` is not a multiple of the typed
+  // array's `BYTES_PER_ELEMENT`.
+  try {
+    var func = isNative(func = global.Float64Array) && func,
+        result = new func(new ArrayBuffer(10), 0, 1) && func;
+  } catch(e) {}
+  return result;
+}());
+
+/** Used as the size, in bytes, of each `Float64Array` element. */
+var FLOAT64_BYTES_PER_ELEMENT = Float64Array ? Float64Array.BYTES_PER_ELEMENT : 0;
+
+/**
+ * Creates a clone of the given array buffer.
+ *
+ * @private
+ * @param {ArrayBuffer} buffer The array buffer to clone.
+ * @returns {ArrayBuffer} Returns the cloned array buffer.
+ */
+function bufferClone(buffer) {
+  return bufferSlice.call(buffer, 0);
+}
+if (!bufferSlice) {
+  // PhantomJS has `ArrayBuffer` and `Uint8Array` but not `Float64Array`.
+  bufferClone = !(ArrayBuffer && Uint8Array) ? constant(null) : function(buffer) {
+    var byteLength = buffer.byteLength,
+        floatLength = Float64Array ? floor(byteLength / FLOAT64_BYTES_PER_ELEMENT) : 0,
+        offset = floatLength * FLOAT64_BYTES_PER_ELEMENT,
+        result = new ArrayBuffer(byteLength);
+
+    if (floatLength) {
+      var view = new Float64Array(result, 0, floatLength);
+      view.set(new Float64Array(buffer, 0, floatLength));
+    }
+    if (byteLength != offset) {
+      view = new Uint8Array(result, offset);
+      view.set(new Uint8Array(buffer, offset));
+    }
+    return result;
+  };
+}
+
+module.exports = bufferClone;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js","../utility/constant":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/constant.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/cacheIndexOf.js":[function(require,module,exports){
+var isObject = require('../lang/isObject');
+
+/**
+ * Checks if `value` is in `cache` mimicking the return signature of
+ * `_.indexOf` by returning `0` if the value is found, else `-1`.
+ *
+ * @private
+ * @param {Object} cache The cache to search.
  * @param {*} value The value to search for.
  * @returns {number} Returns `0` if `value` is found, else `-1`.
  */
 function cacheIndexOf(cache, value) {
-  var type = typeof value;
-  cache = cache.cache;
+  var data = cache.data,
+      result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
 
-  if (type == 'boolean' || value == null) {
-    return cache[value] ? 0 : -1;
-  }
-  if (type != 'number' && type != 'string') {
-    type = 'object';
-  }
-  var key = type == 'number' ? value : keyPrefix + value;
-  cache = (cache = cache[type]) && cache[key];
-
-  return type == 'object'
-    ? (cache && baseIndexOf(cache, value) > -1 ? 0 : -1)
-    : (cache ? 0 : -1);
+  return result ? 0 : -1;
 }
 
 module.exports = cacheIndexOf;
 
-},{"./baseIndexOf":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseIndexOf.js","./keyPrefix":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/keyPrefix.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/cachePush.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var keyPrefix = require('./keyPrefix');
+},{"../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/cachePush.js":[function(require,module,exports){
+var isObject = require('../lang/isObject');
 
 /**
- * Adds a given value to the corresponding cache object.
+ * Adds `value` to the cache.
  *
  * @private
- * @param {*} value The value to add to the cache.
+ * @name push
+ * @memberOf SetCache
+ * @param {*} value The value to cache.
  */
 function cachePush(value) {
-  var cache = this.cache,
-      type = typeof value;
-
-  if (type == 'boolean' || value == null) {
-    cache[value] = true;
+  var data = this.data;
+  if (typeof value == 'string' || isObject(value)) {
+    data.set.add(value);
   } else {
-    if (type != 'number' && type != 'string') {
-      type = 'object';
-    }
-    var key = type == 'number' ? value : keyPrefix + value,
-        typeCache = cache[type] || (cache[type] = {});
-
-    if (type == 'object') {
-      (typeCache[key] || (typeCache[key] = [])).push(value);
-    } else {
-      typeCache[key] = true;
-    }
+    data.hash[value] = true;
   }
 }
 
 module.exports = cachePush;
 
-},{"./keyPrefix":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/keyPrefix.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/createCache.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var cachePush = require('./cachePush'),
-    getObject = require('./getObject'),
-    releaseObject = require('./releaseObject');
+},{"../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/createCache.js":[function(require,module,exports){
+(function (global){
+var SetCache = require('./SetCache'),
+    constant = require('../utility/constant'),
+    isNative = require('../lang/isNative');
+
+/** Native method references. */
+var Set = isNative(Set = global.Set) && Set;
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
 
 /**
- * Creates a cache object to optimize linear searches of large arrays.
+ * Creates a `Set` cache object to optimize linear searches of large arrays.
  *
  * @private
- * @param {Array} [array=[]] The array to search.
- * @returns {null|Object} Returns the cache object or `null` if caching should not be used.
+ * @param {Array} [values] The values to cache.
+ * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
  */
-function createCache(array) {
-  var index = -1,
-      length = array.length,
-      first = array[0],
-      mid = array[(length / 2) | 0],
-      last = array[length - 1];
-
-  if (first && typeof first == 'object' &&
-      mid && typeof mid == 'object' && last && typeof last == 'object') {
-    return false;
-  }
-  var cache = getObject();
-  cache['false'] = cache['null'] = cache['true'] = cache['undefined'] = false;
-
-  var result = getObject();
-  result.array = array;
-  result.cache = cache;
-  result.push = cachePush;
-
-  while (++index < length) {
-    result.push(array[index]);
-  }
-  return result;
-}
+var createCache = !(nativeCreate && Set) ? constant(null) : function(values) {
+  return new SetCache(values);
+};
 
 module.exports = createCache;
 
-},{"./cachePush":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/cachePush.js","./getObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getObject.js","./releaseObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseObject.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/createWrapper.js":[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js","../utility/constant":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/constant.js","./SetCache":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/SetCache.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalArrays.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseBind = require('./baseBind'),
-    baseCreateWrapper = require('./baseCreateWrapper'),
-    isFunction = require('../objects/isFunction'),
-    slice = require('./slice');
-
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
-
-/** Native method shortcuts */
-var push = arrayRef.push,
-    unshift = arrayRef.unshift;
-
-/**
- * Creates a function that, when called, either curries or invokes `func`
- * with an optional `this` binding and partially applied arguments.
+ * A specialized version of `baseIsEqualDeep` for arrays with support for
+ * partial deep comparisons.
  *
  * @private
- * @param {Function|string} func The function or method name to reference.
- * @param {number} bitmask The bitmask of method flags to compose.
- *  The bitmask may be composed of the following flags:
- *  1 - `_.bind`
- *  2 - `_.bindKey`
- *  4 - `_.curry`
- *  8 - `_.curry` (bound)
- *  16 - `_.partial`
- *  32 - `_.partialRight`
- * @param {Array} [partialArgs] An array of arguments to prepend to those
- *  provided to the new function.
- * @param {Array} [partialRightArgs] An array of arguments to append to those
- *  provided to the new function.
- * @param {*} [thisArg] The `this` binding of `func`.
- * @param {number} [arity] The arity of `func`.
- * @returns {Function} Returns the new function.
+ * @param {Array} array The array to compare.
+ * @param {Array} other The other array to compare.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Function} [customizer] The function to customize comparing arrays.
+ * @param {boolean} [isWhere] Specify performing partial comparisons.
+ * @param {Array} [stackA] Tracks traversed `value` objects.
+ * @param {Array} [stackB] Tracks traversed `other` objects.
+ * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
  */
-function createWrapper(func, bitmask, partialArgs, partialRightArgs, thisArg, arity) {
-  var isBind = bitmask & 1,
-      isBindKey = bitmask & 2,
-      isCurry = bitmask & 4,
-      isCurryBound = bitmask & 8,
-      isPartial = bitmask & 16,
-      isPartialRight = bitmask & 32;
+function equalArrays(array, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var index = -1,
+      arrLength = array.length,
+      othLength = other.length,
+      result = true;
 
-  if (!isBindKey && !isFunction(func)) {
-    throw new TypeError;
+  if (arrLength != othLength && !(isWhere && othLength > arrLength)) {
+    return false;
   }
-  if (isPartial && !partialArgs.length) {
-    bitmask &= ~16;
-    isPartial = partialArgs = false;
+  // Deep compare the contents, ignoring non-numeric properties.
+  while (result && ++index < arrLength) {
+    var arrValue = array[index],
+        othValue = other[index];
+
+    result = undefined;
+    if (customizer) {
+      result = isWhere
+        ? customizer(othValue, arrValue, index)
+        : customizer(arrValue, othValue, index);
+    }
+    if (typeof result == 'undefined') {
+      // Recursively compare arrays (susceptible to call stack limits).
+      if (isWhere) {
+        var othIndex = othLength;
+        while (othIndex--) {
+          othValue = other[othIndex];
+          result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isWhere, stackA, stackB);
+          if (result) {
+            break;
+          }
+        }
+      } else {
+        result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isWhere, stackA, stackB);
+      }
+    }
   }
-  if (isPartialRight && !partialRightArgs.length) {
-    bitmask &= ~32;
-    isPartialRight = partialRightArgs = false;
-  }
-  var bindData = func && func.__bindData__;
-  if (bindData && bindData !== true) {
-    // clone `bindData`
-    bindData = slice(bindData);
-    if (bindData[2]) {
-      bindData[2] = slice(bindData[2]);
-    }
-    if (bindData[3]) {
-      bindData[3] = slice(bindData[3]);
-    }
-    // set `thisBinding` is not previously bound
-    if (isBind && !(bindData[1] & 1)) {
-      bindData[4] = thisArg;
-    }
-    // set if previously bound but not currently (subsequent curried functions)
-    if (!isBind && bindData[1] & 1) {
-      bitmask |= 8;
-    }
-    // set curried arity if not yet set
-    if (isCurry && !(bindData[1] & 4)) {
-      bindData[5] = arity;
-    }
-    // append partial left arguments
-    if (isPartial) {
-      push.apply(bindData[2] || (bindData[2] = []), partialArgs);
-    }
-    // append partial right arguments
-    if (isPartialRight) {
-      unshift.apply(bindData[3] || (bindData[3] = []), partialRightArgs);
-    }
-    // merge flags
-    bindData[1] |= bitmask;
-    return createWrapper.apply(null, bindData);
-  }
-  // fast path for `_.bind`
-  var creater = (bitmask == 1 || bitmask === 17) ? baseBind : baseCreateWrapper;
-  return creater([func, bitmask, partialArgs, partialRightArgs, thisArg, arity]);
+  return !!result;
 }
 
-module.exports = createWrapper;
+module.exports = equalArrays;
 
-},{"../objects/isFunction":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js","./baseBind":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseBind.js","./baseCreateWrapper":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateWrapper.js","./slice":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getArray.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var arrayPool = require('./arrayPool');
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalByTag.js":[function(require,module,exports){
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    stringTag = '[object String]';
 
 /**
- * Gets an array from the array pool or creates a new one if the pool is empty.
+ * A specialized version of `baseIsEqualDeep` for comparing objects of
+ * the same `toStringTag`.
+ *
+ * **Note:** This function only supports comparing values with tags of
+ * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
  *
  * @private
- * @returns {Array} The array from the pool.
+ * @param {Object} value The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {string} tag The `toStringTag` of the objects to compare.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
  */
-function getArray() {
-  return arrayPool.pop() || [];
+function equalByTag(object, other, tag) {
+  switch (tag) {
+    case boolTag:
+    case dateTag:
+      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
+      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
+      return +object == +other;
+
+    case errorTag:
+      return object.name == other.name && object.message == other.message;
+
+    case numberTag:
+      // Treat `NaN` vs. `NaN` as equal.
+      return (object != +object)
+        ? other != +other
+        // But, treat `-0` vs. `+0` as not equal.
+        : (object == 0 ? ((1 / object) == (1 / other)) : object == +other);
+
+    case regexpTag:
+    case stringTag:
+      // Coerce regexes to strings and treat strings primitives and string
+      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
+      return object == (other + '');
+  }
+  return false;
 }
 
-module.exports = getArray;
+module.exports = equalByTag;
 
-},{"./arrayPool":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/arrayPool.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/getObject.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var objectPool = require('./objectPool');
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/equalObjects.js":[function(require,module,exports){
+var keys = require('../object/keys');
 
-/**
- * Gets an object from the object pool or creates a new one if the pool is empty.
- *
- * @private
- * @returns {Object} The object from the pool.
- */
-function getObject() {
-  return objectPool.pop() || {
-    'array': null,
-    'cache': null,
-    'criteria': null,
-    'false': false,
-    'index': 0,
-    'null': false,
-    'number': null,
-    'object': null,
-    'push': null,
-    'string': null,
-    'true': false,
-    'undefined': false,
-    'value': null
-  };
-}
-
-module.exports = getObject;
-
-},{"./objectPool":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectPool.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used for native method references */
+/** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
-
-/** Used to detect if a method is native */
-var reNative = RegExp('^' +
-  String(toString)
-    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    .replace(/toString| for [^\]]+/g, '.*?') + '$'
-);
-
-/**
- * Checks if `value` is a native function.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is a native function, else `false`.
- */
-function isNative(value) {
-  return typeof value == 'function' && reNative.test(value);
-}
-
-module.exports = isNative;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/keyPrefix.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to prefix keys to avoid issues with `__proto__` and properties on `Object.prototype` */
-var keyPrefix = +new Date + '';
-
-module.exports = keyPrefix;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/largeArraySize.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used as the size when optimizations are enabled for large arrays */
-var largeArraySize = 75;
-
-module.exports = largeArraySize;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/maxPoolSize.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used as the max size of the `arrayPool` and `objectPool` */
-var maxPoolSize = 40;
-
-module.exports = maxPoolSize;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectPool.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to pool arrays and objects used internally */
-var objectPool = [];
-
-module.exports = objectPool;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to determine if values are of the language type Object */
-var objectTypes = {
-  'boolean': false,
-  'function': true,
-  'object': true,
-  'number': false,
-  'string': false,
-  'undefined': false
-};
-
-module.exports = objectTypes;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseArray.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var arrayPool = require('./arrayPool'),
-    maxPoolSize = require('./maxPoolSize');
-
-/**
- * Releases the given array back to the array pool.
- *
- * @private
- * @param {Array} [array] The array to release.
- */
-function releaseArray(array) {
-  array.length = 0;
-  if (arrayPool.length < maxPoolSize) {
-    arrayPool.push(array);
-  }
-}
-
-module.exports = releaseArray;
-
-},{"./arrayPool":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/arrayPool.js","./maxPoolSize":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/maxPoolSize.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/releaseObject.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var maxPoolSize = require('./maxPoolSize'),
-    objectPool = require('./objectPool');
-
-/**
- * Releases the given object back to the object pool.
- *
- * @private
- * @param {Object} [object] The object to release.
- */
-function releaseObject(object) {
-  var cache = object.cache;
-  if (cache) {
-    releaseObject(cache);
-  }
-  object.array = object.cache = object.criteria = object.object = object.number = object.string = object.value = null;
-  if (objectPool.length < maxPoolSize) {
-    objectPool.push(object);
-  }
-}
-
-module.exports = releaseObject;
-
-},{"./maxPoolSize":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/maxPoolSize.js","./objectPool":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectPool.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/setBindData.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isNative = require('./isNative'),
-    noop = require('../utilities/noop');
-
-/** Used as the property descriptor for `__bindData__` */
-var descriptor = {
-  'configurable': false,
-  'enumerable': false,
-  'value': null,
-  'writable': false
-};
-
-/** Used to set meta data on functions */
-var defineProperty = (function() {
-  // IE 8 only accepts DOM elements
-  try {
-    var o = {},
-        func = isNative(func = Object.defineProperty) && func,
-        result = func(o, o, o) && func;
-  } catch(e) { }
-  return result;
-}());
-
-/**
- * Sets `this` binding data on a given function.
- *
- * @private
- * @param {Function} func The function to set data on.
- * @param {Array} value The data array to set.
- */
-var setBindData = !defineProperty ? noop : function(func, value) {
-  descriptor.value = value;
-  defineProperty(func, '__bindData__', descriptor);
-};
-
-module.exports = setBindData;
-
-},{"../utilities/noop":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/noop.js","./isNative":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/shimKeys.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var objectTypes = require('./objectTypes');
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Native method shortcuts */
+/** Used to check objects for own properties. */
 var hasOwnProperty = objectProto.hasOwnProperty;
 
 /**
- * A fallback implementation of `Object.keys` which produces an array of the
- * given object's own enumerable property names.
+ * A specialized version of `baseIsEqualDeep` for objects with support for
+ * partial deep comparisons.
  *
  * @private
- * @type Function
- * @param {Object} object The object to inspect.
- * @returns {Array} Returns an array of property names.
+ * @param {Object} object The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Function} [customizer] The function to customize comparing values.
+ * @param {boolean} [isWhere] Specify performing partial comparisons.
+ * @param {Array} [stackA] Tracks traversed `value` objects.
+ * @param {Array} [stackB] Tracks traversed `other` objects.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
  */
-var shimKeys = function(object) {
-  var index, iterable = object, result = [];
-  if (!iterable) return result;
-  if (!(objectTypes[typeof object])) return result;
-    for (index in iterable) {
-      if (hasOwnProperty.call(iterable, index)) {
-        result.push(index);
+function equalObjects(object, other, equalFunc, customizer, isWhere, stackA, stackB) {
+  var objProps = keys(object),
+      objLength = objProps.length,
+      othProps = keys(other),
+      othLength = othProps.length;
+
+  if (objLength != othLength && !isWhere) {
+    return false;
+  }
+  var hasCtor,
+      index = -1;
+
+  while (++index < objLength) {
+    var key = objProps[index],
+        result = hasOwnProperty.call(other, key);
+
+    if (result) {
+      var objValue = object[key],
+          othValue = other[key];
+
+      result = undefined;
+      if (customizer) {
+        result = isWhere
+          ? customizer(othValue, objValue, key)
+          : customizer(objValue, othValue, key);
+      }
+      if (typeof result == 'undefined') {
+        // Recursively compare objects (susceptible to call stack limits).
+        result = (objValue && objValue === othValue) || equalFunc(objValue, othValue, customizer, isWhere, stackA, stackB);
       }
     }
-  return result
-};
+    if (!result) {
+      return false;
+    }
+    hasCtor || (hasCtor = key == 'constructor');
+  }
+  if (!hasCtor) {
+    var objCtor = object.constructor,
+        othCtor = other.constructor;
 
-module.exports = shimKeys;
+    // Non `Object` object instances with different constructors are not equal.
+    if (objCtor != othCtor && ('constructor' in object && 'constructor' in other) &&
+        !(typeof objCtor == 'function' && objCtor instanceof objCtor && typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+      return false;
+    }
+  }
+  return true;
+}
 
-},{"./objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/slice.js":[function(require,module,exports){
+module.exports = equalObjects;
+
+},{"../object/keys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/indexOfNaN.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * Slices the `collection` from the `start` index up to, but not including,
- * the `end` index.
- *
- * Note: This function is used instead of `Array#slice` to support node lists
- * in IE < 9 and to ensure dense arrays are returned.
+ * Gets the index at which the first occurrence of `NaN` is found in `array`.
+ * If `fromRight` is provided elements of `array` are iterated from right to left.
  *
  * @private
- * @param {Array|Object|string} collection The collection to slice.
- * @param {number} start The start index.
- * @param {number} end The end index.
- * @returns {Array} Returns the new array.
+ * @param {Array} array The array to search.
+ * @param {number} [fromIndex] The index to search from.
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {number} Returns the index of the matched `NaN`, else `-1`.
  */
-function slice(array, start, end) {
-  start || (start = 0);
-  if (typeof end == 'undefined') {
-    end = array ? array.length : 0;
-  }
-  var index = -1,
-      length = end - start || 0,
-      result = Array(length < 0 ? 0 : length);
+function indexOfNaN(array, fromIndex, fromRight) {
+  var length = array.length,
+      index = fromRight ? (fromIndex || length) : ((fromIndex || 0) - 1);
 
-  while (++index < length) {
-    result[index] = array[start + index];
+  while ((fromRight ? index-- : ++index < length)) {
+    var other = array[index];
+    if (other !== other) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+module.exports = indexOfNaN;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneArray.js":[function(require,module,exports){
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Initializes an array clone.
+ *
+ * @private
+ * @param {Array} array The array to clone.
+ * @returns {Array} Returns the initialized clone.
+ */
+function initCloneArray(array) {
+  var length = array.length,
+      result = new array.constructor(length);
+
+  // Add array properties assigned by `RegExp#exec`.
+  if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
+    result.index = array.index;
+    result.input = array.input;
   }
   return result;
 }
 
-module.exports = slice;
+module.exports = initCloneArray;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/assign.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneByTag.js":[function(require,module,exports){
+var bufferClone = require('./bufferClone');
+
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    stringTag = '[object String]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to match `RegExp` flags from their coerced string values. */
+var reFlags = /\w*$/;
+
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * Initializes an object clone based on its `toStringTag`.
+ *
+ * **Note:** This function only supports cloning values with tags of
+ * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+ *
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @param {string} tag The `toStringTag` of the object to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the initialized clone.
  */
-var baseCreateCallback = require('../internals/baseCreateCallback'),
-    keys = require('./keys'),
-    objectTypes = require('../internals/objectTypes');
+function initCloneByTag(object, tag, isDeep) {
+  var Ctor = object.constructor;
+  switch (tag) {
+    case arrayBufferTag:
+      return bufferClone(object);
+
+    case boolTag:
+    case dateTag:
+      return new Ctor(+object);
+
+    case float32Tag: case float64Tag:
+    case int8Tag: case int16Tag: case int32Tag:
+    case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+      var buffer = object.buffer;
+      return new Ctor(isDeep ? bufferClone(buffer) : buffer, object.byteOffset, object.length);
+
+    case numberTag:
+    case stringTag:
+      return new Ctor(object);
+
+    case regexpTag:
+      var result = new Ctor(object.source, reFlags.exec(object));
+      result.lastIndex = object.lastIndex;
+  }
+  return result;
+}
+
+module.exports = initCloneByTag;
+
+},{"./bufferClone":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bufferClone.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/initCloneObject.js":[function(require,module,exports){
+/**
+ * Initializes an object clone.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneObject(object) {
+  var Ctor = object.constructor;
+  if (!(typeof Ctor == 'function' && Ctor instanceof Ctor)) {
+    Ctor = Object;
+  }
+  return new Ctor;
+}
+
+module.exports = initCloneObject;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isBindable.js":[function(require,module,exports){
+var baseSetData = require('./baseSetData'),
+    isNative = require('../lang/isNative'),
+    support = require('../support');
+
+/** Used to detect named functions. */
+var reFuncName = /^\s*function[ \n\r\t]+\w/;
+
+/** Used to detect functions containing a `this` reference. */
+var reThis = /\bthis\b/;
+
+/** Used to resolve the decompiled source of functions. */
+var fnToString = Function.prototype.toString;
 
 /**
- * Assigns own enumerable properties of source object(s) to the destination
- * object. Subsequent sources will overwrite property assignments of previous
- * sources. If a callback is provided it will be executed to produce the
- * assigned values. The callback is bound to `thisArg` and invoked with two
- * arguments; (objectValue, sourceValue).
+ * Checks if `func` is eligible for `this` binding.
+ *
+ * @private
+ * @param {Function} func The function to check.
+ * @returns {boolean} Returns `true` if `func` is eligible, else `false`.
+ */
+function isBindable(func) {
+  var result = !(support.funcNames ? func.name : support.funcDecomp);
+
+  if (!result) {
+    var source = fnToString.call(func);
+    if (!support.funcNames) {
+      result = !reFuncName.test(source);
+    }
+    if (!result) {
+      // Check if `func` references the `this` keyword and store the result.
+      result = reThis.test(source) || isNative(func);
+      baseSetData(func, result);
+    }
+  }
+  return result;
+}
+
+module.exports = isBindable;
+
+},{"../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js","../support":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js","./baseSetData":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseSetData.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIndex.js":[function(require,module,exports){
+/**
+ * Used as the maximum length of an array-like value.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * for more details.
+ */
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  value = +value;
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return value > -1 && value % 1 == 0 && value < length;
+}
+
+module.exports = isIndex;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIterateeCall.js":[function(require,module,exports){
+var isIndex = require('./isIndex'),
+    isLength = require('./isLength'),
+    isObject = require('../lang/isObject');
+
+/**
+ * Checks if the provided arguments are from an iteratee call.
+ *
+ * @private
+ * @param {*} value The potential iteratee value argument.
+ * @param {*} index The potential iteratee index or key argument.
+ * @param {*} object The potential iteratee object argument.
+ * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+ */
+function isIterateeCall(value, index, object) {
+  if (!isObject(object)) {
+    return false;
+  }
+  var type = typeof index;
+  if (type == 'number') {
+    var length = object.length,
+        prereq = isLength(length) && isIndex(index, length);
+  } else {
+    prereq = type == 'string' && index in object;
+  }
+  return prereq && object[index] === value;
+}
+
+module.exports = isIterateeCall;
+
+},{"../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js","./isIndex":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIndex.js","./isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js":[function(require,module,exports){
+/**
+ * Used as the maximum length of an array-like value.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * for more details.
+ */
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on ES `ToLength`. See the
+ * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
+ * for more details.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js":[function(require,module,exports){
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return (value && typeof value == 'object') || false;
+}
+
+module.exports = isObjectLike;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isStrictComparable.js":[function(require,module,exports){
+var isObject = require('../lang/isObject');
+
+/**
+ * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` if suitable for strict
+ *  equality comparisons, else `false`.
+ */
+function isStrictComparable(value) {
+  return value === value && (value === 0 ? ((1 / value) > 0) : !isObject(value));
+}
+
+module.exports = isStrictComparable;
+
+},{"../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/metaMap.js":[function(require,module,exports){
+(function (global){
+var isNative = require('../lang/isNative');
+
+/** Native method references. */
+var WeakMap = isNative(WeakMap = global.WeakMap) && WeakMap;
+
+/** Used to store function metadata. */
+var metaMap = WeakMap && new WeakMap;
+
+module.exports = metaMap;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/shimKeys.js":[function(require,module,exports){
+var isArguments = require('../lang/isArguments'),
+    isArray = require('../lang/isArray'),
+    isIndex = require('./isIndex'),
+    isLength = require('./isLength'),
+    keysIn = require('../object/keysIn'),
+    support = require('../support');
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * A fallback implementation of `Object.keys` which creates an array of the
+ * own enumerable property names of `object`.
+ *
+ * @private
+ * @param {Object} object The object to inspect.
+ * @returns {Array} Returns the array of property names.
+ */
+function shimKeys(object) {
+  var props = keysIn(object),
+      propsLength = props.length,
+      length = propsLength && object.length;
+
+  var allowIndexes = length && isLength(length) &&
+    (isArray(object) || (support.nonEnumArgs && isArguments(object)));
+
+  var index = -1,
+      result = [];
+
+  while (++index < propsLength) {
+    var key = props[index];
+    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = shimKeys;
+
+},{"../lang/isArguments":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArguments.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js","../object/keysIn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keysIn.js","../support":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js","./isIndex":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIndex.js","./isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/sortedUniq.js":[function(require,module,exports){
+/**
+ * An implementation of `_.uniq` optimized for sorted arrays without support
+ * for callback shorthands and `this` binding.
+ *
+ * @private
+ * @param {Array} array The array to inspect.
+ * @param {Function} [iteratee] The function invoked per iteration.
+ * @returns {Array} Returns the new duplicate-value-free array.
+ */
+function sortedUniq(array, iteratee) {
+  var seen,
+      index = -1,
+      length = array.length,
+      resIndex = -1,
+      result = [];
+
+  while (++index < length) {
+    var value = array[index],
+        computed = iteratee ? iteratee(value, index, array) : value;
+
+    if (!index || seen !== computed) {
+      seen = computed;
+      result[++resIndex] = value;
+    }
+  }
+  return result;
+}
+
+module.exports = sortedUniq;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/toObject.js":[function(require,module,exports){
+var isObject = require('../lang/isObject');
+
+/**
+ * Converts `value` to an object if it is not one.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {Object} Returns the object.
+ */
+function toObject(value) {
+  return isObject(value) ? value : Object(value);
+}
+
+module.exports = toObject;
+
+},{"../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/clone.js":[function(require,module,exports){
+var baseClone = require('../internal/baseClone'),
+    bindCallback = require('../internal/bindCallback'),
+    isIterateeCall = require('../internal/isIterateeCall');
+
+/**
+ * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
+ * otherwise they are assigned by reference. If `customizer` is provided it is
+ * invoked to produce the cloned values. If `customizer` returns `undefined`
+ * cloning is handled by the method instead. The `customizer` is bound to
+ * `thisArg` and invoked with two argument; (value [, index|key, object]).
+ *
+ * **Note:** This method is loosely based on the structured clone algorithm.
+ * The enumerable properties of `arguments` objects and objects created by
+ * constructors other than `Object` are cloned to plain `Object` objects. An
+ * empty object is returned for uncloneable values such as functions, DOM nodes,
+ * Maps, Sets, and WeakMaps. See the [HTML5 specification](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm)
+ * for more details.
  *
  * @static
  * @memberOf _
- * @type Function
- * @alias extend
- * @category Objects
- * @param {Object} object The destination object.
- * @param {...Object} [source] The source objects.
- * @param {Function} [callback] The function to customize assigning values.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Object} Returns the destination object.
- * @example
- *
- * _.assign({ 'name': 'fred' }, { 'employer': 'slate' });
- * // => { 'name': 'fred', 'employer': 'slate' }
- *
- * var defaults = _.partialRight(_.assign, function(a, b) {
- *   return typeof a == 'undefined' ? b : a;
- * });
- *
- * var object = { 'name': 'barney' };
- * defaults(object, { 'name': 'fred', 'employer': 'slate' });
- * // => { 'name': 'barney', 'employer': 'slate' }
- */
-var assign = function(object, source, guard) {
-  var index, iterable = object, result = iterable;
-  if (!iterable) return result;
-  var args = arguments,
-      argsIndex = 0,
-      argsLength = typeof guard == 'number' ? 2 : args.length;
-  if (argsLength > 3 && typeof args[argsLength - 2] == 'function') {
-    var callback = baseCreateCallback(args[--argsLength - 1], args[argsLength--], 2);
-  } else if (argsLength > 2 && typeof args[argsLength - 1] == 'function') {
-    callback = args[--argsLength];
-  }
-  while (++argsIndex < argsLength) {
-    iterable = args[argsIndex];
-    if (iterable && objectTypes[typeof iterable]) {
-    var ownIndex = -1,
-        ownProps = objectTypes[typeof iterable] && keys(iterable),
-        length = ownProps ? ownProps.length : 0;
-
-    while (++ownIndex < length) {
-      index = ownProps[ownIndex];
-      result[index] = callback ? callback(result[index], iterable[index]) : iterable[index];
-    }
-    }
-  }
-  return result
-};
-
-module.exports = assign;
-
-},{"../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js","../internals/objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js","./keys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/clone.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseClone = require('../internals/baseClone'),
-    baseCreateCallback = require('../internals/baseCreateCallback');
-
-/**
- * Creates a clone of `value`. If `isDeep` is `true` nested objects will also
- * be cloned, otherwise they will be assigned by reference. If a callback
- * is provided it will be executed to produce the cloned values. If the
- * callback returns `undefined` cloning will be handled by the method instead.
- * The callback is bound to `thisArg` and invoked with one argument; (value).
- *
- * @static
- * @memberOf _
- * @category Objects
+ * @category Lang
  * @param {*} value The value to clone.
- * @param {boolean} [isDeep=false] Specify a deep clone.
- * @param {Function} [callback] The function to customize cloning values.
- * @param {*} [thisArg] The `this` binding of `callback`.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @param {Function} [customizer] The function to customize cloning values.
+ * @param {*} [thisArg] The `this` binding of `customizer`.
  * @returns {*} Returns the cloned value.
  * @example
  *
- * var characters = [
- *   { 'name': 'barney', 'age': 36 },
- *   { 'name': 'fred',   'age': 40 }
+ * var users = [
+ *   { 'user': 'barney' },
+ *   { 'user': 'fred' }
  * ];
  *
- * var shallow = _.clone(characters);
- * shallow[0] === characters[0];
+ * var shallow = _.clone(users);
+ * shallow[0] === users[0];
  * // => true
  *
- * var deep = _.clone(characters, true);
- * deep[0] === characters[0];
+ * var deep = _.clone(users, true);
+ * deep[0] === users[0];
  * // => false
  *
- * _.mixin({
- *   'clone': _.partialRight(_.clone, function(value) {
- *     return _.isElement(value) ? value.cloneNode(false) : undefined;
- *   })
+ * // using a customizer callback
+ * var body = _.clone(document.body, function(value) {
+ *   return _.isElement(value) ? value.cloneNode(false) : undefined;
  * });
  *
- * var clone = _.clone(document.body);
- * clone.childNodes.length;
+ * body === document.body
+ * // => false
+ * body.nodeName
+ * // => BODY
+ * body.childNodes.length;
  * // => 0
  */
-function clone(value, isDeep, callback, thisArg) {
-  // allows working with "Collections" methods without using their `index`
-  // and `collection` arguments for `isDeep` and `callback`
+function clone(value, isDeep, customizer, thisArg) {
+  // Juggle arguments.
   if (typeof isDeep != 'boolean' && isDeep != null) {
-    thisArg = callback;
-    callback = isDeep;
+    thisArg = customizer;
+    customizer = isIterateeCall(value, isDeep, thisArg) ? null : isDeep;
     isDeep = false;
   }
-  return baseClone(value, isDeep, typeof callback == 'function' && baseCreateCallback(callback, thisArg, 1));
+  customizer = typeof customizer == 'function' && bindCallback(customizer, thisArg, 1);
+  return baseClone(value, isDeep, customizer);
 }
 
 module.exports = clone;
 
-},{"../internals/baseClone":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseClone.js","../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/findKey.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createCallback = require('../functions/createCallback'),
-    forOwn = require('./forOwn');
+},{"../internal/baseClone":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseClone.js","../internal/bindCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bindCallback.js","../internal/isIterateeCall":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIterateeCall.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArguments.js":[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isObjectLike = require('../internal/isObjectLike');
 
-/**
- * This method is like `_.findIndex` except that it returns the key of the
- * first element that passes the callback check, instead of the element itself.
- *
- * If a property name is provided for `callback` the created "_.pluck" style
- * callback will return the property value of the given element.
- *
- * If an object is provided for `callback` the created "_.where" style callback
- * will return `true` for elements that have the properties of the given object,
- * else `false`.
- *
- * @static
- * @memberOf _
- * @category Objects
- * @param {Object} object The object to search.
- * @param {Function|Object|string} [callback=identity] The function called per
- *  iteration. If a property name or object is provided it will be used to
- *  create a "_.pluck" or "_.where" style callback, respectively.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {string|undefined} Returns the key of the found element, else `undefined`.
- * @example
- *
- * var characters = {
- *   'barney': {  'age': 36, 'blocked': false },
- *   'fred': {    'age': 40, 'blocked': true },
- *   'pebbles': { 'age': 1,  'blocked': false }
- * };
- *
- * _.findKey(characters, function(chr) {
- *   return chr.age < 40;
- * });
- * // => 'barney' (property order is not guaranteed across environments)
- *
- * // using "_.where" callback shorthand
- * _.findKey(characters, { 'age': 1 });
- * // => 'pebbles'
- *
- * // using "_.pluck" callback shorthand
- * _.findKey(characters, 'blocked');
- * // => 'fred'
- */
-function findKey(object, callback, thisArg) {
-  var result;
-  callback = createCallback(callback, thisArg, 3);
-  forOwn(object, function(value, key, object) {
-    if (callback(value, key, object)) {
-      result = key;
-      return false;
-    }
-  });
-  return result;
-}
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]';
 
-module.exports = findKey;
-
-},{"../functions/createCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js","./forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forIn.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('../internals/baseCreateCallback'),
-    objectTypes = require('../internals/objectTypes');
-
-/**
- * Iterates over own and inherited enumerable properties of an object,
- * executing the callback for each property. The callback is bound to `thisArg`
- * and invoked with three arguments; (value, key, object). Callbacks may exit
- * iteration early by explicitly returning `false`.
- *
- * @static
- * @memberOf _
- * @type Function
- * @category Objects
- * @param {Object} object The object to iterate over.
- * @param {Function} [callback=identity] The function called per iteration.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Object} Returns `object`.
- * @example
- *
- * function Shape() {
- *   this.x = 0;
- *   this.y = 0;
- * }
- *
- * Shape.prototype.move = function(x, y) {
- *   this.x += x;
- *   this.y += y;
- * };
- *
- * _.forIn(new Shape, function(value, key) {
- *   console.log(key);
- * });
- * // => logs 'x', 'y', and 'move' (property order is not guaranteed across environments)
- */
-var forIn = function(collection, callback, thisArg) {
-  var index, iterable = collection, result = iterable;
-  if (!iterable) return result;
-  if (!objectTypes[typeof iterable]) return result;
-  callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
-    for (index in iterable) {
-      if (callback(iterable[index], index, collection) === false) return result;
-    }
-  return result
-};
-
-module.exports = forIn;
-
-},{"../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js","../internals/objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('../internals/baseCreateCallback'),
-    keys = require('./keys'),
-    objectTypes = require('../internals/objectTypes');
-
-/**
- * Iterates over own enumerable properties of an object, executing the callback
- * for each property. The callback is bound to `thisArg` and invoked with three
- * arguments; (value, key, object). Callbacks may exit iteration early by
- * explicitly returning `false`.
- *
- * @static
- * @memberOf _
- * @type Function
- * @category Objects
- * @param {Object} object The object to iterate over.
- * @param {Function} [callback=identity] The function called per iteration.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Object} Returns `object`.
- * @example
- *
- * _.forOwn({ '0': 'zero', '1': 'one', 'length': 2 }, function(num, key) {
- *   console.log(key);
- * });
- * // => logs '0', '1', and 'length' (property order is not guaranteed across environments)
- */
-var forOwn = function(collection, callback, thisArg) {
-  var index, iterable = collection, result = iterable;
-  if (!iterable) return result;
-  if (!objectTypes[typeof iterable]) return result;
-  callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
-    var ownIndex = -1,
-        ownProps = objectTypes[typeof iterable] && keys(iterable),
-        length = ownProps ? ownProps.length : 0;
-
-    while (++ownIndex < length) {
-      index = ownProps[ownIndex];
-      if (callback(iterable[index], index, collection) === false) return result;
-    }
-  return result
-};
-
-module.exports = forOwn;
-
-},{"../internals/baseCreateCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/baseCreateCallback.js","../internals/objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js","./keys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isArguments.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** `Object#toString` result shortcuts */
-var argsClass = '[object Arguments]';
-
-/** Used for native method references */
+/** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
+/**
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
 
 /**
- * Checks if `value` is an `arguments` object.
+ * Checks if `value` is classified as an `arguments` object.
  *
  * @static
  * @memberOf _
- * @category Objects
+ * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is an `arguments` object, else `false`.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
  * @example
  *
- * (function() { return _.isArguments(arguments); })(1, 2, 3);
+ * (function() { return _.isArguments(arguments); })();
  * // => true
  *
  * _.isArguments([1, 2, 3]);
  * // => false
  */
 function isArguments(value) {
-  return value && typeof value == 'object' && typeof value.length == 'number' &&
-    toString.call(value) == argsClass || false;
+  var length = isObjectLike(value) ? value.length : undefined;
+  return (isLength(length) && objToString.call(value) == argsTag) || false;
 }
 
 module.exports = isArguments;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isArray.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isNative = require('../internals/isNative');
+},{"../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../internal/isObjectLike":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js":[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isNative = require('./isNative'),
+    isObjectLike = require('../internal/isObjectLike');
 
-/** `Object#toString` result shortcuts */
-var arrayClass = '[object Array]';
+/** `Object#toString` result references. */
+var arrayTag = '[object Array]';
 
-/** Used for native method references */
+/** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
+/**
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
 
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
+/* Native method references for those with the same name as other `lodash` methods. */
 var nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray;
 
 /**
- * Checks if `value` is an array.
+ * Checks if `value` is classified as an `Array` object.
  *
  * @static
  * @memberOf _
- * @type Function
- * @category Objects
+ * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is an array, else `false`.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
  * @example
- *
- * (function() { return _.isArray(arguments); })();
- * // => false
  *
  * _.isArray([1, 2, 3]);
  * // => true
+ *
+ * (function() { return _.isArray(arguments); })();
+ * // => false
  */
 var isArray = nativeIsArray || function(value) {
-  return value && typeof value == 'object' && typeof value.length == 'number' &&
-    toString.call(value) == arrayClass || false;
+  return (isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag) || false;
 };
 
 module.exports = isArray;
 
-},{"../internals/isNative":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isFunction.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
+},{"../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../internal/isObjectLike":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js","./isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isFunction.js":[function(require,module,exports){
+(function (global){
+var isNative = require('./isNative');
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
 
 /**
- * Checks if `value` is a function.
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
+
+/** Native method references. */
+var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
+
+/**
+ * Checks if `value` is classified as a `Function` object.
  *
  * @static
  * @memberOf _
- * @category Objects
+ * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is a function, else `false`.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
  * @example
  *
  * _.isFunction(_);
  * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
  */
 function isFunction(value) {
-  return typeof value == 'function';
+  // Avoid a Chakra JIT bug in compatibility modes of IE 11.
+  // See https://github.com/jashkenas/underscore/issues/1621 for more details.
+  return typeof value == 'function' || false;
+}
+// Fallback for environments that return incorrect `typeof` operator results.
+if (isFunction(/x/) || (Uint8Array && !isFunction(Uint8Array))) {
+  isFunction = function(value) {
+    // The use of `Object#toString` avoids issues with the `typeof` operator
+    // in older versions of Chrome and Safari which return 'function' for regexes
+    // and Safari 8 equivalents which return 'object' for typed array constructors.
+    return objToString.call(value) == funcTag;
+  };
 }
 
 module.exports = isFunction;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var objectTypes = require('../internals/objectTypes');
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js":[function(require,module,exports){
+var escapeRegExp = require('../string/escapeRegExp'),
+    isObjectLike = require('../internal/isObjectLike');
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]';
+
+/** Used to detect host constructors (Safari > 5). */
+var reHostCtor = /^\[object .+?Constructor\]$/;
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var fnToString = Function.prototype.toString;
 
 /**
- * Checks if `value` is the language type of Object.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
+
+/** Used to detect if a method is native. */
+var reNative = RegExp('^' +
+  escapeRegExp(objToString)
+  .replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/**
+ * Checks if `value` is a native function.
  *
  * @static
  * @memberOf _
- * @category Objects
+ * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is an object, else `false`.
+ * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+ * @example
+ *
+ * _.isNative(Array.prototype.push);
+ * // => true
+ *
+ * _.isNative(_);
+ * // => false
+ */
+function isNative(value) {
+  if (value == null) {
+    return false;
+  }
+  if (objToString.call(value) == funcTag) {
+    return reNative.test(fnToString.call(value));
+  }
+  return (isObjectLike(value) && reHostCtor.test(value)) || false;
+}
+
+module.exports = isNative;
+
+},{"../internal/isObjectLike":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js","../string/escapeRegExp":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/string/escapeRegExp.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js":[function(require,module,exports){
+/**
+ * Checks if `value` is the language type of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * **Note:** See the [ES5 spec](https://es5.github.io/#x8) for more details.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
  * @example
  *
  * _.isObject({});
@@ -9970,169 +8446,434 @@ var objectTypes = require('../internals/objectTypes');
  * // => false
  */
 function isObject(value) {
-  // check if the value is the ECMAScript language type of Object
-  // http://es5.github.io/#x8
-  // and avoid a V8 bug
-  // http://code.google.com/p/v8/issues/detail?id=2291
-  return !!(value && objectTypes[typeof value]);
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return type == 'function' || (value && type == 'object') || false;
 }
 
 module.exports = isObject;
 
-},{"../internals/objectTypes":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/objectTypes.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isString.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isString.js":[function(require,module,exports){
+var isObjectLike = require('../internal/isObjectLike');
 
-/** `Object#toString` result shortcuts */
-var stringClass = '[object String]';
+/** `Object#toString` result references. */
+var stringTag = '[object String]';
 
-/** Used for native method references */
+/** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the internal [[Class]] of values */
-var toString = objectProto.toString;
+/**
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
+ */
+var objToString = objectProto.toString;
 
 /**
- * Checks if `value` is a string.
+ * Checks if `value` is classified as a `String` primitive or object.
  *
  * @static
  * @memberOf _
- * @category Objects
+ * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is a string, else `false`.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
  * @example
  *
- * _.isString('fred');
+ * _.isString('abc');
  * // => true
+ *
+ * _.isString(1);
+ * // => false
  */
 function isString(value) {
-  return typeof value == 'string' ||
-    value && typeof value == 'object' && toString.call(value) == stringClass || false;
+  return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag) || false;
 }
 
 module.exports = isString;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/keys.js":[function(require,module,exports){
+},{"../internal/isObjectLike":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isTypedArray.js":[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isObjectLike = require('../internal/isObjectLike');
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to identify `toStringTag` values of typed arrays. */
+var typedArrayTags = {};
+typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+typedArrayTags[uint32Tag] = true;
+typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+typedArrayTags[dateTag] = typedArrayTags[errorTag] =
+typedArrayTags[funcTag] = typedArrayTags[mapTag] =
+typedArrayTags[numberTag] = typedArrayTags[objectTag] =
+typedArrayTags[regexpTag] = typedArrayTags[setTag] =
+typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * Used to resolve the `toStringTag` of values.
+ * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * for more details.
  */
-var isNative = require('../internals/isNative'),
-    isObject = require('./isObject'),
-    shimKeys = require('../internals/shimKeys');
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys;
+var objToString = objectProto.toString;
 
 /**
- * Creates an array composed of the own enumerable property names of an object.
+ * Checks if `value` is classified as a typed array.
  *
  * @static
  * @memberOf _
- * @category Objects
- * @param {Object} object The object to inspect.
- * @returns {Array} Returns an array of property names.
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
  * @example
  *
- * _.keys({ 'one': 1, 'two': 2, 'three': 3 });
- * // => ['one', 'two', 'three'] (property order is not guaranteed across environments)
+ * _.isTypedArray(new Uint8Array);
+ * // => true
+ *
+ * _.isTypedArray([]);
+ * // => false
+ */
+function isTypedArray(value) {
+  return (isObjectLike(value) && isLength(value.length) && typedArrayTags[objToString.call(value)]) || false;
+}
+
+module.exports = isTypedArray;
+
+},{"../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../internal/isObjectLike":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isObjectLike.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/findKey.js":[function(require,module,exports){
+var baseCallback = require('../internal/baseCallback'),
+    baseFind = require('../internal/baseFind'),
+    baseForOwn = require('../internal/baseForOwn');
+
+/**
+ * This method is like `_.findIndex` except that it returns the key of the
+ * first element `predicate` returns truthy for, instead of the element itself.
+ *
+ * If a property name is provided for `predicate` the created "_.property"
+ * style callback returns the property value of the given element.
+ *
+ * If an object is provided for `predicate` the created "_.matches" style
+ * callback returns `true` for elements that have the properties of the given
+ * object, else `false`.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to search.
+ * @param {Function|Object|string} [predicate=_.identity] The function invoked
+ *  per iteration. If a property name or object is provided it is used to
+ *  create a "_.property" or "_.matches" style callback respectively.
+ * @param {*} [thisArg] The `this` binding of `predicate`.
+ * @returns {string|undefined} Returns the key of the matched element, else `undefined`.
+ * @example
+ *
+ * var users = {
+ *   'barney':  { 'age': 36, 'active': true },
+ *   'fred':    { 'age': 40, 'active': false },
+ *   'pebbles': { 'age': 1,  'active': true }
+ * };
+ *
+ * _.findKey(users, function(chr) { return chr.age < 40; });
+ * // => 'barney' (iteration order is not guaranteed)
+ *
+ * // using the "_.matches" callback shorthand
+ * _.findKey(users, { 'age': 1 });
+ * // => 'pebbles'
+ *
+ * // using the "_.property" callback shorthand
+ * _.findKey(users, 'active');
+ * // => 'barney'
+ */
+function findKey(object, predicate, thisArg) {
+  predicate = baseCallback(predicate, thisArg, 3);
+  return baseFind(object, predicate, baseForOwn, true);
+}
+
+module.exports = findKey;
+
+},{"../internal/baseCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js","../internal/baseFind":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseFind.js","../internal/baseForOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/forOwn.js":[function(require,module,exports){
+var baseForOwn = require('../internal/baseForOwn'),
+    bindCallback = require('../internal/bindCallback');
+
+/**
+ * Iterates over own enumerable properties of an object invoking `iteratee`
+ * for each property. The `iteratee` is bound to `thisArg` and invoked with
+ * three arguments; (value, key, object). Iterator functions may exit iteration
+ * early by explicitly returning `false`.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to iterate over.
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
+ * @returns {Object} Returns `object`.
+ * @example
+ *
+ * _.forOwn({ '0': 'zero', '1': 'one', 'length': 2 }, function(n, key) {
+ *   console.log(key);
+ * });
+ * // => logs '0', '1', and 'length' (iteration order is not guaranteed)
+ */
+function forOwn(object, iteratee, thisArg) {
+  if (typeof iteratee != 'function' || typeof thisArg != 'undefined') {
+    iteratee = bindCallback(iteratee, thisArg, 3);
+  }
+  return baseForOwn(object, iteratee);
+}
+
+module.exports = forOwn;
+
+},{"../internal/baseForOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js","../internal/bindCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/bindCallback.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keys.js":[function(require,module,exports){
+var isLength = require('../internal/isLength'),
+    isNative = require('../lang/isNative'),
+    isObject = require('../lang/isObject'),
+    shimKeys = require('../internal/shimKeys');
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys;
+
+/**
+ * Creates an array of the own enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects. See the
+ * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.keys)
+ * for more details.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to inspect.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keys(new Foo);
+ * // => ['a', 'b'] (iteration order is not guaranteed)
+ *
+ * _.keys('hi');
+ * // => ['0', '1']
  */
 var keys = !nativeKeys ? shimKeys : function(object) {
-  if (!isObject(object)) {
-    return [];
+  if (object) {
+    var Ctor = object.constructor,
+        length = object.length;
   }
-  return nativeKeys(object);
+  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+     (typeof object != 'function' && (length && isLength(length)))) {
+    return shimKeys(object);
+  }
+  return isObject(object) ? nativeKeys(object) : [];
 };
 
 module.exports = keys;
 
-},{"../internals/isNative":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js","../internals/shimKeys":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/shimKeys.js","./isObject":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/isObject.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/mapValues.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createCallback = require('../functions/createCallback'),
-    forOwn = require('./forOwn');
+},{"../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../internal/shimKeys":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/shimKeys.js","../lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js","../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/keysIn.js":[function(require,module,exports){
+var isArguments = require('../lang/isArguments'),
+    isArray = require('../lang/isArray'),
+    isIndex = require('../internal/isIndex'),
+    isLength = require('../internal/isLength'),
+    isObject = require('../lang/isObject'),
+    support = require('../support');
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
 
 /**
- * Creates an object with the same keys as `object` and values generated by
- * running each own enumerable property of `object` through the callback.
- * The callback is bound to `thisArg` and invoked with three arguments;
- * (value, key, object).
+ * Creates an array of the own and inherited enumerable property names of `object`.
  *
- * If a property name is provided for `callback` the created "_.pluck" style
- * callback will return the property value of the given element.
- *
- * If an object is provided for `callback` the created "_.where" style callback
- * will return `true` for elements that have the properties of the given object,
- * else `false`.
+ * **Note:** Non-object values are coerced to objects.
  *
  * @static
  * @memberOf _
- * @category Objects
- * @param {Object} object The object to iterate over.
- * @param {Function|Object|string} [callback=identity] The function called
- *  per iteration. If a property name or object is provided it will be used
- *  to create a "_.pluck" or "_.where" style callback, respectively.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Array} Returns a new object with values of the results of each `callback` execution.
+ * @category Object
+ * @param {Object} object The object to inspect.
+ * @returns {Array} Returns the array of property names.
  * @example
  *
- * _.mapValues({ 'a': 1, 'b': 2, 'c': 3} , function(num) { return num * 3; });
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keysIn(new Foo);
+ * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+ */
+function keysIn(object) {
+  if (object == null) {
+    return [];
+  }
+  if (!isObject(object)) {
+    object = Object(object);
+  }
+  var length = object.length;
+  length = (length && isLength(length) &&
+    (isArray(object) || (support.nonEnumArgs && isArguments(object))) && length) || 0;
+
+  var Ctor = object.constructor,
+      index = -1,
+      isProto = typeof Ctor == 'function' && Ctor.prototype == object,
+      result = Array(length),
+      skipIndexes = length > 0;
+
+  while (++index < length) {
+    result[index] = (index + '');
+  }
+  for (var key in object) {
+    if (!(skipIndexes && isIndex(key, length)) &&
+        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = keysIn;
+
+},{"../internal/isIndex":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isIndex.js","../internal/isLength":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/isLength.js","../lang/isArguments":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArguments.js","../lang/isArray":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isArray.js","../lang/isObject":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isObject.js","../support":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/object/mapValues.js":[function(require,module,exports){
+var baseCallback = require('../internal/baseCallback'),
+    baseForOwn = require('../internal/baseForOwn');
+
+/**
+ * Creates an object with the same keys as `object` and values generated by
+ * running each own enumerable property of `object` through `iteratee`. The
+ * iteratee function is bound to `thisArg` and invoked with three arguments;
+ * (value, key, object).
+ *
+ * If a property name is provided for `iteratee` the created "_.property"
+ * style callback returns the property value of the given element.
+ *
+ * If an object is provided for `iteratee` the created "_.matches" style
+ * callback returns `true` for elements that have the properties of the given
+ * object, else `false`.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to iterate over.
+ * @param {Function|Object|string} [iteratee=_.identity] The function invoked
+ *  per iteration. If a property name or object is provided it is used to
+ *  create a "_.property" or "_.matches" style callback respectively.
+ * @param {*} [thisArg] The `this` binding of `iteratee`.
+ * @returns {Object} Returns the new mapped object.
+ * @example
+ *
+ * _.mapValues({ 'a': 1, 'b': 2, 'c': 3} , function(n) { return n * 3; });
  * // => { 'a': 3, 'b': 6, 'c': 9 }
  *
- * var characters = {
- *   'fred': { 'name': 'fred', 'age': 40 },
- *   'pebbles': { 'name': 'pebbles', 'age': 1 }
+ * var users = {
+ *   'fred':    { 'user': 'fred',    'age': 40 },
+ *   'pebbles': { 'user': 'pebbles', 'age': 1 }
  * };
  *
- * // using "_.pluck" callback shorthand
- * _.mapValues(characters, 'age');
- * // => { 'fred': 40, 'pebbles': 1 }
+ * // using the "_.property" callback shorthand
+ * _.mapValues(users, 'age');
+ * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
  */
-function mapValues(object, callback, thisArg) {
+function mapValues(object, iteratee, thisArg) {
   var result = {};
-  callback = createCallback(callback, thisArg, 3);
+  iteratee = baseCallback(iteratee, thisArg, 3);
 
-  forOwn(object, function(value, key, object) {
-    result[key] = callback(value, key, object);
+  baseForOwn(object, function(value, key, object) {
+    result[key] = iteratee(value, key, object);
   });
   return result;
 }
 
 module.exports = mapValues;
 
-},{"../functions/createCallback":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/functions/createCallback.js","./forOwn":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/objects/forOwn.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js":[function(require,module,exports){
-(function (global){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isNative = require('./internals/isNative');
+},{"../internal/baseCallback":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseCallback.js","../internal/baseForOwn":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseForOwn.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/string/escapeRegExp.js":[function(require,module,exports){
+var baseToString = require('../internal/baseToString');
 
-/** Used to detect functions containing a `this` reference */
+/**
+ * Used to match `RegExp` special characters.
+ * See this [article on `RegExp` characters](http://www.regular-expressions.info/characters.html#special)
+ * for more details.
+ */
+var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
+    reHasRegExpChars = RegExp(reRegExpChars.source);
+
+/**
+ * Escapes the `RegExp` special characters "\", "^", "$", ".", "|", "?", "*",
+ * "+", "(", ")", "[", "]", "{" and "}" in `string`.
+ *
+ * @static
+ * @memberOf _
+ * @category String
+ * @param {string} [string=''] The string to escape.
+ * @returns {string} Returns the escaped string.
+ * @example
+ *
+ * _.escapeRegExp('[lodash](https://lodash.com/)');
+ * // => '\[lodash\]\(https://lodash\.com/\)'
+ */
+function escapeRegExp(string) {
+  string = baseToString(string);
+  return (string && reHasRegExpChars.test(string))
+    ? string.replace(reRegExpChars, '\\$&')
+    : string;
+}
+
+module.exports = escapeRegExp;
+
+},{"../internal/baseToString":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internal/baseToString.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/support.js":[function(require,module,exports){
+(function (global){
+var isNative = require('./lang/isNative');
+
+/** Used to detect functions containing a `this` reference. */
 var reThis = /\bthis\b/;
 
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to detect DOM support. */
+var document = (document = global.window) && document.document;
+
+/** Native method references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
 /**
- * An object used to flag environments features.
+ * An object environment feature flags.
  *
  * @static
  * @memberOf _
@@ -10140,47 +8881,96 @@ var reThis = /\bthis\b/;
  */
 var support = {};
 
-/**
- * Detect if functions can be decompiled by `Function#toString`
- * (all but PS3 and older Opera mobile browsers & avoided in Windows 8 apps).
- *
- * @memberOf _.support
- * @type boolean
- */
-support.funcDecomp = !isNative(global.WinRTError) && reThis.test(function() { return this; });
+(function(x) {
 
-/**
- * Detect if `Function#name` is supported (all but IE).
- *
- * @memberOf _.support
- * @type boolean
- */
-support.funcNames = typeof Function.name == 'string';
+  /**
+   * Detect if functions can be decompiled by `Function#toString`
+   * (all but Firefox OS certified apps, older Opera mobile browsers, and
+   * the PlayStation 3; forced `false` for Windows 8 apps).
+   *
+   * @memberOf _.support
+   * @type boolean
+   */
+  support.funcDecomp = !isNative(global.WinRTError) && reThis.test(function() { return this; });
+
+  /**
+   * Detect if `Function#name` is supported (all but IE).
+   *
+   * @memberOf _.support
+   * @type boolean
+   */
+  support.funcNames = typeof Function.name == 'string';
+
+  /**
+   * Detect if the DOM is supported.
+   *
+   * @memberOf _.support
+   * @type boolean
+   */
+  try {
+    support.dom = document.createDocumentFragment().nodeType === 11;
+  } catch(e) {
+    support.dom = false;
+  }
+
+  /**
+   * Detect if `arguments` object indexes are non-enumerable.
+   *
+   * In Firefox < 4, IE < 9, PhantomJS, and Safari < 5.1 `arguments` object
+   * indexes are non-enumerable. Chrome < 25 and Node.js < 0.11.0 treat
+   * `arguments` object indexes as non-enumerable and fail `hasOwnProperty`
+   * checks for indexes that exceed their function's formal parameters with
+   * associated values of `0`.
+   *
+   * @memberOf _.support
+   * @type boolean
+   */
+  try {
+    support.nonEnumArgs = !propertyIsEnumerable.call(arguments, 1);
+  } catch(e) {
+    support.nonEnumArgs = true;
+  }
+}(0, 0));
 
 module.exports = support;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./internals/isNative":"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/internals/isNative.js"}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/identity.js":[function(require,module,exports){
+},{"./lang/isNative":"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/lang/isNative.js"}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/constant.js":[function(require,module,exports){
 /**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
+ * Creates a function that returns `value`.
+ *
+ * @static
+ * @memberOf _
+ * @category Utility
+ * @param {*} value The value to return from the new function.
+ * @returns {Function} Returns the new function.
+ * @example
+ *
+ * var object = { 'user': 'fred' };
+ * var getter = _.constant(object);
+ * getter() === object;
+ * // => true
  */
+function constant(value) {
+  return function() {
+    return value;
+  };
+}
 
+module.exports = constant;
+
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utility/identity.js":[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
  * @static
  * @memberOf _
- * @category Utilities
+ * @category Utility
  * @param {*} value Any value.
  * @returns {*} Returns `value`.
  * @example
  *
- * var object = { 'name': 'fred' };
+ * var object = { 'user': 'fred' };
  * _.identity(object) === object;
  * // => true
  */
@@ -10190,77 +8980,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/noop.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * A no-operation function.
- *
- * @static
- * @memberOf _
- * @category Utilities
- * @example
- *
- * var object = { 'name': 'fred' };
- * _.noop(object) === undefined;
- * // => true
- */
-function noop() {
-  // no operation performed
-}
-
-module.exports = noop;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/lodash-node/modern/utilities/property.js":[function(require,module,exports){
-/**
- * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="node" -o ./modern/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * Creates a "_.pluck" style function, which returns the `key` value of a
- * given object.
- *
- * @static
- * @memberOf _
- * @category Utilities
- * @param {string} key The name of the property to retrieve.
- * @returns {Function} Returns the new function.
- * @example
- *
- * var characters = [
- *   { 'name': 'fred',   'age': 40 },
- *   { 'name': 'barney', 'age': 36 }
- * ];
- *
- * var getName = _.property('name');
- *
- * _.map(characters, getName);
- * // => ['barney', 'fred']
- *
- * _.sortBy(characters, getName);
- * // => [{ 'name': 'barney', 'age': 36 }, { 'name': 'fred',   'age': 40 }]
- */
-function property(key) {
-  return function(object) {
-    return object[key];
-  };
-}
-
-module.exports = property;
-
-},{}],"/home/cv/coup/node_modules/fluxxor/node_modules/object-path/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/node_modules/object-path/index.js":[function(require,module,exports){
 (function (root, factory){
   'use strict';
 
@@ -10502,9 +9222,9 @@ module.exports = property;
 
   return objectPath;
 });
-},{}],"/home/cv/coup/node_modules/fluxxor/version.js":[function(require,module,exports){
-module.exports = "1.5.1"
-},{}],"/home/cv/coup/node_modules/keymirror/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/fluxxor/version.js":[function(require,module,exports){
+module.exports = "1.5.2"
+},{}],"/Users/cvializ/coup/node_modules/keymirror/index.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -10559,7 +9279,7 @@ var keyMirror = function(obj) {
 
 module.exports = keyMirror;
 
-},{}],"/home/cv/coup/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -10586,7 +9306,7 @@ var AutoFocusMixin = {
 
 module.exports = AutoFocusMixin;
 
-},{"./focusNode":"/home/cv/coup/node_modules/react/lib/focusNode.js"}],"/home/cv/coup/node_modules/react/lib/BeforeInputEventPlugin.js":[function(require,module,exports){
+},{"./focusNode":"/Users/cvializ/coup/node_modules/react/lib/focusNode.js"}],"/Users/cvializ/coup/node_modules/react/lib/BeforeInputEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  * All rights reserved.
@@ -10808,7 +9528,7 @@ var BeforeInputEventPlugin = {
 
 module.exports = BeforeInputEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./SyntheticInputEvent":"/home/cv/coup/node_modules/react/lib/SyntheticInputEvent.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js"}],"/home/cv/coup/node_modules/react/lib/CSSProperty.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./SyntheticInputEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticInputEvent.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js"}],"/Users/cvializ/coup/node_modules/react/lib/CSSProperty.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -10927,7 +9647,7 @@ var CSSProperty = {
 
 module.exports = CSSProperty;
 
-},{}],"/home/cv/coup/node_modules/react/lib/CSSPropertyOperations.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/CSSPropertyOperations.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -11062,7 +9782,7 @@ var CSSPropertyOperations = {
 module.exports = CSSPropertyOperations;
 
 }).call(this,require('_process'))
-},{"./CSSProperty":"/home/cv/coup/node_modules/react/lib/CSSProperty.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./camelizeStyleName":"/home/cv/coup/node_modules/react/lib/camelizeStyleName.js","./dangerousStyleValue":"/home/cv/coup/node_modules/react/lib/dangerousStyleValue.js","./hyphenateStyleName":"/home/cv/coup/node_modules/react/lib/hyphenateStyleName.js","./memoizeStringOnly":"/home/cv/coup/node_modules/react/lib/memoizeStringOnly.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/CallbackQueue.js":[function(require,module,exports){
+},{"./CSSProperty":"/Users/cvializ/coup/node_modules/react/lib/CSSProperty.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./camelizeStyleName":"/Users/cvializ/coup/node_modules/react/lib/camelizeStyleName.js","./dangerousStyleValue":"/Users/cvializ/coup/node_modules/react/lib/dangerousStyleValue.js","./hyphenateStyleName":"/Users/cvializ/coup/node_modules/react/lib/hyphenateStyleName.js","./memoizeStringOnly":"/Users/cvializ/coup/node_modules/react/lib/memoizeStringOnly.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/CallbackQueue.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -11162,7 +9882,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 module.exports = CallbackQueue;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ChangeEventPlugin.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ChangeEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -11544,7 +10264,7 @@ var ChangeEventPlugin = {
 
 module.exports = ChangeEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/home/cv/coup/node_modules/react/lib/EventPluginHub.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js","./isEventSupported":"/home/cv/coup/node_modules/react/lib/isEventSupported.js","./isTextInputElement":"/home/cv/coup/node_modules/react/lib/isTextInputElement.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js"}],"/home/cv/coup/node_modules/react/lib/ClientReactRootIndex.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js","./isEventSupported":"/Users/cvializ/coup/node_modules/react/lib/isEventSupported.js","./isTextInputElement":"/Users/cvializ/coup/node_modules/react/lib/isTextInputElement.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js"}],"/Users/cvializ/coup/node_modules/react/lib/ClientReactRootIndex.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -11569,7 +10289,7 @@ var ClientReactRootIndex = {
 
 module.exports = ClientReactRootIndex;
 
-},{}],"/home/cv/coup/node_modules/react/lib/CompositionEventPlugin.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/CompositionEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -11828,7 +10548,7 @@ var CompositionEventPlugin = {
 
 module.exports = CompositionEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./ReactInputSelection":"/home/cv/coup/node_modules/react/lib/ReactInputSelection.js","./SyntheticCompositionEvent":"/home/cv/coup/node_modules/react/lib/SyntheticCompositionEvent.js","./getTextContentAccessor":"/home/cv/coup/node_modules/react/lib/getTextContentAccessor.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js"}],"/home/cv/coup/node_modules/react/lib/DOMChildrenOperations.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./ReactInputSelection":"/Users/cvializ/coup/node_modules/react/lib/ReactInputSelection.js","./SyntheticCompositionEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticCompositionEvent.js","./getTextContentAccessor":"/Users/cvializ/coup/node_modules/react/lib/getTextContentAccessor.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js"}],"/Users/cvializ/coup/node_modules/react/lib/DOMChildrenOperations.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -12003,7 +10723,7 @@ var DOMChildrenOperations = {
 module.exports = DOMChildrenOperations;
 
 }).call(this,require('_process'))
-},{"./Danger":"/home/cv/coup/node_modules/react/lib/Danger.js","./ReactMultiChildUpdateTypes":"/home/cv/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js","./getTextContentAccessor":"/home/cv/coup/node_modules/react/lib/getTextContentAccessor.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/DOMProperty.js":[function(require,module,exports){
+},{"./Danger":"/Users/cvializ/coup/node_modules/react/lib/Danger.js","./ReactMultiChildUpdateTypes":"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js","./getTextContentAccessor":"/Users/cvializ/coup/node_modules/react/lib/getTextContentAccessor.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -12302,7 +11022,7 @@ var DOMProperty = {
 module.exports = DOMProperty;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -12499,7 +11219,7 @@ var DOMPropertyOperations = {
 module.exports = DOMPropertyOperations;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./escapeTextForBrowser":"/home/cv/coup/node_modules/react/lib/escapeTextForBrowser.js","./memoizeStringOnly":"/home/cv/coup/node_modules/react/lib/memoizeStringOnly.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/Danger.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./escapeTextForBrowser":"/Users/cvializ/coup/node_modules/react/lib/escapeTextForBrowser.js","./memoizeStringOnly":"/Users/cvializ/coup/node_modules/react/lib/memoizeStringOnly.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/Danger.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -12685,7 +11405,7 @@ var Danger = {
 module.exports = Danger;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./createNodesFromMarkup":"/home/cv/coup/node_modules/react/lib/createNodesFromMarkup.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js","./getMarkupWrap":"/home/cv/coup/node_modules/react/lib/getMarkupWrap.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/DefaultEventPluginOrder.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./createNodesFromMarkup":"/Users/cvializ/coup/node_modules/react/lib/createNodesFromMarkup.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js","./getMarkupWrap":"/Users/cvializ/coup/node_modules/react/lib/getMarkupWrap.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/DefaultEventPluginOrder.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -12725,7 +11445,7 @@ var DefaultEventPluginOrder = [
 
 module.exports = DefaultEventPluginOrder;
 
-},{"./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js"}],"/home/cv/coup/node_modules/react/lib/EnterLeaveEventPlugin.js":[function(require,module,exports){
+},{"./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js"}],"/Users/cvializ/coup/node_modules/react/lib/EnterLeaveEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -12865,7 +11585,7 @@ var EnterLeaveEventPlugin = {
 
 module.exports = EnterLeaveEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./SyntheticMouseEvent":"/home/cv/coup/node_modules/react/lib/SyntheticMouseEvent.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js"}],"/home/cv/coup/node_modules/react/lib/EventConstants.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./SyntheticMouseEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticMouseEvent.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -12937,7 +11657,7 @@ var EventConstants = {
 
 module.exports = EventConstants;
 
-},{"./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js"}],"/home/cv/coup/node_modules/react/lib/EventListener.js":[function(require,module,exports){
+},{"./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventListener.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -13027,7 +11747,7 @@ var EventListener = {
 module.exports = EventListener;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/EventPluginHub.js":[function(require,module,exports){
+},{"./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -13303,7 +12023,7 @@ var EventPluginHub = {
 module.exports = EventPluginHub;
 
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":"/home/cv/coup/node_modules/react/lib/EventPluginRegistry.js","./EventPluginUtils":"/home/cv/coup/node_modules/react/lib/EventPluginUtils.js","./accumulateInto":"/home/cv/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/home/cv/coup/node_modules/react/lib/forEachAccumulated.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/EventPluginRegistry.js":[function(require,module,exports){
+},{"./EventPluginRegistry":"/Users/cvializ/coup/node_modules/react/lib/EventPluginRegistry.js","./EventPluginUtils":"/Users/cvializ/coup/node_modules/react/lib/EventPluginUtils.js","./accumulateInto":"/Users/cvializ/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/Users/cvializ/coup/node_modules/react/lib/forEachAccumulated.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventPluginRegistry.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -13583,7 +12303,7 @@ var EventPluginRegistry = {
 module.exports = EventPluginRegistry;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/EventPluginUtils.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventPluginUtils.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -13804,7 +12524,7 @@ var EventPluginUtils = {
 module.exports = EventPluginUtils;
 
 }).call(this,require('_process'))
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/EventPropagators.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -13946,7 +12666,7 @@ var EventPropagators = {
 module.exports = EventPropagators;
 
 }).call(this,require('_process'))
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/home/cv/coup/node_modules/react/lib/EventPluginHub.js","./accumulateInto":"/home/cv/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/home/cv/coup/node_modules/react/lib/forEachAccumulated.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js","./accumulateInto":"/Users/cvializ/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/Users/cvializ/coup/node_modules/react/lib/forEachAccumulated.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -13991,7 +12711,7 @@ var ExecutionEnvironment = {
 
 module.exports = ExecutionEnvironment;
 
-},{}],"/home/cv/coup/node_modules/react/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -14183,7 +12903,7 @@ var HTMLDOMPropertyConfig = {
 
 module.exports = HTMLDOMPropertyConfig;
 
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/home/cv/coup/node_modules/react/lib/LinkedValueUtils.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/Users/cvializ/coup/node_modules/react/lib/LinkedValueUtils.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14339,7 +13059,7 @@ var LinkedValueUtils = {
 module.exports = LinkedValueUtils;
 
 }).call(this,require('_process'))
-},{"./ReactPropTypes":"/home/cv/coup/node_modules/react/lib/ReactPropTypes.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/LocalEventTrapMixin.js":[function(require,module,exports){
+},{"./ReactPropTypes":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypes.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/LocalEventTrapMixin.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -14389,7 +13109,7 @@ var LocalEventTrapMixin = {
 module.exports = LocalEventTrapMixin;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./accumulateInto":"/home/cv/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/home/cv/coup/node_modules/react/lib/forEachAccumulated.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/MobileSafariClickEventPlugin.js":[function(require,module,exports){
+},{"./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./accumulateInto":"/Users/cvializ/coup/node_modules/react/lib/accumulateInto.js","./forEachAccumulated":"/Users/cvializ/coup/node_modules/react/lib/forEachAccumulated.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/MobileSafariClickEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -14447,7 +13167,7 @@ var MobileSafariClickEventPlugin = {
 
 module.exports = MobileSafariClickEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js"}],"/home/cv/coup/node_modules/react/lib/Object.assign.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js"}],"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js":[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -14494,7 +13214,7 @@ function assign(target, sources) {
 
 module.exports = assign;
 
-},{}],"/home/cv/coup/node_modules/react/lib/PooledClass.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14610,7 +13330,7 @@ var PooledClass = {
 module.exports = PooledClass;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/React.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/React.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14798,7 +13518,7 @@ React.version = '0.12.2';
 module.exports = React;
 
 }).call(this,require('_process'))
-},{"./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./EventPluginUtils":"/home/cv/coup/node_modules/react/lib/EventPluginUtils.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactChildren":"/home/cv/coup/node_modules/react/lib/ReactChildren.js","./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactContext":"/home/cv/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactDOMComponent":"/home/cv/coup/node_modules/react/lib/ReactDOMComponent.js","./ReactDefaultInjection":"/home/cv/coup/node_modules/react/lib/ReactDefaultInjection.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/home/cv/coup/node_modules/react/lib/ReactElementValidator.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactLegacyElement":"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactMultiChild":"/home/cv/coup/node_modules/react/lib/ReactMultiChild.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./ReactPropTypes":"/home/cv/coup/node_modules/react/lib/ReactPropTypes.js","./ReactServerRendering":"/home/cv/coup/node_modules/react/lib/ReactServerRendering.js","./ReactTextComponent":"/home/cv/coup/node_modules/react/lib/ReactTextComponent.js","./deprecated":"/home/cv/coup/node_modules/react/lib/deprecated.js","./onlyChild":"/home/cv/coup/node_modules/react/lib/onlyChild.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js":[function(require,module,exports){
+},{"./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./EventPluginUtils":"/Users/cvializ/coup/node_modules/react/lib/EventPluginUtils.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactChildren":"/Users/cvializ/coup/node_modules/react/lib/ReactChildren.js","./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactContext":"/Users/cvializ/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactDOMComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMComponent.js","./ReactDefaultInjection":"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultInjection.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/Users/cvializ/coup/node_modules/react/lib/ReactElementValidator.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactLegacyElement":"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactMultiChild":"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChild.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./ReactPropTypes":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypes.js","./ReactServerRendering":"/Users/cvializ/coup/node_modules/react/lib/ReactServerRendering.js","./ReactTextComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactTextComponent.js","./deprecated":"/Users/cvializ/coup/node_modules/react/lib/deprecated.js","./onlyChild":"/Users/cvializ/coup/node_modules/react/lib/onlyChild.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -14841,7 +13561,7 @@ var ReactBrowserComponentMixin = {
 module.exports = ReactBrowserComponentMixin;
 
 }).call(this,require('_process'))
-},{"./ReactEmptyComponent":"/home/cv/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js":[function(require,module,exports){
+},{"./ReactEmptyComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -15196,7 +13916,7 @@ var ReactBrowserEventEmitter = assign({}, ReactEventEmitterMixin, {
 
 module.exports = ReactBrowserEventEmitter;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/home/cv/coup/node_modules/react/lib/EventPluginHub.js","./EventPluginRegistry":"/home/cv/coup/node_modules/react/lib/EventPluginRegistry.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactEventEmitterMixin":"/home/cv/coup/node_modules/react/lib/ReactEventEmitterMixin.js","./ViewportMetrics":"/home/cv/coup/node_modules/react/lib/ViewportMetrics.js","./isEventSupported":"/home/cv/coup/node_modules/react/lib/isEventSupported.js"}],"/home/cv/coup/node_modules/react/lib/ReactChildren.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPluginHub":"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js","./EventPluginRegistry":"/Users/cvializ/coup/node_modules/react/lib/EventPluginRegistry.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactEventEmitterMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactEventEmitterMixin.js","./ViewportMetrics":"/Users/cvializ/coup/node_modules/react/lib/ViewportMetrics.js","./isEventSupported":"/Users/cvializ/coup/node_modules/react/lib/isEventSupported.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactChildren.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -15346,7 +14066,7 @@ var ReactChildren = {
 module.exports = ReactChildren;
 
 }).call(this,require('_process'))
-},{"./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./traverseAllChildren":"/home/cv/coup/node_modules/react/lib/traverseAllChildren.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactComponent.js":[function(require,module,exports){
+},{"./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./traverseAllChildren":"/Users/cvializ/coup/node_modules/react/lib/traverseAllChildren.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -15789,7 +14509,7 @@ var ReactComponent = {
 module.exports = ReactComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactOwner":"/home/cv/coup/node_modules/react/lib/ReactOwner.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactComponentBrowserEnvironment.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactOwner.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactComponentBrowserEnvironment.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -15911,7 +14631,7 @@ var ReactComponentBrowserEnvironment = {
 module.exports = ReactComponentBrowserEnvironment;
 
 }).call(this,require('_process'))
-},{"./ReactDOMIDOperations":"/home/cv/coup/node_modules/react/lib/ReactDOMIDOperations.js","./ReactMarkupChecksum":"/home/cv/coup/node_modules/react/lib/ReactMarkupChecksum.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./ReactReconcileTransaction":"/home/cv/coup/node_modules/react/lib/ReactReconcileTransaction.js","./getReactRootElementInContainer":"/home/cv/coup/node_modules/react/lib/getReactRootElementInContainer.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./setInnerHTML":"/home/cv/coup/node_modules/react/lib/setInnerHTML.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js":[function(require,module,exports){
+},{"./ReactDOMIDOperations":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMIDOperations.js","./ReactMarkupChecksum":"/Users/cvializ/coup/node_modules/react/lib/ReactMarkupChecksum.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./ReactReconcileTransaction":"/Users/cvializ/coup/node_modules/react/lib/ReactReconcileTransaction.js","./getReactRootElementInContainer":"/Users/cvializ/coup/node_modules/react/lib/getReactRootElementInContainer.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./setInnerHTML":"/Users/cvializ/coup/node_modules/react/lib/setInnerHTML.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -17351,7 +16071,7 @@ var ReactCompositeComponent = {
 module.exports = ReactCompositeComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactContext":"/home/cv/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/home/cv/coup/node_modules/react/lib/ReactElementValidator.js","./ReactEmptyComponent":"/home/cv/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactErrorUtils":"/home/cv/coup/node_modules/react/lib/ReactErrorUtils.js","./ReactLegacyElement":"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactOwner":"/home/cv/coup/node_modules/react/lib/ReactOwner.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./ReactPropTransferer":"/home/cv/coup/node_modules/react/lib/ReactPropTransferer.js","./ReactPropTypeLocationNames":"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocationNames.js","./ReactPropTypeLocations":"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocations.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./instantiateReactComponent":"/home/cv/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js","./mapObject":"/home/cv/coup/node_modules/react/lib/mapObject.js","./monitorCodeUse":"/home/cv/coup/node_modules/react/lib/monitorCodeUse.js","./shouldUpdateReactComponent":"/home/cv/coup/node_modules/react/lib/shouldUpdateReactComponent.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactContext.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactContext":"/Users/cvializ/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/Users/cvializ/coup/node_modules/react/lib/ReactElementValidator.js","./ReactEmptyComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactErrorUtils":"/Users/cvializ/coup/node_modules/react/lib/ReactErrorUtils.js","./ReactLegacyElement":"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactOwner.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./ReactPropTransferer":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTransferer.js","./ReactPropTypeLocationNames":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocationNames.js","./ReactPropTypeLocations":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocations.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./instantiateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js","./mapObject":"/Users/cvializ/coup/node_modules/react/lib/mapObject.js","./monitorCodeUse":"/Users/cvializ/coup/node_modules/react/lib/monitorCodeUse.js","./shouldUpdateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/shouldUpdateReactComponent.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactContext.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -17413,7 +16133,7 @@ var ReactContext = {
 
 module.exports = ReactContext;
 
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js"}],"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -17447,7 +16167,7 @@ var ReactCurrentOwner = {
 
 module.exports = ReactCurrentOwner;
 
-},{}],"/home/cv/coup/node_modules/react/lib/ReactDOM.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -17630,7 +16350,7 @@ var ReactDOM = mapObject({
 module.exports = ReactDOM;
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/home/cv/coup/node_modules/react/lib/ReactElementValidator.js","./ReactLegacyElement":"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js","./mapObject":"/home/cv/coup/node_modules/react/lib/mapObject.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMButton.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactElementValidator":"/Users/cvializ/coup/node_modules/react/lib/ReactElementValidator.js","./ReactLegacyElement":"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js","./mapObject":"/Users/cvializ/coup/node_modules/react/lib/mapObject.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMButton.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -17695,7 +16415,7 @@ var ReactDOMButton = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMButton;
 
-},{"./AutoFocusMixin":"/home/cv/coup/node_modules/react/lib/AutoFocusMixin.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMComponent.js":[function(require,module,exports){
+},{"./AutoFocusMixin":"/Users/cvializ/coup/node_modules/react/lib/AutoFocusMixin.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -18182,7 +16902,7 @@ assign(
 module.exports = ReactDOMComponent;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":"/home/cv/coup/node_modules/react/lib/CSSPropertyOperations.js","./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactMultiChild":"/home/cv/coup/node_modules/react/lib/ReactMultiChild.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./escapeTextForBrowser":"/home/cv/coup/node_modules/react/lib/escapeTextForBrowser.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./isEventSupported":"/home/cv/coup/node_modules/react/lib/isEventSupported.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js","./monitorCodeUse":"/home/cv/coup/node_modules/react/lib/monitorCodeUse.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMForm.js":[function(require,module,exports){
+},{"./CSSPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/CSSPropertyOperations.js","./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactMultiChild":"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChild.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./escapeTextForBrowser":"/Users/cvializ/coup/node_modules/react/lib/escapeTextForBrowser.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./isEventSupported":"/Users/cvializ/coup/node_modules/react/lib/isEventSupported.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js","./monitorCodeUse":"/Users/cvializ/coup/node_modules/react/lib/monitorCodeUse.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMForm.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -18232,7 +16952,7 @@ var ReactDOMForm = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMForm;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./LocalEventTrapMixin":"/home/cv/coup/node_modules/react/lib/LocalEventTrapMixin.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMIDOperations.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./LocalEventTrapMixin":"/Users/cvializ/coup/node_modules/react/lib/LocalEventTrapMixin.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMIDOperations.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -18418,7 +17138,7 @@ var ReactDOMIDOperations = {
 module.exports = ReactDOMIDOperations;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":"/home/cv/coup/node_modules/react/lib/CSSPropertyOperations.js","./DOMChildrenOperations":"/home/cv/coup/node_modules/react/lib/DOMChildrenOperations.js","./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./setInnerHTML":"/home/cv/coup/node_modules/react/lib/setInnerHTML.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMImg.js":[function(require,module,exports){
+},{"./CSSPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/CSSPropertyOperations.js","./DOMChildrenOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMChildrenOperations.js","./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./setInnerHTML":"/Users/cvializ/coup/node_modules/react/lib/setInnerHTML.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMImg.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -18466,7 +17186,7 @@ var ReactDOMImg = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMImg;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./LocalEventTrapMixin":"/home/cv/coup/node_modules/react/lib/LocalEventTrapMixin.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMInput.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./LocalEventTrapMixin":"/Users/cvializ/coup/node_modules/react/lib/LocalEventTrapMixin.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMInput.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -18644,7 +17364,7 @@ var ReactDOMInput = ReactCompositeComponent.createClass({
 module.exports = ReactDOMInput;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":"/home/cv/coup/node_modules/react/lib/AutoFocusMixin.js","./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./LinkedValueUtils":"/home/cv/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMOption.js":[function(require,module,exports){
+},{"./AutoFocusMixin":"/Users/cvializ/coup/node_modules/react/lib/AutoFocusMixin.js","./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./LinkedValueUtils":"/Users/cvializ/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMOption.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -18697,7 +17417,7 @@ var ReactDOMOption = ReactCompositeComponent.createClass({
 module.exports = ReactDOMOption;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMSelect.js":[function(require,module,exports){
+},{"./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMSelect.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -18881,7 +17601,7 @@ var ReactDOMSelect = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMSelect;
 
-},{"./AutoFocusMixin":"/home/cv/coup/node_modules/react/lib/AutoFocusMixin.js","./LinkedValueUtils":"/home/cv/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMSelection.js":[function(require,module,exports){
+},{"./AutoFocusMixin":"/Users/cvializ/coup/node_modules/react/lib/AutoFocusMixin.js","./LinkedValueUtils":"/Users/cvializ/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMSelection.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19090,7 +17810,7 @@ var ReactDOMSelection = {
 
 module.exports = ReactDOMSelection;
 
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./getNodeForCharacterOffset":"/home/cv/coup/node_modules/react/lib/getNodeForCharacterOffset.js","./getTextContentAccessor":"/home/cv/coup/node_modules/react/lib/getTextContentAccessor.js"}],"/home/cv/coup/node_modules/react/lib/ReactDOMTextarea.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./getNodeForCharacterOffset":"/Users/cvializ/coup/node_modules/react/lib/getNodeForCharacterOffset.js","./getTextContentAccessor":"/Users/cvializ/coup/node_modules/react/lib/getTextContentAccessor.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDOMTextarea.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -19231,7 +17951,7 @@ var ReactDOMTextarea = ReactCompositeComponent.createClass({
 module.exports = ReactDOMTextarea;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":"/home/cv/coup/node_modules/react/lib/AutoFocusMixin.js","./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./LinkedValueUtils":"/home/cv/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/home/cv/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDefaultBatchingStrategy.js":[function(require,module,exports){
+},{"./AutoFocusMixin":"/Users/cvializ/coup/node_modules/react/lib/AutoFocusMixin.js","./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./LinkedValueUtils":"/Users/cvializ/coup/node_modules/react/lib/LinkedValueUtils.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactDOM":"/Users/cvializ/coup/node_modules/react/lib/ReactDOM.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultBatchingStrategy.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19304,7 +18024,7 @@ var ReactDefaultBatchingStrategy = {
 
 module.exports = ReactDefaultBatchingStrategy;
 
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./Transaction":"/home/cv/coup/node_modules/react/lib/Transaction.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js"}],"/home/cv/coup/node_modules/react/lib/ReactDefaultInjection.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./Transaction":"/Users/cvializ/coup/node_modules/react/lib/Transaction.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultInjection.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -19433,7 +18153,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":"/home/cv/coup/node_modules/react/lib/BeforeInputEventPlugin.js","./ChangeEventPlugin":"/home/cv/coup/node_modules/react/lib/ChangeEventPlugin.js","./ClientReactRootIndex":"/home/cv/coup/node_modules/react/lib/ClientReactRootIndex.js","./CompositionEventPlugin":"/home/cv/coup/node_modules/react/lib/CompositionEventPlugin.js","./DefaultEventPluginOrder":"/home/cv/coup/node_modules/react/lib/DefaultEventPluginOrder.js","./EnterLeaveEventPlugin":"/home/cv/coup/node_modules/react/lib/EnterLeaveEventPlugin.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./HTMLDOMPropertyConfig":"/home/cv/coup/node_modules/react/lib/HTMLDOMPropertyConfig.js","./MobileSafariClickEventPlugin":"/home/cv/coup/node_modules/react/lib/MobileSafariClickEventPlugin.js","./ReactBrowserComponentMixin":"/home/cv/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactComponentBrowserEnvironment":"/home/cv/coup/node_modules/react/lib/ReactComponentBrowserEnvironment.js","./ReactDOMButton":"/home/cv/coup/node_modules/react/lib/ReactDOMButton.js","./ReactDOMComponent":"/home/cv/coup/node_modules/react/lib/ReactDOMComponent.js","./ReactDOMForm":"/home/cv/coup/node_modules/react/lib/ReactDOMForm.js","./ReactDOMImg":"/home/cv/coup/node_modules/react/lib/ReactDOMImg.js","./ReactDOMInput":"/home/cv/coup/node_modules/react/lib/ReactDOMInput.js","./ReactDOMOption":"/home/cv/coup/node_modules/react/lib/ReactDOMOption.js","./ReactDOMSelect":"/home/cv/coup/node_modules/react/lib/ReactDOMSelect.js","./ReactDOMTextarea":"/home/cv/coup/node_modules/react/lib/ReactDOMTextarea.js","./ReactDefaultBatchingStrategy":"/home/cv/coup/node_modules/react/lib/ReactDefaultBatchingStrategy.js","./ReactDefaultPerf":"/home/cv/coup/node_modules/react/lib/ReactDefaultPerf.js","./ReactEventListener":"/home/cv/coup/node_modules/react/lib/ReactEventListener.js","./ReactInjection":"/home/cv/coup/node_modules/react/lib/ReactInjection.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./SVGDOMPropertyConfig":"/home/cv/coup/node_modules/react/lib/SVGDOMPropertyConfig.js","./SelectEventPlugin":"/home/cv/coup/node_modules/react/lib/SelectEventPlugin.js","./ServerReactRootIndex":"/home/cv/coup/node_modules/react/lib/ServerReactRootIndex.js","./SimpleEventPlugin":"/home/cv/coup/node_modules/react/lib/SimpleEventPlugin.js","./createFullPageComponent":"/home/cv/coup/node_modules/react/lib/createFullPageComponent.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactDefaultPerf.js":[function(require,module,exports){
+},{"./BeforeInputEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/BeforeInputEventPlugin.js","./ChangeEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/ChangeEventPlugin.js","./ClientReactRootIndex":"/Users/cvializ/coup/node_modules/react/lib/ClientReactRootIndex.js","./CompositionEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/CompositionEventPlugin.js","./DefaultEventPluginOrder":"/Users/cvializ/coup/node_modules/react/lib/DefaultEventPluginOrder.js","./EnterLeaveEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/EnterLeaveEventPlugin.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./HTMLDOMPropertyConfig":"/Users/cvializ/coup/node_modules/react/lib/HTMLDOMPropertyConfig.js","./MobileSafariClickEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/MobileSafariClickEventPlugin.js","./ReactBrowserComponentMixin":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserComponentMixin.js","./ReactComponentBrowserEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ReactComponentBrowserEnvironment.js","./ReactDOMButton":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMButton.js","./ReactDOMComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMComponent.js","./ReactDOMForm":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMForm.js","./ReactDOMImg":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMImg.js","./ReactDOMInput":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMInput.js","./ReactDOMOption":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMOption.js","./ReactDOMSelect":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMSelect.js","./ReactDOMTextarea":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMTextarea.js","./ReactDefaultBatchingStrategy":"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultBatchingStrategy.js","./ReactDefaultPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultPerf.js","./ReactEventListener":"/Users/cvializ/coup/node_modules/react/lib/ReactEventListener.js","./ReactInjection":"/Users/cvializ/coup/node_modules/react/lib/ReactInjection.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./SVGDOMPropertyConfig":"/Users/cvializ/coup/node_modules/react/lib/SVGDOMPropertyConfig.js","./SelectEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/SelectEventPlugin.js","./ServerReactRootIndex":"/Users/cvializ/coup/node_modules/react/lib/ServerReactRootIndex.js","./SimpleEventPlugin":"/Users/cvializ/coup/node_modules/react/lib/SimpleEventPlugin.js","./createFullPageComponent":"/Users/cvializ/coup/node_modules/react/lib/createFullPageComponent.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultPerf.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19693,7 +18413,7 @@ var ReactDefaultPerf = {
 
 module.exports = ReactDefaultPerf;
 
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./ReactDefaultPerfAnalysis":"/home/cv/coup/node_modules/react/lib/ReactDefaultPerfAnalysis.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./performanceNow":"/home/cv/coup/node_modules/react/lib/performanceNow.js"}],"/home/cv/coup/node_modules/react/lib/ReactDefaultPerfAnalysis.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./ReactDefaultPerfAnalysis":"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultPerfAnalysis.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./performanceNow":"/Users/cvializ/coup/node_modules/react/lib/performanceNow.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactDefaultPerfAnalysis.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19899,7 +18619,7 @@ var ReactDefaultPerfAnalysis = {
 
 module.exports = ReactDefaultPerfAnalysis;
 
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js"}],"/home/cv/coup/node_modules/react/lib/ReactElement.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -20145,7 +18865,7 @@ ReactElement.isValidElement = function(object) {
 module.exports = ReactElement;
 
 }).call(this,require('_process'))
-},{"./ReactContext":"/home/cv/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactElementValidator.js":[function(require,module,exports){
+},{"./ReactContext":"/Users/cvializ/coup/node_modules/react/lib/ReactContext.js","./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactElementValidator.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -20427,7 +19147,7 @@ var ReactElementValidator = {
 module.exports = ReactElementValidator;
 
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactPropTypeLocations":"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocations.js","./monitorCodeUse":"/home/cv/coup/node_modules/react/lib/monitorCodeUse.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactEmptyComponent.js":[function(require,module,exports){
+},{"./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactPropTypeLocations":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocations.js","./monitorCodeUse":"/Users/cvializ/coup/node_modules/react/lib/monitorCodeUse.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactEmptyComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -20504,7 +19224,7 @@ var ReactEmptyComponent = {
 module.exports = ReactEmptyComponent;
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactErrorUtils.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactErrorUtils.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20536,7 +19256,7 @@ var ReactErrorUtils = {
 
 module.exports = ReactErrorUtils;
 
-},{}],"/home/cv/coup/node_modules/react/lib/ReactEventEmitterMixin.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/ReactEventEmitterMixin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20586,7 +19306,7 @@ var ReactEventEmitterMixin = {
 
 module.exports = ReactEventEmitterMixin;
 
-},{"./EventPluginHub":"/home/cv/coup/node_modules/react/lib/EventPluginHub.js"}],"/home/cv/coup/node_modules/react/lib/ReactEventListener.js":[function(require,module,exports){
+},{"./EventPluginHub":"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactEventListener.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20770,7 +19490,7 @@ var ReactEventListener = {
 
 module.exports = ReactEventListener;
 
-},{"./EventListener":"/home/cv/coup/node_modules/react/lib/EventListener.js","./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMount":"/home/cv/coup/node_modules/react/lib/ReactMount.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js","./getEventTarget":"/home/cv/coup/node_modules/react/lib/getEventTarget.js","./getUnboundedScrollPosition":"/home/cv/coup/node_modules/react/lib/getUnboundedScrollPosition.js"}],"/home/cv/coup/node_modules/react/lib/ReactInjection.js":[function(require,module,exports){
+},{"./EventListener":"/Users/cvializ/coup/node_modules/react/lib/EventListener.js","./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMount":"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js","./getEventTarget":"/Users/cvializ/coup/node_modules/react/lib/getEventTarget.js","./getUnboundedScrollPosition":"/Users/cvializ/coup/node_modules/react/lib/getUnboundedScrollPosition.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactInjection.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20810,7 +19530,7 @@ var ReactInjection = {
 
 module.exports = ReactInjection;
 
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./EventPluginHub":"/home/cv/coup/node_modules/react/lib/EventPluginHub.js","./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactEmptyComponent":"/home/cv/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactNativeComponent":"/home/cv/coup/node_modules/react/lib/ReactNativeComponent.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./ReactRootIndex":"/home/cv/coup/node_modules/react/lib/ReactRootIndex.js","./ReactUpdates":"/home/cv/coup/node_modules/react/lib/ReactUpdates.js"}],"/home/cv/coup/node_modules/react/lib/ReactInputSelection.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./EventPluginHub":"/Users/cvializ/coup/node_modules/react/lib/EventPluginHub.js","./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactEmptyComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactNativeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactNativeComponent.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./ReactRootIndex":"/Users/cvializ/coup/node_modules/react/lib/ReactRootIndex.js","./ReactUpdates":"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactInputSelection.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -20946,7 +19666,7 @@ var ReactInputSelection = {
 
 module.exports = ReactInputSelection;
 
-},{"./ReactDOMSelection":"/home/cv/coup/node_modules/react/lib/ReactDOMSelection.js","./containsNode":"/home/cv/coup/node_modules/react/lib/containsNode.js","./focusNode":"/home/cv/coup/node_modules/react/lib/focusNode.js","./getActiveElement":"/home/cv/coup/node_modules/react/lib/getActiveElement.js"}],"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js":[function(require,module,exports){
+},{"./ReactDOMSelection":"/Users/cvializ/coup/node_modules/react/lib/ReactDOMSelection.js","./containsNode":"/Users/cvializ/coup/node_modules/react/lib/containsNode.js","./focusNode":"/Users/cvializ/coup/node_modules/react/lib/focusNode.js","./getActiveElement":"/Users/cvializ/coup/node_modules/react/lib/getActiveElement.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -21281,7 +20001,7 @@ var ReactInstanceHandles = {
 module.exports = ReactInstanceHandles;
 
 }).call(this,require('_process'))
-},{"./ReactRootIndex":"/home/cv/coup/node_modules/react/lib/ReactRootIndex.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js":[function(require,module,exports){
+},{"./ReactRootIndex":"/Users/cvializ/coup/node_modules/react/lib/ReactRootIndex.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -21528,7 +20248,7 @@ ReactLegacyElementFactory._isLegacyCallWarningEnabled = true;
 module.exports = ReactLegacyElementFactory;
 
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./monitorCodeUse":"/home/cv/coup/node_modules/react/lib/monitorCodeUse.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactMarkupChecksum.js":[function(require,module,exports){
+},{"./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./monitorCodeUse":"/Users/cvializ/coup/node_modules/react/lib/monitorCodeUse.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactMarkupChecksum.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -21576,7 +20296,7 @@ var ReactMarkupChecksum = {
 
 module.exports = ReactMarkupChecksum;
 
-},{"./adler32":"/home/cv/coup/node_modules/react/lib/adler32.js"}],"/home/cv/coup/node_modules/react/lib/ReactMount.js":[function(require,module,exports){
+},{"./adler32":"/Users/cvializ/coup/node_modules/react/lib/adler32.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactMount.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -22274,7 +20994,7 @@ ReactMount.renderComponent = deprecated(
 module.exports = ReactMount;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js","./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactLegacyElement":"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./containsNode":"/home/cv/coup/node_modules/react/lib/containsNode.js","./deprecated":"/home/cv/coup/node_modules/react/lib/deprecated.js","./getReactRootElementInContainer":"/home/cv/coup/node_modules/react/lib/getReactRootElementInContainer.js","./instantiateReactComponent":"/home/cv/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./shouldUpdateReactComponent":"/home/cv/coup/node_modules/react/lib/shouldUpdateReactComponent.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactMultiChild.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js","./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactLegacyElement":"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./containsNode":"/Users/cvializ/coup/node_modules/react/lib/containsNode.js","./deprecated":"/Users/cvializ/coup/node_modules/react/lib/deprecated.js","./getReactRootElementInContainer":"/Users/cvializ/coup/node_modules/react/lib/getReactRootElementInContainer.js","./instantiateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./shouldUpdateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/shouldUpdateReactComponent.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChild.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -22702,7 +21422,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 
-},{"./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactMultiChildUpdateTypes":"/home/cv/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js","./flattenChildren":"/home/cv/coup/node_modules/react/lib/flattenChildren.js","./instantiateReactComponent":"/home/cv/coup/node_modules/react/lib/instantiateReactComponent.js","./shouldUpdateReactComponent":"/home/cv/coup/node_modules/react/lib/shouldUpdateReactComponent.js"}],"/home/cv/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js":[function(require,module,exports){
+},{"./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactMultiChildUpdateTypes":"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js","./flattenChildren":"/Users/cvializ/coup/node_modules/react/lib/flattenChildren.js","./instantiateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/instantiateReactComponent.js","./shouldUpdateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/shouldUpdateReactComponent.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactMultiChildUpdateTypes.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -22735,7 +21455,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 
 module.exports = ReactMultiChildUpdateTypes;
 
-},{"./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js"}],"/home/cv/coup/node_modules/react/lib/ReactNativeComponent.js":[function(require,module,exports){
+},{"./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactNativeComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -22808,7 +21528,7 @@ var ReactNativeComponent = {
 module.exports = ReactNativeComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactOwner.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactOwner.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -22964,7 +21684,7 @@ var ReactOwner = {
 module.exports = ReactOwner;
 
 }).call(this,require('_process'))
-},{"./emptyObject":"/home/cv/coup/node_modules/react/lib/emptyObject.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactPerf.js":[function(require,module,exports){
+},{"./emptyObject":"/Users/cvializ/coup/node_modules/react/lib/emptyObject.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -23048,7 +21768,7 @@ function _noMeasure(objName, fnName, func) {
 module.exports = ReactPerf;
 
 }).call(this,require('_process'))
-},{"_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactPropTransferer.js":[function(require,module,exports){
+},{"_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPropTransferer.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -23215,7 +21935,7 @@ var ReactPropTransferer = {
 module.exports = ReactPropTransferer;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./joinClasses":"/home/cv/coup/node_modules/react/lib/joinClasses.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocationNames.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./joinClasses":"/Users/cvializ/coup/node_modules/react/lib/joinClasses.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocationNames.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -23243,7 +21963,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = ReactPropTypeLocationNames;
 
 }).call(this,require('_process'))
-},{"_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocations.js":[function(require,module,exports){
+},{"_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocations.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -23267,7 +21987,7 @@ var ReactPropTypeLocations = keyMirror({
 
 module.exports = ReactPropTypeLocations;
 
-},{"./keyMirror":"/home/cv/coup/node_modules/react/lib/keyMirror.js"}],"/home/cv/coup/node_modules/react/lib/ReactPropTypes.js":[function(require,module,exports){
+},{"./keyMirror":"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypes.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -23621,7 +22341,7 @@ function getPreciseType(propValue) {
 
 module.exports = ReactPropTypes;
 
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactPropTypeLocationNames":"/home/cv/coup/node_modules/react/lib/ReactPropTypeLocationNames.js","./deprecated":"/home/cv/coup/node_modules/react/lib/deprecated.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js"}],"/home/cv/coup/node_modules/react/lib/ReactPutListenerQueue.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactPropTypeLocationNames":"/Users/cvializ/coup/node_modules/react/lib/ReactPropTypeLocationNames.js","./deprecated":"/Users/cvializ/coup/node_modules/react/lib/deprecated.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactPutListenerQueue.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -23677,7 +22397,7 @@ PooledClass.addPoolingTo(ReactPutListenerQueue);
 
 module.exports = ReactPutListenerQueue;
 
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js"}],"/home/cv/coup/node_modules/react/lib/ReactReconcileTransaction.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactReconcileTransaction.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -23853,7 +22573,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 
-},{"./CallbackQueue":"/home/cv/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./ReactBrowserEventEmitter":"/home/cv/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactInputSelection":"/home/cv/coup/node_modules/react/lib/ReactInputSelection.js","./ReactPutListenerQueue":"/home/cv/coup/node_modules/react/lib/ReactPutListenerQueue.js","./Transaction":"/home/cv/coup/node_modules/react/lib/Transaction.js"}],"/home/cv/coup/node_modules/react/lib/ReactRootIndex.js":[function(require,module,exports){
+},{"./CallbackQueue":"/Users/cvializ/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./ReactBrowserEventEmitter":"/Users/cvializ/coup/node_modules/react/lib/ReactBrowserEventEmitter.js","./ReactInputSelection":"/Users/cvializ/coup/node_modules/react/lib/ReactInputSelection.js","./ReactPutListenerQueue":"/Users/cvializ/coup/node_modules/react/lib/ReactPutListenerQueue.js","./Transaction":"/Users/cvializ/coup/node_modules/react/lib/Transaction.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactRootIndex.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -23884,7 +22604,7 @@ var ReactRootIndex = {
 
 module.exports = ReactRootIndex;
 
-},{}],"/home/cv/coup/node_modules/react/lib/ReactServerRendering.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/ReactServerRendering.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -23964,7 +22684,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMarkupChecksum":"/home/cv/coup/node_modules/react/lib/ReactMarkupChecksum.js","./ReactServerRenderingTransaction":"/home/cv/coup/node_modules/react/lib/ReactServerRenderingTransaction.js","./instantiateReactComponent":"/home/cv/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ReactServerRenderingTransaction.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./ReactMarkupChecksum":"/Users/cvializ/coup/node_modules/react/lib/ReactMarkupChecksum.js","./ReactServerRenderingTransaction":"/Users/cvializ/coup/node_modules/react/lib/ReactServerRenderingTransaction.js","./instantiateReactComponent":"/Users/cvializ/coup/node_modules/react/lib/instantiateReactComponent.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactServerRenderingTransaction.js":[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -24077,7 +22797,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 
-},{"./CallbackQueue":"/home/cv/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./ReactPutListenerQueue":"/home/cv/coup/node_modules/react/lib/ReactPutListenerQueue.js","./Transaction":"/home/cv/coup/node_modules/react/lib/Transaction.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js"}],"/home/cv/coup/node_modules/react/lib/ReactTextComponent.js":[function(require,module,exports){
+},{"./CallbackQueue":"/Users/cvializ/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./ReactPutListenerQueue":"/Users/cvializ/coup/node_modules/react/lib/ReactPutListenerQueue.js","./Transaction":"/Users/cvializ/coup/node_modules/react/lib/Transaction.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactTextComponent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -24183,7 +22903,7 @@ ReactTextComponentFactory.type = ReactTextComponent;
 
 module.exports = ReactTextComponentFactory;
 
-},{"./DOMPropertyOperations":"/home/cv/coup/node_modules/react/lib/DOMPropertyOperations.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./ReactComponent":"/home/cv/coup/node_modules/react/lib/ReactComponent.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./escapeTextForBrowser":"/home/cv/coup/node_modules/react/lib/escapeTextForBrowser.js"}],"/home/cv/coup/node_modules/react/lib/ReactUpdates.js":[function(require,module,exports){
+},{"./DOMPropertyOperations":"/Users/cvializ/coup/node_modules/react/lib/DOMPropertyOperations.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./ReactComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactComponent.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./escapeTextForBrowser":"/Users/cvializ/coup/node_modules/react/lib/escapeTextForBrowser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ReactUpdates.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -24473,7 +23193,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 
 }).call(this,require('_process'))
-},{"./CallbackQueue":"/home/cv/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./ReactCurrentOwner":"/home/cv/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactPerf":"/home/cv/coup/node_modules/react/lib/ReactPerf.js","./Transaction":"/home/cv/coup/node_modules/react/lib/Transaction.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/SVGDOMPropertyConfig.js":[function(require,module,exports){
+},{"./CallbackQueue":"/Users/cvializ/coup/node_modules/react/lib/CallbackQueue.js","./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./ReactCurrentOwner":"/Users/cvializ/coup/node_modules/react/lib/ReactCurrentOwner.js","./ReactPerf":"/Users/cvializ/coup/node_modules/react/lib/ReactPerf.js","./Transaction":"/Users/cvializ/coup/node_modules/react/lib/Transaction.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/SVGDOMPropertyConfig.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -24565,7 +23285,7 @@ var SVGDOMPropertyConfig = {
 
 module.exports = SVGDOMPropertyConfig;
 
-},{"./DOMProperty":"/home/cv/coup/node_modules/react/lib/DOMProperty.js"}],"/home/cv/coup/node_modules/react/lib/SelectEventPlugin.js":[function(require,module,exports){
+},{"./DOMProperty":"/Users/cvializ/coup/node_modules/react/lib/DOMProperty.js"}],"/Users/cvializ/coup/node_modules/react/lib/SelectEventPlugin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -24760,7 +23480,7 @@ var SelectEventPlugin = {
 
 module.exports = SelectEventPlugin;
 
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./ReactInputSelection":"/home/cv/coup/node_modules/react/lib/ReactInputSelection.js","./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js","./getActiveElement":"/home/cv/coup/node_modules/react/lib/getActiveElement.js","./isTextInputElement":"/home/cv/coup/node_modules/react/lib/isTextInputElement.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js","./shallowEqual":"/home/cv/coup/node_modules/react/lib/shallowEqual.js"}],"/home/cv/coup/node_modules/react/lib/ServerReactRootIndex.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./ReactInputSelection":"/Users/cvializ/coup/node_modules/react/lib/ReactInputSelection.js","./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js","./getActiveElement":"/Users/cvializ/coup/node_modules/react/lib/getActiveElement.js","./isTextInputElement":"/Users/cvializ/coup/node_modules/react/lib/isTextInputElement.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js","./shallowEqual":"/Users/cvializ/coup/node_modules/react/lib/shallowEqual.js"}],"/Users/cvializ/coup/node_modules/react/lib/ServerReactRootIndex.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -24791,7 +23511,7 @@ var ServerReactRootIndex = {
 
 module.exports = ServerReactRootIndex;
 
-},{}],"/home/cv/coup/node_modules/react/lib/SimpleEventPlugin.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/SimpleEventPlugin.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -25219,7 +23939,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 
 }).call(this,require('_process'))
-},{"./EventConstants":"/home/cv/coup/node_modules/react/lib/EventConstants.js","./EventPluginUtils":"/home/cv/coup/node_modules/react/lib/EventPluginUtils.js","./EventPropagators":"/home/cv/coup/node_modules/react/lib/EventPropagators.js","./SyntheticClipboardEvent":"/home/cv/coup/node_modules/react/lib/SyntheticClipboardEvent.js","./SyntheticDragEvent":"/home/cv/coup/node_modules/react/lib/SyntheticDragEvent.js","./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js","./SyntheticFocusEvent":"/home/cv/coup/node_modules/react/lib/SyntheticFocusEvent.js","./SyntheticKeyboardEvent":"/home/cv/coup/node_modules/react/lib/SyntheticKeyboardEvent.js","./SyntheticMouseEvent":"/home/cv/coup/node_modules/react/lib/SyntheticMouseEvent.js","./SyntheticTouchEvent":"/home/cv/coup/node_modules/react/lib/SyntheticTouchEvent.js","./SyntheticUIEvent":"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js","./SyntheticWheelEvent":"/home/cv/coup/node_modules/react/lib/SyntheticWheelEvent.js","./getEventCharCode":"/home/cv/coup/node_modules/react/lib/getEventCharCode.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","./keyOf":"/home/cv/coup/node_modules/react/lib/keyOf.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticClipboardEvent.js":[function(require,module,exports){
+},{"./EventConstants":"/Users/cvializ/coup/node_modules/react/lib/EventConstants.js","./EventPluginUtils":"/Users/cvializ/coup/node_modules/react/lib/EventPluginUtils.js","./EventPropagators":"/Users/cvializ/coup/node_modules/react/lib/EventPropagators.js","./SyntheticClipboardEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticClipboardEvent.js","./SyntheticDragEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticDragEvent.js","./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js","./SyntheticFocusEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticFocusEvent.js","./SyntheticKeyboardEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticKeyboardEvent.js","./SyntheticMouseEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticMouseEvent.js","./SyntheticTouchEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticTouchEvent.js","./SyntheticUIEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js","./SyntheticWheelEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticWheelEvent.js","./getEventCharCode":"/Users/cvializ/coup/node_modules/react/lib/getEventCharCode.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","./keyOf":"/Users/cvializ/coup/node_modules/react/lib/keyOf.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticClipboardEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25265,7 +23985,7 @@ SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 module.exports = SyntheticClipboardEvent;
 
 
-},{"./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticCompositionEvent.js":[function(require,module,exports){
+},{"./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticCompositionEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25311,7 +24031,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticCompositionEvent;
 
 
-},{"./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticDragEvent.js":[function(require,module,exports){
+},{"./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticDragEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25350,7 +24070,7 @@ SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
 
-},{"./SyntheticMouseEvent":"/home/cv/coup/node_modules/react/lib/SyntheticMouseEvent.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js":[function(require,module,exports){
+},{"./SyntheticMouseEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticMouseEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25508,7 +24228,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.threeArgumentPooler);
 
 module.exports = SyntheticEvent;
 
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/home/cv/coup/node_modules/react/lib/PooledClass.js","./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js","./getEventTarget":"/home/cv/coup/node_modules/react/lib/getEventTarget.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticFocusEvent.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./PooledClass":"/Users/cvializ/coup/node_modules/react/lib/PooledClass.js","./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js","./getEventTarget":"/Users/cvializ/coup/node_modules/react/lib/getEventTarget.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticFocusEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25547,7 +24267,7 @@ SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
 
-},{"./SyntheticUIEvent":"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticInputEvent.js":[function(require,module,exports){
+},{"./SyntheticUIEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticInputEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  * All rights reserved.
@@ -25594,7 +24314,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticInputEvent;
 
 
-},{"./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticKeyboardEvent.js":[function(require,module,exports){
+},{"./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticKeyboardEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25681,7 +24401,7 @@ SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
 
-},{"./SyntheticUIEvent":"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js","./getEventCharCode":"/home/cv/coup/node_modules/react/lib/getEventCharCode.js","./getEventKey":"/home/cv/coup/node_modules/react/lib/getEventKey.js","./getEventModifierState":"/home/cv/coup/node_modules/react/lib/getEventModifierState.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticMouseEvent.js":[function(require,module,exports){
+},{"./SyntheticUIEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js","./getEventCharCode":"/Users/cvializ/coup/node_modules/react/lib/getEventCharCode.js","./getEventKey":"/Users/cvializ/coup/node_modules/react/lib/getEventKey.js","./getEventModifierState":"/Users/cvializ/coup/node_modules/react/lib/getEventModifierState.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticMouseEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25764,7 +24484,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
 
-},{"./SyntheticUIEvent":"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js","./ViewportMetrics":"/home/cv/coup/node_modules/react/lib/ViewportMetrics.js","./getEventModifierState":"/home/cv/coup/node_modules/react/lib/getEventModifierState.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticTouchEvent.js":[function(require,module,exports){
+},{"./SyntheticUIEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js","./ViewportMetrics":"/Users/cvializ/coup/node_modules/react/lib/ViewportMetrics.js","./getEventModifierState":"/Users/cvializ/coup/node_modules/react/lib/getEventModifierState.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticTouchEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25812,7 +24532,7 @@ SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
 
-},{"./SyntheticUIEvent":"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js","./getEventModifierState":"/home/cv/coup/node_modules/react/lib/getEventModifierState.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticUIEvent.js":[function(require,module,exports){
+},{"./SyntheticUIEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js","./getEventModifierState":"/Users/cvializ/coup/node_modules/react/lib/getEventModifierState.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticUIEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25874,7 +24594,7 @@ SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
 
-},{"./SyntheticEvent":"/home/cv/coup/node_modules/react/lib/SyntheticEvent.js","./getEventTarget":"/home/cv/coup/node_modules/react/lib/getEventTarget.js"}],"/home/cv/coup/node_modules/react/lib/SyntheticWheelEvent.js":[function(require,module,exports){
+},{"./SyntheticEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticEvent.js","./getEventTarget":"/Users/cvializ/coup/node_modules/react/lib/getEventTarget.js"}],"/Users/cvializ/coup/node_modules/react/lib/SyntheticWheelEvent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -25935,7 +24655,7 @@ SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
 
-},{"./SyntheticMouseEvent":"/home/cv/coup/node_modules/react/lib/SyntheticMouseEvent.js"}],"/home/cv/coup/node_modules/react/lib/Transaction.js":[function(require,module,exports){
+},{"./SyntheticMouseEvent":"/Users/cvializ/coup/node_modules/react/lib/SyntheticMouseEvent.js"}],"/Users/cvializ/coup/node_modules/react/lib/Transaction.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26176,7 +24896,7 @@ var Transaction = {
 module.exports = Transaction;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/ViewportMetrics.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/ViewportMetrics.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26208,7 +24928,7 @@ var ViewportMetrics = {
 
 module.exports = ViewportMetrics;
 
-},{"./getUnboundedScrollPosition":"/home/cv/coup/node_modules/react/lib/getUnboundedScrollPosition.js"}],"/home/cv/coup/node_modules/react/lib/accumulateInto.js":[function(require,module,exports){
+},{"./getUnboundedScrollPosition":"/Users/cvializ/coup/node_modules/react/lib/getUnboundedScrollPosition.js"}],"/Users/cvializ/coup/node_modules/react/lib/accumulateInto.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -26274,7 +24994,7 @@ function accumulateInto(current, next) {
 module.exports = accumulateInto;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/adler32.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/adler32.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26308,7 +25028,7 @@ function adler32(data) {
 
 module.exports = adler32;
 
-},{}],"/home/cv/coup/node_modules/react/lib/camelize.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/camelize.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26340,7 +25060,7 @@ function camelize(string) {
 
 module.exports = camelize;
 
-},{}],"/home/cv/coup/node_modules/react/lib/camelizeStyleName.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/camelizeStyleName.js":[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -26382,7 +25102,7 @@ function camelizeStyleName(string) {
 
 module.exports = camelizeStyleName;
 
-},{"./camelize":"/home/cv/coup/node_modules/react/lib/camelize.js"}],"/home/cv/coup/node_modules/react/lib/containsNode.js":[function(require,module,exports){
+},{"./camelize":"/Users/cvializ/coup/node_modules/react/lib/camelize.js"}],"/Users/cvializ/coup/node_modules/react/lib/containsNode.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26426,7 +25146,7 @@ function containsNode(outerNode, innerNode) {
 
 module.exports = containsNode;
 
-},{"./isTextNode":"/home/cv/coup/node_modules/react/lib/isTextNode.js"}],"/home/cv/coup/node_modules/react/lib/createArrayFrom.js":[function(require,module,exports){
+},{"./isTextNode":"/Users/cvializ/coup/node_modules/react/lib/isTextNode.js"}],"/Users/cvializ/coup/node_modules/react/lib/createArrayFrom.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26512,7 +25232,7 @@ function createArrayFrom(obj) {
 
 module.exports = createArrayFrom;
 
-},{"./toArray":"/home/cv/coup/node_modules/react/lib/toArray.js"}],"/home/cv/coup/node_modules/react/lib/createFullPageComponent.js":[function(require,module,exports){
+},{"./toArray":"/Users/cvializ/coup/node_modules/react/lib/toArray.js"}],"/Users/cvializ/coup/node_modules/react/lib/createFullPageComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26573,7 +25293,7 @@ function createFullPageComponent(tag) {
 module.exports = createFullPageComponent;
 
 }).call(this,require('_process'))
-},{"./ReactCompositeComponent":"/home/cv/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/createNodesFromMarkup.js":[function(require,module,exports){
+},{"./ReactCompositeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactCompositeComponent.js","./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/createNodesFromMarkup.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26663,7 +25383,7 @@ function createNodesFromMarkup(markup, handleScript) {
 module.exports = createNodesFromMarkup;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./createArrayFrom":"/home/cv/coup/node_modules/react/lib/createArrayFrom.js","./getMarkupWrap":"/home/cv/coup/node_modules/react/lib/getMarkupWrap.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/dangerousStyleValue.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./createArrayFrom":"/Users/cvializ/coup/node_modules/react/lib/createArrayFrom.js","./getMarkupWrap":"/Users/cvializ/coup/node_modules/react/lib/getMarkupWrap.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/dangerousStyleValue.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26721,7 +25441,7 @@ function dangerousStyleValue(name, value) {
 
 module.exports = dangerousStyleValue;
 
-},{"./CSSProperty":"/home/cv/coup/node_modules/react/lib/CSSProperty.js"}],"/home/cv/coup/node_modules/react/lib/deprecated.js":[function(require,module,exports){
+},{"./CSSProperty":"/Users/cvializ/coup/node_modules/react/lib/CSSProperty.js"}],"/Users/cvializ/coup/node_modules/react/lib/deprecated.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26772,7 +25492,7 @@ function deprecated(namespace, oldName, newName, ctx, fn) {
 module.exports = deprecated;
 
 }).call(this,require('_process'))
-},{"./Object.assign":"/home/cv/coup/node_modules/react/lib/Object.assign.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/emptyFunction.js":[function(require,module,exports){
+},{"./Object.assign":"/Users/cvializ/coup/node_modules/react/lib/Object.assign.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26806,7 +25526,7 @@ emptyFunction.thatReturnsArgument = function(arg) { return arg; };
 
 module.exports = emptyFunction;
 
-},{}],"/home/cv/coup/node_modules/react/lib/emptyObject.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/emptyObject.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26830,7 +25550,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = emptyObject;
 
 }).call(this,require('_process'))
-},{"_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/escapeTextForBrowser.js":[function(require,module,exports){
+},{"_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/escapeTextForBrowser.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -26871,7 +25591,7 @@ function escapeTextForBrowser(text) {
 
 module.exports = escapeTextForBrowser;
 
-},{}],"/home/cv/coup/node_modules/react/lib/flattenChildren.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/flattenChildren.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -26940,7 +25660,7 @@ function flattenChildren(children) {
 module.exports = flattenChildren;
 
 }).call(this,require('_process'))
-},{"./ReactTextComponent":"/home/cv/coup/node_modules/react/lib/ReactTextComponent.js","./traverseAllChildren":"/home/cv/coup/node_modules/react/lib/traverseAllChildren.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/focusNode.js":[function(require,module,exports){
+},{"./ReactTextComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactTextComponent.js","./traverseAllChildren":"/Users/cvializ/coup/node_modules/react/lib/traverseAllChildren.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/focusNode.js":[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -26969,7 +25689,7 @@ function focusNode(node) {
 
 module.exports = focusNode;
 
-},{}],"/home/cv/coup/node_modules/react/lib/forEachAccumulated.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/forEachAccumulated.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27000,7 +25720,7 @@ var forEachAccumulated = function(arr, cb, scope) {
 
 module.exports = forEachAccumulated;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getActiveElement.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getActiveElement.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27029,7 +25749,7 @@ function getActiveElement() /*?DOMElement*/ {
 
 module.exports = getActiveElement;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getEventCharCode.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getEventCharCode.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27081,7 +25801,7 @@ function getEventCharCode(nativeEvent) {
 
 module.exports = getEventCharCode;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getEventKey.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getEventKey.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27186,7 +25906,7 @@ function getEventKey(nativeEvent) {
 
 module.exports = getEventKey;
 
-},{"./getEventCharCode":"/home/cv/coup/node_modules/react/lib/getEventCharCode.js"}],"/home/cv/coup/node_modules/react/lib/getEventModifierState.js":[function(require,module,exports){
+},{"./getEventCharCode":"/Users/cvializ/coup/node_modules/react/lib/getEventCharCode.js"}],"/Users/cvializ/coup/node_modules/react/lib/getEventModifierState.js":[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  * All rights reserved.
@@ -27233,7 +25953,7 @@ function getEventModifierState(nativeEvent) {
 
 module.exports = getEventModifierState;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getEventTarget.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getEventTarget.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27264,7 +25984,7 @@ function getEventTarget(nativeEvent) {
 
 module.exports = getEventTarget;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getMarkupWrap.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getMarkupWrap.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -27381,7 +26101,7 @@ function getMarkupWrap(nodeName) {
 module.exports = getMarkupWrap;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/getNodeForCharacterOffset.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/getNodeForCharacterOffset.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27456,7 +26176,7 @@ function getNodeForCharacterOffset(root, offset) {
 
 module.exports = getNodeForCharacterOffset;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getReactRootElementInContainer.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getReactRootElementInContainer.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27491,7 +26211,7 @@ function getReactRootElementInContainer(container) {
 
 module.exports = getReactRootElementInContainer;
 
-},{}],"/home/cv/coup/node_modules/react/lib/getTextContentAccessor.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/getTextContentAccessor.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27528,7 +26248,7 @@ function getTextContentAccessor() {
 
 module.exports = getTextContentAccessor;
 
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/home/cv/coup/node_modules/react/lib/getUnboundedScrollPosition.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/Users/cvializ/coup/node_modules/react/lib/getUnboundedScrollPosition.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27568,7 +26288,7 @@ function getUnboundedScrollPosition(scrollable) {
 
 module.exports = getUnboundedScrollPosition;
 
-},{}],"/home/cv/coup/node_modules/react/lib/hyphenate.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/hyphenate.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27601,7 +26321,7 @@ function hyphenate(string) {
 
 module.exports = hyphenate;
 
-},{}],"/home/cv/coup/node_modules/react/lib/hyphenateStyleName.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/hyphenateStyleName.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27642,7 +26362,7 @@ function hyphenateStyleName(string) {
 
 module.exports = hyphenateStyleName;
 
-},{"./hyphenate":"/home/cv/coup/node_modules/react/lib/hyphenate.js"}],"/home/cv/coup/node_modules/react/lib/instantiateReactComponent.js":[function(require,module,exports){
+},{"./hyphenate":"/Users/cvializ/coup/node_modules/react/lib/hyphenate.js"}],"/Users/cvializ/coup/node_modules/react/lib/instantiateReactComponent.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -27756,7 +26476,7 @@ function instantiateReactComponent(element, parentCompositeType) {
 module.exports = instantiateReactComponent;
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactEmptyComponent":"/home/cv/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactLegacyElement":"/home/cv/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactNativeComponent":"/home/cv/coup/node_modules/react/lib/ReactNativeComponent.js","./warning":"/home/cv/coup/node_modules/react/lib/warning.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/invariant.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactEmptyComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactEmptyComponent.js","./ReactLegacyElement":"/Users/cvializ/coup/node_modules/react/lib/ReactLegacyElement.js","./ReactNativeComponent":"/Users/cvializ/coup/node_modules/react/lib/ReactNativeComponent.js","./warning":"/Users/cvializ/coup/node_modules/react/lib/warning.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/invariant.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -27813,7 +26533,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/isEventSupported.js":[function(require,module,exports){
+},{"_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/isEventSupported.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27878,7 +26598,7 @@ function isEventSupported(eventNameSuffix, capture) {
 
 module.exports = isEventSupported;
 
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/home/cv/coup/node_modules/react/lib/isNode.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/Users/cvializ/coup/node_modules/react/lib/isNode.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27906,7 +26626,7 @@ function isNode(object) {
 
 module.exports = isNode;
 
-},{}],"/home/cv/coup/node_modules/react/lib/isTextInputElement.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/isTextInputElement.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27950,7 +26670,7 @@ function isTextInputElement(elem) {
 
 module.exports = isTextInputElement;
 
-},{}],"/home/cv/coup/node_modules/react/lib/isTextNode.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/isTextNode.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -27975,7 +26695,7 @@ function isTextNode(object) {
 
 module.exports = isTextNode;
 
-},{"./isNode":"/home/cv/coup/node_modules/react/lib/isNode.js"}],"/home/cv/coup/node_modules/react/lib/joinClasses.js":[function(require,module,exports){
+},{"./isNode":"/Users/cvializ/coup/node_modules/react/lib/isNode.js"}],"/Users/cvializ/coup/node_modules/react/lib/joinClasses.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28016,7 +26736,7 @@ function joinClasses(className/*, ... */) {
 
 module.exports = joinClasses;
 
-},{}],"/home/cv/coup/node_modules/react/lib/keyMirror.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/keyMirror.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -28071,7 +26791,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/keyOf.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/keyOf.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28107,7 +26827,7 @@ var keyOf = function(oneKeyObj) {
 
 module.exports = keyOf;
 
-},{}],"/home/cv/coup/node_modules/react/lib/mapObject.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/mapObject.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28160,7 +26880,7 @@ function mapObject(object, callback, context) {
 
 module.exports = mapObject;
 
-},{}],"/home/cv/coup/node_modules/react/lib/memoizeStringOnly.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/memoizeStringOnly.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28194,7 +26914,7 @@ function memoizeStringOnly(callback) {
 
 module.exports = memoizeStringOnly;
 
-},{}],"/home/cv/coup/node_modules/react/lib/monitorCodeUse.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/monitorCodeUse.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -28228,7 +26948,7 @@ function monitorCodeUse(eventName, data) {
 module.exports = monitorCodeUse;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/onlyChild.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/onlyChild.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -28268,7 +26988,7 @@ function onlyChild(children) {
 module.exports = onlyChild;
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/performance.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/performance.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28296,7 +27016,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = performance || {};
 
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/home/cv/coup/node_modules/react/lib/performanceNow.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/Users/cvializ/coup/node_modules/react/lib/performanceNow.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28324,7 +27044,7 @@ var performanceNow = performance.now.bind(performance);
 
 module.exports = performanceNow;
 
-},{"./performance":"/home/cv/coup/node_modules/react/lib/performance.js"}],"/home/cv/coup/node_modules/react/lib/setInnerHTML.js":[function(require,module,exports){
+},{"./performance":"/Users/cvializ/coup/node_modules/react/lib/performance.js"}],"/Users/cvializ/coup/node_modules/react/lib/setInnerHTML.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28402,7 +27122,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = setInnerHTML;
 
-},{"./ExecutionEnvironment":"/home/cv/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/home/cv/coup/node_modules/react/lib/shallowEqual.js":[function(require,module,exports){
+},{"./ExecutionEnvironment":"/Users/cvializ/coup/node_modules/react/lib/ExecutionEnvironment.js"}],"/Users/cvializ/coup/node_modules/react/lib/shallowEqual.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28446,7 +27166,7 @@ function shallowEqual(objA, objB) {
 
 module.exports = shallowEqual;
 
-},{}],"/home/cv/coup/node_modules/react/lib/shouldUpdateReactComponent.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/shouldUpdateReactComponent.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -28484,7 +27204,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 
 module.exports = shouldUpdateReactComponent;
 
-},{}],"/home/cv/coup/node_modules/react/lib/toArray.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/react/lib/toArray.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -28556,7 +27276,7 @@ function toArray(obj) {
 module.exports = toArray;
 
 }).call(this,require('_process'))
-},{"./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/traverseAllChildren.js":[function(require,module,exports){
+},{"./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/traverseAllChildren.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -28739,7 +27459,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 module.exports = traverseAllChildren;
 
 }).call(this,require('_process'))
-},{"./ReactElement":"/home/cv/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/home/cv/coup/node_modules/react/lib/ReactInstanceHandles.js","./invariant":"/home/cv/coup/node_modules/react/lib/invariant.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/lib/warning.js":[function(require,module,exports){
+},{"./ReactElement":"/Users/cvializ/coup/node_modules/react/lib/ReactElement.js","./ReactInstanceHandles":"/Users/cvializ/coup/node_modules/react/lib/ReactInstanceHandles.js","./invariant":"/Users/cvializ/coup/node_modules/react/lib/invariant.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/lib/warning.js":[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -28784,14 +27504,14 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":"/home/cv/coup/node_modules/react/lib/emptyFunction.js","_process":"/home/cv/coup/node_modules/browserify/node_modules/process/browser.js"}],"/home/cv/coup/node_modules/react/react.js":[function(require,module,exports){
+},{"./emptyFunction":"/Users/cvializ/coup/node_modules/react/lib/emptyFunction.js","_process":"/Users/cvializ/coup/node_modules/browserify/node_modules/process/browser.js"}],"/Users/cvializ/coup/node_modules/react/react.js":[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":"/home/cv/coup/node_modules/react/lib/React.js"}],"/home/cv/coup/node_modules/socket.io-client/index.js":[function(require,module,exports){
+},{"./lib/React":"/Users/cvializ/coup/node_modules/react/lib/React.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/index.js":[function(require,module,exports){
 
 module.exports = require('./lib/');
 
-},{"./lib/":"/home/cv/coup/node_modules/socket.io-client/lib/index.js"}],"/home/cv/coup/node_modules/socket.io-client/lib/index.js":[function(require,module,exports){
+},{"./lib/":"/Users/cvializ/coup/node_modules/socket.io-client/lib/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/lib/index.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -28880,7 +27600,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":"/home/cv/coup/node_modules/socket.io-client/lib/manager.js","./socket":"/home/cv/coup/node_modules/socket.io-client/lib/socket.js","./url":"/home/cv/coup/node_modules/socket.io-client/lib/url.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","socket.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js"}],"/home/cv/coup/node_modules/socket.io-client/lib/manager.js":[function(require,module,exports){
+},{"./manager":"/Users/cvializ/coup/node_modules/socket.io-client/lib/manager.js","./socket":"/Users/cvializ/coup/node_modules/socket.io-client/lib/socket.js","./url":"/Users/cvializ/coup/node_modules/socket.io-client/lib/url.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js","socket.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/lib/manager.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -28895,6 +27615,8 @@ var on = require('./on');
 var bind = require('component-bind');
 var object = require('object-component');
 var debug = require('debug')('socket.io-client:manager');
+var indexOf = require('indexof');
+var Backoff = require('backo2');
 
 /**
  * Module exports
@@ -28926,16 +27648,22 @@ function Manager(uri, opts){
   this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
   this.reconnectionDelay(opts.reconnectionDelay || 1000);
   this.reconnectionDelayMax(opts.reconnectionDelayMax || 5000);
+  this.randomizationFactor(opts.randomizationFactor || 0.5);
+  this.backoff = new Backoff({
+    min: this.reconnectionDelay(),
+    max: this.reconnectionDelayMax(),
+    jitter: this.randomizationFactor()
+  });
   this.timeout(null == opts.timeout ? 20000 : opts.timeout);
   this.readyState = 'closed';
   this.uri = uri;
-  this.connected = 0;
-  this.attempts = 0;
+  this.connected = [];
   this.encoding = false;
   this.packetBuffer = [];
   this.encoder = new parser.Encoder();
   this.decoder = new parser.Decoder();
-  this.open();
+  this.autoConnect = opts.autoConnect !== false;
+  if (this.autoConnect) this.open();
 }
 
 /**
@@ -28948,6 +27676,18 @@ Manager.prototype.emitAll = function() {
   this.emit.apply(this, arguments);
   for (var nsp in this.nsps) {
     this.nsps[nsp].emit.apply(this.nsps[nsp], arguments);
+  }
+};
+
+/**
+ * Update `socket.id` of all sockets
+ *
+ * @api private
+ */
+
+Manager.prototype.updateSocketIds = function(){
+  for (var nsp in this.nsps) {
+    this.nsps[nsp].id = this.engine.id;
   }
 };
 
@@ -28996,6 +27736,14 @@ Manager.prototype.reconnectionAttempts = function(v){
 Manager.prototype.reconnectionDelay = function(v){
   if (!arguments.length) return this._reconnectionDelay;
   this._reconnectionDelay = v;
+  this.backoff && this.backoff.setMin(v);
+  return this;
+};
+
+Manager.prototype.randomizationFactor = function(v){
+  if (!arguments.length) return this._randomizationFactor;
+  this._randomizationFactor = v;
+  this.backoff && this.backoff.setJitter(v);
   return this;
 };
 
@@ -29010,6 +27758,7 @@ Manager.prototype.reconnectionDelay = function(v){
 Manager.prototype.reconnectionDelayMax = function(v){
   if (!arguments.length) return this._reconnectionDelayMax;
   this._reconnectionDelayMax = v;
+  this.backoff && this.backoff.setMax(v);
   return this;
 };
 
@@ -29034,9 +27783,9 @@ Manager.prototype.timeout = function(v){
  */
 
 Manager.prototype.maybeReconnectOnOpen = function() {
-  if (!this.openReconnect && !this.reconnecting && this._reconnection) {
+  // Only try to reconnect if it's the first time we're connecting
+  if (!this.reconnecting && this._reconnection && this.backoff.attempts === 0) {
     // keeps reconnection from firing twice for the same reconnection loop
-    this.openReconnect = true;
     this.reconnect();
   }
 };
@@ -29060,6 +27809,7 @@ Manager.prototype.connect = function(fn){
   var socket = this.engine;
   var self = this;
   this.readyState = 'opening';
+  this.skipReconnect = false;
 
   // emit `open`
   var openSub = on(socket, 'open', function() {
@@ -29077,9 +27827,10 @@ Manager.prototype.connect = function(fn){
       var err = new Error('Connection error');
       err.data = data;
       fn(err);
+    } else {
+      // Only do this if there is no fn to handle the error
+      self.maybeReconnectOnOpen();
     }
-
-    self.maybeReconnectOnOpen();
   });
 
   // emit `connect_timeout`
@@ -29178,7 +27929,10 @@ Manager.prototype.socket = function(nsp){
     this.nsps[nsp] = socket;
     var self = this;
     socket.on('connect', function(){
-      self.connected++;
+      socket.id = self.engine.id;
+      if (!~indexOf(self.connected, socket)) {
+        self.connected.push(socket);
+      }
     });
   }
   return socket;
@@ -29191,7 +27945,11 @@ Manager.prototype.socket = function(nsp){
  */
 
 Manager.prototype.destroy = function(socket){
-  --this.connected || this.close();
+  var index = indexOf(this.connected, socket);
+  if (~index) this.connected.splice(index, 1);
+  if (this.connected.length) return;
+
+  this.close();
 };
 
 /**
@@ -29259,7 +28017,9 @@ Manager.prototype.cleanup = function(){
 Manager.prototype.close =
 Manager.prototype.disconnect = function(){
   this.skipReconnect = true;
-  this.engine.close();
+  this.backoff.reset();
+  this.readyState = 'closed';
+  this.engine && this.engine.close();
 };
 
 /**
@@ -29271,6 +28031,7 @@ Manager.prototype.disconnect = function(){
 Manager.prototype.onclose = function(reason){
   debug('close');
   this.cleanup();
+  this.backoff.reset();
   this.readyState = 'closed';
   this.emit('close', reason);
   if (this._reconnection && !this.skipReconnect) {
@@ -29285,25 +28046,30 @@ Manager.prototype.onclose = function(reason){
  */
 
 Manager.prototype.reconnect = function(){
-  if (this.reconnecting) return this;
+  if (this.reconnecting || this.skipReconnect) return this;
 
   var self = this;
-  this.attempts++;
 
-  if (this.attempts > this._reconnectionAttempts) {
+  if (this.backoff.attempts >= this._reconnectionAttempts) {
     debug('reconnect failed');
+    this.backoff.reset();
     this.emitAll('reconnect_failed');
     this.reconnecting = false;
   } else {
-    var delay = this.attempts * this.reconnectionDelay();
-    delay = Math.min(delay, this.reconnectionDelayMax());
+    var delay = this.backoff.duration();
     debug('will wait %dms before reconnect attempt', delay);
 
     this.reconnecting = true;
     var timer = setTimeout(function(){
+      if (self.skipReconnect) return;
+
       debug('attempting reconnect');
-      self.emitAll('reconnect_attempt', self.attempts);
-      self.emitAll('reconnecting', self.attempts);
+      self.emitAll('reconnect_attempt', self.backoff.attempts);
+      self.emitAll('reconnecting', self.backoff.attempts);
+
+      // check again for the case socket closed in above events
+      if (self.skipReconnect) return;
+
       self.open(function(err){
         if (err) {
           debug('reconnect attempt error');
@@ -29332,13 +28098,14 @@ Manager.prototype.reconnect = function(){
  */
 
 Manager.prototype.onreconnect = function(){
-  var attempt = this.attempts;
-  this.attempts = 0;
+  var attempt = this.backoff.attempts;
   this.reconnecting = false;
+  this.backoff.reset();
+  this.updateSocketIds();
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":"/home/cv/coup/node_modules/socket.io-client/lib/on.js","./socket":"/home/cv/coup/node_modules/socket.io-client/lib/socket.js","./url":"/home/cv/coup/node_modules/socket.io-client/lib/url.js","component-bind":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-bind/index.js","component-emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","engine.io-client":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/index.js","object-component":"/home/cv/coup/node_modules/socket.io-client/node_modules/object-component/index.js","socket.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js"}],"/home/cv/coup/node_modules/socket.io-client/lib/on.js":[function(require,module,exports){
+},{"./on":"/Users/cvializ/coup/node_modules/socket.io-client/lib/on.js","./socket":"/Users/cvializ/coup/node_modules/socket.io-client/lib/socket.js","./url":"/Users/cvializ/coup/node_modules/socket.io-client/lib/url.js","backo2":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/backo2/index.js","component-bind":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-bind/index.js","component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js","engine.io-client":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/index.js","indexof":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/indexof/index.js","object-component":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/object-component/index.js","socket.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/lib/on.js":[function(require,module,exports){
 
 /**
  * Module exports.
@@ -29364,7 +28131,7 @@ function on(obj, ev, fn) {
   };
 }
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/lib/socket.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/lib/socket.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -29376,8 +28143,7 @@ var toArray = require('to-array');
 var on = require('./on');
 var bind = require('component-bind');
 var debug = require('debug')('socket.io-client:socket');
-var hasBin = require('has-binary-data');
-var indexOf = require('indexof');
+var hasBin = require('has-binary');
 
 /**
  * Module exports.
@@ -29423,12 +28189,11 @@ function Socket(io, nsp){
   this.json = this; // compat
   this.ids = 0;
   this.acks = {};
-  this.open();
+  if (this.io.autoConnect) this.open();
   this.receiveBuffer = [];
   this.sendBuffer = [];
   this.connected = false;
   this.disconnected = true;
-  this.subEvents();
 }
 
 /**
@@ -29444,6 +28209,8 @@ Emitter(Socket.prototype);
  */
 
 Socket.prototype.subEvents = function() {
+  if (this.subs) return;
+
   var io = this.io;
   this.subs = [
     on(io, 'open', bind(this, 'onopen')),
@@ -29453,15 +28220,16 @@ Socket.prototype.subEvents = function() {
 };
 
 /**
- * Called upon engine `open`.
+ * "Opens" the socket.
  *
- * @api private
+ * @api public
  */
 
 Socket.prototype.open =
 Socket.prototype.connect = function(){
   if (this.connected) return this;
 
+  this.subEvents();
   this.io.open(); // ensure open
   if ('open' == this.io.readyState) this.onopen();
   return this;
@@ -29530,7 +28298,7 @@ Socket.prototype.packet = function(packet){
 };
 
 /**
- * "Opens" the socket.
+ * Called upon engine `open`.
  *
  * @api private
  */
@@ -29555,6 +28323,7 @@ Socket.prototype.onclose = function(reason){
   debug('close (%s)', reason);
   this.connected = false;
   this.disconnected = true;
+  delete this.id;
   this.emit('disconnect', reason);
 };
 
@@ -29714,9 +28483,12 @@ Socket.prototype.ondisconnect = function(){
  */
 
 Socket.prototype.destroy = function(){
-  // clean subscriptions to avoid reconnections
-  for (var i = 0; i < this.subs.length; i++) {
-    this.subs[i].destroy();
+  if (this.subs) {
+    // clean subscriptions to avoid reconnections
+    for (var i = 0; i < this.subs.length; i++) {
+      this.subs[i].destroy();
+    }
+    this.subs = null;
   }
 
   this.io.destroy(this);
@@ -29731,20 +28503,22 @@ Socket.prototype.destroy = function(){
 
 Socket.prototype.close =
 Socket.prototype.disconnect = function(){
-  if (!this.connected) return this;
-
-  debug('performing disconnect (%s)', this.nsp);
-  this.packet({ type: parser.DISCONNECT });
+  if (this.connected) {
+    debug('performing disconnect (%s)', this.nsp);
+    this.packet({ type: parser.DISCONNECT });
+  }
 
   // remove socket from pool
   this.destroy();
 
-  // fire events
-  this.onclose('io client disconnect');
+  if (this.connected) {
+    // fire events
+    this.onclose('io client disconnect');
+  }
   return this;
 };
 
-},{"./on":"/home/cv/coup/node_modules/socket.io-client/lib/on.js","component-bind":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-bind/index.js","component-emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","has-binary-data":"/home/cv/coup/node_modules/socket.io-client/node_modules/has-binary-data/index.js","indexof":"/home/cv/coup/node_modules/socket.io-client/node_modules/indexof/index.js","socket.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js","to-array":"/home/cv/coup/node_modules/socket.io-client/node_modules/to-array/index.js"}],"/home/cv/coup/node_modules/socket.io-client/lib/url.js":[function(require,module,exports){
+},{"./on":"/Users/cvializ/coup/node_modules/socket.io-client/lib/on.js","component-bind":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-bind/index.js","component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js","has-binary":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/index.js","socket.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js","to-array":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/to-array/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/lib/url.js":[function(require,module,exports){
 (function (global){
 
 /**
@@ -29774,12 +28548,14 @@ function url(uri, loc){
 
   // default to window.location
   var loc = loc || global.location;
-  if (null == uri) uri = loc.protocol + '//' + loc.hostname;
+  if (null == uri) uri = loc.protocol + '//' + loc.host;
 
   // relative path support
   if ('string' == typeof uri) {
     if ('/' == uri.charAt(0)) {
-      if ('undefined' != typeof loc) {
+      if ('/' == uri.charAt(1)) {
+        uri = loc.protocol + uri;
+      } else {
         uri = loc.hostname + uri;
       }
     }
@@ -29819,7 +28595,94 @@ function url(uri, loc){
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","parseuri":"/home/cv/coup/node_modules/socket.io-client/node_modules/parseuri/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/component-bind/index.js":[function(require,module,exports){
+},{"debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js","parseuri":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/parseuri/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/backo2/index.js":[function(require,module,exports){
+
+/**
+ * Expose `Backoff`.
+ */
+
+module.exports = Backoff;
+
+/**
+ * Initialize backoff timer with `opts`.
+ *
+ * - `min` initial timeout in milliseconds [100]
+ * - `max` max timeout [10000]
+ * - `jitter` [0]
+ * - `factor` [2]
+ *
+ * @param {Object} opts
+ * @api public
+ */
+
+function Backoff(opts) {
+  opts = opts || {};
+  this.ms = opts.min || 100;
+  this.max = opts.max || 10000;
+  this.factor = opts.factor || 2;
+  this.jitter = opts.jitter > 0 && opts.jitter <= 1 ? opts.jitter : 0;
+  this.attempts = 0;
+}
+
+/**
+ * Return the backoff duration.
+ *
+ * @return {Number}
+ * @api public
+ */
+
+Backoff.prototype.duration = function(){
+  var ms = this.ms * Math.pow(this.factor, this.attempts++);
+  if (this.jitter) {
+    var rand =  Math.random();
+    var deviation = Math.floor(rand * this.jitter * ms);
+    ms = (Math.floor(rand * 10) & 1) == 0  ? ms - deviation : ms + deviation;
+  }
+  return Math.min(ms, this.max) | 0;
+};
+
+/**
+ * Reset the number of attempts.
+ *
+ * @api public
+ */
+
+Backoff.prototype.reset = function(){
+  this.attempts = 0;
+};
+
+/**
+ * Set the minimum duration
+ *
+ * @api public
+ */
+
+Backoff.prototype.setMin = function(min){
+  this.ms = min;
+};
+
+/**
+ * Set the maximum duration
+ *
+ * @api public
+ */
+
+Backoff.prototype.setMax = function(max){
+  this.max = max;
+};
+
+/**
+ * Set the jitter
+ *
+ * @api public
+ */
+
+Backoff.prototype.setJitter = function(jitter){
+  this.jitter = jitter;
+};
+
+
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-bind/index.js":[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -29844,7 +28707,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js":[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -30010,7 +28873,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js":[function(require,module,exports){
 
 /**
  * Expose `debug()` as the module.
@@ -30149,11 +29012,11 @@ try {
   if (window.localStorage) debug.enable(localStorage.debug);
 } catch(e){}
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/index.js":[function(require,module,exports){
 
 module.exports =  require('./lib/');
 
-},{"./lib/":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/index.js":[function(require,module,exports){
+},{"./lib/":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/index.js":[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -30165,7 +29028,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/socket.js","engine.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/socket.js":[function(require,module,exports){
+},{"./socket":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/socket.js","engine.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/socket.js":[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -30226,7 +29089,12 @@ function Socket(uri, opts){
   if (opts.host) {
     var pieces = opts.host.split(':');
     opts.hostname = pieces.shift();
-    if (pieces.length) opts.port = pieces.pop();
+    if (pieces.length) {
+      opts.port = pieces.pop();
+    } else if (!opts.port) {
+      // if no port is specified manually, use the protocol default
+      opts.port = this.secure ? '443' : '80';
+    }
   }
 
   this.agent = opts.agent || false;
@@ -30240,7 +29108,9 @@ function Socket(uri, opts){
   this.upgrade = false !== opts.upgrade;
   this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
   this.forceJSONP = !!opts.forceJSONP;
+  this.jsonp = false !== opts.jsonp;
   this.forceBase64 = !!opts.forceBase64;
+  this.enablesXDR = !!opts.enablesXDR;
   this.timestampParam = opts.timestampParam || 't';
   this.timestampRequests = opts.timestampRequests;
   this.transports = opts.transports || ['polling', 'websocket'];
@@ -30249,9 +29119,19 @@ function Socket(uri, opts){
   this.callbackBuffer = [];
   this.policyPort = opts.policyPort || 843;
   this.rememberUpgrade = opts.rememberUpgrade || false;
-  this.open();
   this.binaryType = null;
   this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx || null;
+  this.key = opts.key || null;
+  this.passphrase = opts.passphrase || null;
+  this.cert = opts.cert || null;
+  this.ca = opts.ca || null;
+  this.ciphers = opts.ciphers || null;
+  this.rejectUnauthorized = opts.rejectUnauthorized || null;
+
+  this.open();
 }
 
 Socket.priorWebsocketSuccess = false;
@@ -30309,11 +29189,20 @@ Socket.prototype.createTransport = function (name) {
     path: this.path,
     query: query,
     forceJSONP: this.forceJSONP,
+    jsonp: this.jsonp,
     forceBase64: this.forceBase64,
+    enablesXDR: this.enablesXDR,
     timestampRequests: this.timestampRequests,
     timestampParam: this.timestampParam,
     policyPort: this.policyPort,
-    socket: this
+    socket: this,
+    pfx: this.pfx,
+    key: this.key,
+    passphrase: this.passphrase,
+    cert: this.cert,
+    ca: this.ca,
+    ciphers: this.ciphers,
+    rejectUnauthorized: this.rejectUnauthorized
   });
 
   return transport;
@@ -30338,11 +29227,28 @@ Socket.prototype.open = function () {
   var transport;
   if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') != -1) {
     transport = 'websocket';
+  } else if (0 == this.transports.length) {
+    // Emit error on next tick so it can be listened to
+    var self = this;
+    setTimeout(function() {
+      self.emit('error', 'No transports available');
+    }, 0);
+    return;
   } else {
     transport = this.transports[0];
   }
   this.readyState = 'opening';
-  var transport = this.createTransport(transport);
+
+  // Retry with the next transport if the transport is disabled (jsonp: false)
+  var transport;
+  try {
+    transport = this.createTransport(transport);
+  } catch (e) {
+    this.transports.shift();
+    this.open();
+    return;
+  }
+
   transport.open();
   this.setTransport(transport);
 };
@@ -30411,14 +29317,13 @@ Socket.prototype.probe = function (name) {
         debug('probe transport "%s" pong', name);
         self.upgrading = true;
         self.emit('upgrading', transport);
+        if (!transport) return;
         Socket.priorWebsocketSuccess = 'websocket' == transport.name;
 
         debug('pausing current transport "%s"', self.transport.name);
         self.transport.pause(function () {
           if (failed) return;
-          if ('closed' == self.readyState || 'closing' == self.readyState) {
-            return;
-          }
+          if ('closed' == self.readyState) return;
           debug('changing transport and sending upgrade packet');
 
           cleanup();
@@ -30700,6 +29605,10 @@ Socket.prototype.send = function (msg, fn) {
  */
 
 Socket.prototype.sendPacket = function (type, data, fn) {
+  if ('closing' == this.readyState || 'closed' == this.readyState) {
+    return;
+  }
+
   var packet = { type: type, data: data };
   this.emit('packetCreate', packet);
   this.writeBuffer.push(packet);
@@ -30715,9 +29624,41 @@ Socket.prototype.sendPacket = function (type, data, fn) {
 
 Socket.prototype.close = function () {
   if ('opening' == this.readyState || 'open' == this.readyState) {
-    this.onClose('forced close');
-    debug('socket closing - telling transport to close');
-    this.transport.close();
+    this.readyState = 'closing';
+
+    var self = this;
+
+    function close() {
+      self.onClose('forced close');
+      debug('socket closing - telling transport to close');
+      self.transport.close();
+    }
+
+    function cleanupAndClose() {
+      self.removeListener('upgrade', cleanupAndClose);
+      self.removeListener('upgradeError', cleanupAndClose);
+      close();
+    }
+
+    function waitForUpgrade() {
+      // wait for upgrade to finish since we can't send packets while pausing a transport
+      self.once('upgrade', cleanupAndClose);
+      self.once('upgradeError', cleanupAndClose);
+    }
+
+    if (this.writeBuffer.length) {
+      this.once('drain', function() {
+        if (this.upgrading) {
+          waitForUpgrade();
+        } else {
+          close();
+        }
+      });
+    } else if (this.upgrading) {
+      waitForUpgrade();
+    } else {
+      close();
+    }
   }
 
   return this;
@@ -30743,7 +29684,7 @@ Socket.prototype.onError = function (err) {
  */
 
 Socket.prototype.onClose = function (reason, desc) {
-  if ('opening' == this.readyState || 'open' == this.readyState) {
+  if ('opening' == this.readyState || 'open' == this.readyState || 'closing' == this.readyState) {
     debug('socket close with reason: "%s"', reason);
     var self = this;
 
@@ -30796,7 +29737,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","./transports":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/index.js","component-emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","engine.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","indexof":"/home/cv/coup/node_modules/socket.io-client/node_modules/indexof/index.js","parsejson":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parsejson/index.js","parseqs":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","parseuri":"/home/cv/coup/node_modules/socket.io-client/node_modules/parseuri/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js":[function(require,module,exports){
+},{"./transport":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","./transports":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/index.js","component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/browser.js","engine.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","indexof":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/indexof/index.js","parsejson":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parsejson/index.js","parseqs":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","parseuri":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseuri/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js":[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -30828,6 +29769,16 @@ function Transport (opts) {
   this.readyState = '';
   this.agent = opts.agent || false;
   this.socket = opts.socket;
+  this.enablesXDR = opts.enablesXDR;
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx;
+  this.key = opts.key;
+  this.passphrase = opts.passphrase;
+  this.cert = opts.cert;
+  this.ca = opts.ca;
+  this.ciphers = opts.ciphers;
+  this.rejectUnauthorized = opts.rejectUnauthorized;
 }
 
 /**
@@ -30924,13 +29875,8 @@ Transport.prototype.onOpen = function () {
  */
 
 Transport.prototype.onData = function(data){
-  try {
-    var packet = parser.decodePacket(data, this.socket.binaryType);
-    this.onPacket(packet);
-  } catch(e){
-    e.data = data;
-    this.onError('parser decode error', e);
-  }
+  var packet = parser.decodePacket(data, this.socket.binaryType);
+  this.onPacket(packet);
 };
 
 /**
@@ -30952,7 +29898,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","engine.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/index.js":[function(require,module,exports){
+},{"component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","engine.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/index.js":[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -30980,6 +29926,8 @@ exports.websocket = websocket;
 function polling(opts){
   var xhr;
   var xd = false;
+  var xs = false;
+  var jsonp = false !== opts.jsonp;
 
   if (global.location) {
     var isSSL = 'https:' == location.protocol;
@@ -30991,20 +29939,23 @@ function polling(opts){
     }
 
     xd = opts.hostname != location.hostname || port != opts.port;
+    xs = opts.secure != isSSL;
   }
 
   opts.xdomain = xd;
+  opts.xscheme = xs;
   xhr = new XMLHttpRequest(opts);
 
   if ('open' in xhr && !opts.forceJSONP) {
     return new XHR(opts);
   } else {
+    if (!jsonp) throw new Error('JSONP disabled');
     return new JSONP(opts);
   }
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-jsonp.js","./polling-xhr":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-xhr.js","./websocket":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/websocket.js","xmlhttprequest":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-jsonp.js":[function(require,module,exports){
+},{"./polling-jsonp":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-jsonp.js","./polling-xhr":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-xhr.js","./websocket":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/websocket.js","xmlhttprequest":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-jsonp.js":[function(require,module,exports){
 (function (global){
 
 /**
@@ -31081,7 +30032,7 @@ function JSONPPolling (opts) {
   if (global.document && global.addEventListener) {
     global.addEventListener('beforeunload', function () {
       if (self.script) self.script.onerror = empty;
-    });
+    }, false);
   }
 }
 
@@ -31112,6 +30063,7 @@ JSONPPolling.prototype.doClose = function () {
   if (this.form) {
     this.form.parentNode.removeChild(this.form);
     this.form = null;
+    this.iframe = null;
   }
 
   Polling.prototype.doClose.call(this);
@@ -31240,7 +30192,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js","component-inherit":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-xhr.js":[function(require,module,exports){
+},{"./polling":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js","component-inherit":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling-xhr.js":[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -31286,6 +30238,7 @@ function XHR(opts){
 
     this.xd = opts.hostname != global.location.hostname ||
       port != opts.port;
+    this.xs = opts.secure != isSSL;
   }
 }
 
@@ -31312,8 +30265,20 @@ XHR.prototype.request = function(opts){
   opts = opts || {};
   opts.uri = this.uri();
   opts.xd = this.xd;
+  opts.xs = this.xs;
   opts.agent = this.agent || false;
   opts.supportsBinary = this.supportsBinary;
+  opts.enablesXDR = this.enablesXDR;
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+
   return new Request(opts);
 };
 
@@ -31366,10 +30331,24 @@ function Request(opts){
   this.method = opts.method || 'GET';
   this.uri = opts.uri;
   this.xd = !!opts.xd;
+  this.xs = !!opts.xs;
   this.async = false !== opts.async;
   this.data = undefined != opts.data ? opts.data : null;
   this.agent = opts.agent;
-  this.create(opts.isBinary, opts.supportsBinary);
+  this.isBinary = opts.isBinary;
+  this.supportsBinary = opts.supportsBinary;
+  this.enablesXDR = opts.enablesXDR;
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx;
+  this.key = opts.key;
+  this.passphrase = opts.passphrase;
+  this.cert = opts.cert;
+  this.ca = opts.ca;
+  this.ciphers = opts.ciphers;
+  this.rejectUnauthorized = opts.rejectUnauthorized;
+
+  this.create();
 }
 
 /**
@@ -31384,14 +30363,25 @@ Emitter(Request.prototype);
  * @api private
  */
 
-Request.prototype.create = function(isBinary, supportsBinary){
-  var xhr = this.xhr = new XMLHttpRequest({ agent: this.agent, xdomain: this.xd });
+Request.prototype.create = function(){
+  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+
+  var xhr = this.xhr = new XMLHttpRequest(opts);
   var self = this;
 
   try {
     debug('xhr open %s: %s', this.method, this.uri);
     xhr.open(this.method, this.uri, this.async);
-    if (supportsBinary) {
+    if (this.supportsBinary) {
       // This has to be done after open because Firefox is stupid
       // http://stackoverflow.com/questions/13216903/get-binary-data-with-xmlhttprequest-in-a-firefox-extension
       xhr.responseType = 'arraybuffer';
@@ -31399,7 +30389,7 @@ Request.prototype.create = function(isBinary, supportsBinary){
 
     if ('POST' == this.method) {
       try {
-        if (isBinary) {
+        if (this.isBinary) {
           xhr.setRequestHeader('Content-type', 'application/octet-stream');
         } else {
           xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
@@ -31412,22 +30402,18 @@ Request.prototype.create = function(isBinary, supportsBinary){
       xhr.withCredentials = true;
     }
 
-    xhr.onreadystatechange = function(){
-      var data;
-
-      try {
+    if (this.hasXDR()) {
+      xhr.onload = function(){
+        self.onLoad();
+      };
+      xhr.onerror = function(){
+        self.onError(xhr.responseText);
+      };
+    } else {
+      xhr.onreadystatechange = function(){
         if (4 != xhr.readyState) return;
         if (200 == xhr.status || 1223 == xhr.status) {
-          var contentType = xhr.getResponseHeader('Content-Type');
-          if (contentType === 'application/octet-stream') {
-            data = xhr.response;
-          } else {
-            if (!supportsBinary) {
-              data = xhr.responseText;
-            } else {
-              data = 'ok';
-            }
-          }
+          self.onLoad();
         } else {
           // make sure the `error` event handler that's user-set
           // does not throw in the same tick and gets caught here
@@ -31435,14 +30421,8 @@ Request.prototype.create = function(isBinary, supportsBinary){
             self.onError(xhr.status);
           }, 0);
         }
-      } catch (e) {
-        self.onError(e);
-      }
-
-      if (null != data) {
-        self.onData(data);
-      }
-    };
+      };
+    }
 
     debug('xhr data %s', this.data);
     xhr.send(this.data);
@@ -31492,7 +30472,7 @@ Request.prototype.onData = function(data){
 
 Request.prototype.onError = function(err){
   this.emit('error', err);
-  this.cleanup();
+  this.cleanup(true);
 };
 
 /**
@@ -31501,22 +30481,68 @@ Request.prototype.onError = function(err){
  * @api private
  */
 
-Request.prototype.cleanup = function(){
+Request.prototype.cleanup = function(fromError){
   if ('undefined' == typeof this.xhr || null === this.xhr) {
     return;
   }
   // xmlhttprequest
-  this.xhr.onreadystatechange = empty;
+  if (this.hasXDR()) {
+    this.xhr.onload = this.xhr.onerror = empty;
+  } else {
+    this.xhr.onreadystatechange = empty;
+  }
 
-  try {
-    this.xhr.abort();
-  } catch(e) {}
+  if (fromError) {
+    try {
+      this.xhr.abort();
+    } catch(e) {}
+  }
 
   if (global.document) {
     delete Request.requests[this.index];
   }
 
   this.xhr = null;
+};
+
+/**
+ * Called upon load.
+ *
+ * @api private
+ */
+
+Request.prototype.onLoad = function(){
+  var data;
+  try {
+    var contentType;
+    try {
+      contentType = this.xhr.getResponseHeader('Content-Type').split(';')[0];
+    } catch (e) {}
+    if (contentType === 'application/octet-stream') {
+      data = this.xhr.response;
+    } else {
+      if (!this.supportsBinary) {
+        data = this.xhr.responseText;
+      } else {
+        data = 'ok';
+      }
+    }
+  } catch (e) {
+    this.onError(e);
+  }
+  if (null != data) {
+    this.onData(data);
+  }
+};
+
+/**
+ * Check if it has XDomainRequest.
+ *
+ * @api private
+ */
+
+Request.prototype.hasXDR = function(){
+  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
 };
 
 /**
@@ -31541,7 +30567,7 @@ if (global.document) {
   if (global.attachEvent) {
     global.attachEvent('onunload', unloadHandler);
   } else if (global.addEventListener) {
-    global.addEventListener('beforeunload', unloadHandler);
+    global.addEventListener('beforeunload', unloadHandler, false);
   }
 }
 
@@ -31554,7 +30580,7 @@ function unloadHandler() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js","component-emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","component-inherit":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","xmlhttprequest":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js":[function(require,module,exports){
+},{"./polling":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js","component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","component-inherit":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/browser.js","xmlhttprequest":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/polling.js":[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -31577,7 +30603,7 @@ module.exports = Polling;
 
 var hasXHR2 = (function() {
   var XMLHttpRequest = require('xmlhttprequest');
-  var xhr = new XMLHttpRequest({ agent: this.agent, xdomain: false });
+  var xhr = new XMLHttpRequest({ xdomain: false });
   return null != xhr.responseType;
 })();
 
@@ -31801,7 +30827,7 @@ Polling.prototype.uri = function(){
   return schema + '://' + this.hostname + port + this.path + query;
 };
 
-},{"../transport":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","component-inherit":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","engine.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","parseqs":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","xmlhttprequest":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/websocket.js":[function(require,module,exports){
+},{"../transport":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","component-inherit":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/browser.js","engine.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","parseqs":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","xmlhttprequest":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transports/websocket.js":[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -31877,6 +30903,15 @@ WS.prototype.doOpen = function(){
   var uri = this.uri();
   var protocols = void(0);
   var opts = { agent: this.agent };
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
 
   this.ws = new WebSocket(uri, protocols, opts);
 
@@ -32032,17 +31067,34 @@ WS.prototype.check = function(){
   return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
 };
 
-},{"../transport":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","component-inherit":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","engine.io-parser":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","parseqs":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","ws":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/ws/lib/browser.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js":[function(require,module,exports){
+},{"../transport":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/transport.js","component-inherit":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/browser.js","engine.io-parser":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js","parseqs":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js","ws":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/ws/lib/browser.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/lib/xmlhttprequest.js":[function(require,module,exports){
 // browser shim for xmlhttprequest module
 var hasCORS = require('has-cors');
 
 module.exports = function(opts) {
   var xdomain = opts.xdomain;
 
+  // scheme must be same when usign XDomainRequest
+  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+  var xscheme = opts.xscheme;
+
+  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
+  // https://github.com/Automattic/engine.io-client/pull/217
+  var enablesXDR = opts.enablesXDR;
+
   // XMLHttpRequest can be disabled on IE
   try {
     if ('undefined' != typeof XMLHttpRequest && (!xdomain || hasCORS)) {
       return new XMLHttpRequest();
+    }
+  } catch (e) { }
+
+  // Use XDomainRequest for IE8 if enablesXDR is true
+  // because loading bar keeps flashing when using jsonp-polling
+  // https://github.com/yujiosaka/socke.io-ie8-loading-example
+  try {
+    if ('undefined' != typeof XDomainRequest && !xscheme && enablesXDR) {
+      return new XDomainRequest();
     }
   } catch (e) { }
 
@@ -32053,7 +31105,7 @@ module.exports = function(opts) {
   }
 }
 
-},{"has-cors":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js":[function(require,module,exports){
+},{"has-cors":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/component-inherit/index.js":[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -32061,13 +31113,475 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/browser.js":[function(require,module,exports){
+
+/**
+ * This is the web browser implementation of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = require('./debug');
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+  'lightseagreen',
+  'forestgreen',
+  'goldenrod',
+  'dodgerblue',
+  'darkorchid',
+  'crimson'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+function useColors() {
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  return ('WebkitAppearance' in document.documentElement.style) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (window.console && (console.firebug || (console.exception && console.table))) ||
+    // is firefox >= v31?
+    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+}
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+exports.formatters.j = function(v) {
+  return JSON.stringify(v);
+};
+
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs() {
+  var args = arguments;
+  var useColors = this.useColors;
+
+  args[0] = (useColors ? '%c' : '')
+    + this.namespace
+    + (useColors ? ' %c' : ' ')
+    + args[0]
+    + (useColors ? '%c ' : ' ')
+    + '+' + exports.humanize(this.diff);
+
+  if (!useColors) return args;
+
+  var c = 'color: ' + this.color;
+  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+
+  // the final "%c" is somewhat tricky, because there could be other
+  // arguments passed either before or after the %c, so we need to
+  // figure out the correct index to insert the CSS into
+  var index = 0;
+  var lastC = 0;
+  args[0].replace(/%[a-z%]/g, function(match) {
+    if ('%%' === match) return;
+    index++;
+    if ('%c' === match) {
+      // we only are interested in the *last* %c
+      // (the user may have provided their own)
+      lastC = index;
+    }
+  });
+
+  args.splice(lastC, 0, c);
+  return args;
+}
+
+/**
+ * Invokes `console.log()` when available.
+ * No-op when `console.log` is not a "function".
+ *
+ * @api public
+ */
+
+function log() {
+  // This hackery is required for IE8,
+  // where the `console.log` function doesn't have 'apply'
+  return 'object' == typeof console
+    && 'function' == typeof console.log
+    && Function.prototype.apply.call(console.log, console, arguments);
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+
+function save(namespaces) {
+  try {
+    if (null == namespaces) {
+      localStorage.removeItem('debug');
+    } else {
+      localStorage.debug = namespaces;
+    }
+  } catch(e) {}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+  var r;
+  try {
+    r = localStorage.debug;
+  } catch(e) {}
+  return r;
+}
+
+/**
+ * Enable namespaces listed in `localStorage.debug` initially.
+ */
+
+exports.enable(load());
+
+},{"./debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/debug.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/debug.js":[function(require,module,exports){
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = debug;
+exports.coerce = coerce;
+exports.disable = disable;
+exports.enable = enable;
+exports.enabled = enabled;
+exports.humanize = require('ms');
+
+/**
+ * The currently active debug mode names, and names to skip.
+ */
+
+exports.names = [];
+exports.skips = [];
+
+/**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lowercased letter, i.e. "n".
+ */
+
+exports.formatters = {};
+
+/**
+ * Previously assigned color.
+ */
+
+var prevColor = 0;
+
+/**
+ * Previous log timestamp.
+ */
+
+var prevTime;
+
+/**
+ * Select a color.
+ *
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor() {
+  return exports.colors[prevColor++ % exports.colors.length];
+}
+
+/**
+ * Create a debugger with the given `namespace`.
+ *
+ * @param {String} namespace
+ * @return {Function}
+ * @api public
+ */
+
+function debug(namespace) {
+
+  // define the `disabled` version
+  function disabled() {
+  }
+  disabled.enabled = false;
+
+  // define the `enabled` version
+  function enabled() {
+
+    var self = enabled;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
+
+    // add the `color` if not set
+    if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.color && self.useColors) self.color = selectColor();
+
+    var args = Array.prototype.slice.call(arguments);
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
+      // anything else let's inspect with %o
+      args = ['%o'].concat(args);
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(self, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    if ('function' === typeof exports.formatArgs) {
+      args = exports.formatArgs.apply(self, args);
+    }
+    var logFn = enabled.log || exports.log || console.log.bind(console);
+    logFn.apply(self, args);
+  }
+  enabled.enabled = true;
+
+  var fn = exports.enabled(namespace) ? enabled : disabled;
+
+  fn.namespace = namespace;
+
+  return fn;
+}
+
+/**
+ * Enables a debug mode by namespaces. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} namespaces
+ * @api public
+ */
+
+function enable(namespaces) {
+  exports.save(namespaces);
+
+  var split = (namespaces || '').split(/[\s,]+/);
+  var len = split.length;
+
+  for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
+    namespaces = split[i].replace(/\*/g, '.*?');
+    if (namespaces[0] === '-') {
+      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      exports.names.push(new RegExp('^' + namespaces + '$'));
+    }
+  }
+}
+
+/**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+function disable() {
+  exports.enable('');
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+function enabled(name) {
+  var i, len;
+  for (i = 0, len = exports.skips.length; i < len; i++) {
+    if (exports.skips[i].test(name)) {
+      return false;
+    }
+  }
+  for (i = 0, len = exports.names.length; i < len; i++) {
+    if (exports.names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function coerce(val) {
+  if (val instanceof Error) return val.stack || val.message;
+  return val;
+}
+
+},{"ms":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/node_modules/ms/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/debug/node_modules/ms/index.js":[function(require,module,exports){
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} options
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options){
+  options = options || {};
+  if ('string' == typeof val) return parse(val);
+  return options.long
+    ? long(val)
+    : short(val);
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  var match = /^((?:\d+)?\.?\d+) *(ms|seconds?|s|minutes?|m|hours?|h|days?|d|years?|y)?$/i.exec(str);
+  if (!match) return;
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'y':
+      return n * y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 's':
+      return n * s;
+    case 'ms':
+      return n;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function short(ms) {
+  if (ms >= d) return Math.round(ms / d) + 'd';
+  if (ms >= h) return Math.round(ms / h) + 'h';
+  if (ms >= m) return Math.round(ms / m) + 'm';
+  if (ms >= s) return Math.round(ms / s) + 's';
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function long(ms) {
+  return plural(ms, d, 'day')
+    || plural(ms, h, 'hour')
+    || plural(ms, m, 'minute')
+    || plural(ms, s, 'second')
+    || ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, n, name) {
+  if (ms < n) return;
+  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/browser.js":[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
  */
 
 var keys = require('./keys');
+var hasBinary = require('has-binary');
 var sliceBuffer = require('arraybuffer.slice');
 var base64encoder = require('base64-arraybuffer');
 var after = require('after');
@@ -32083,10 +31597,24 @@ var utf8 = require('utf8');
 var isAndroid = navigator.userAgent.match(/Android/i);
 
 /**
+ * Check if we are running in PhantomJS.
+ * Uploading a Blob with PhantomJS does not work correctly, as reported here:
+ * https://github.com/ariya/phantomjs/issues/11395
+ * @type boolean
+ */
+var isPhantomJS = /PhantomJS/i.test(navigator.userAgent);
+
+/**
+ * When true, avoids using Blobs to encode payloads.
+ * @type boolean
+ */
+var dontSendBlobs = isAndroid || isPhantomJS;
+
+/**
  * Current protocol version.
  */
 
-exports.protocol = 2;
+exports.protocol = 3;
 
 /**
  * Packet types.
@@ -32132,10 +31660,15 @@ var Blob = require('blob');
  * @api private
  */
 
-exports.encodePacket = function (packet, supportsBinary, callback) {
-  if (typeof supportsBinary == 'function') {
+exports.encodePacket = function (packet, supportsBinary, utf8encode, callback) {
+  if ('function' == typeof supportsBinary) {
     callback = supportsBinary;
     supportsBinary = false;
+  }
+
+  if ('function' == typeof utf8encode) {
+    callback = utf8encode;
+    utf8encode = null;
   }
 
   var data = (packet.data === undefined)
@@ -32148,17 +31681,28 @@ exports.encodePacket = function (packet, supportsBinary, callback) {
     return encodeBlob(packet, supportsBinary, callback);
   }
 
+  // might be an object with { base64: true, data: dataAsBase64String }
+  if (data && data.base64) {
+    return encodeBase64Object(packet, callback);
+  }
+
   // Sending data as a utf-8 string
   var encoded = packets[packet.type];
 
   // data fragment is optional
   if (undefined !== packet.data) {
-    encoded += utf8.encode(String(packet.data));
+    encoded += utf8encode ? utf8.encode(String(packet.data)) : String(packet.data);
   }
 
   return callback('' + encoded);
 
 };
+
+function encodeBase64Object(packet, callback) {
+  // packet data is an object { base64: true, data: dataAsBase64String }
+  var message = 'b' + exports.packets[packet.type] + packet.data.data;
+  return callback(message);
+}
 
 /**
  * Encode packet helpers for binary types
@@ -32189,7 +31733,7 @@ function encodeBlobAsArrayBuffer(packet, supportsBinary, callback) {
   var fr = new FileReader();
   fr.onload = function() {
     packet.data = fr.result;
-    exports.encodePacket(packet, supportsBinary, callback);
+    exports.encodePacket(packet, supportsBinary, true, callback);
   };
   return fr.readAsArrayBuffer(packet.data);
 }
@@ -32199,7 +31743,7 @@ function encodeBlob(packet, supportsBinary, callback) {
     return exports.encodeBase64Packet(packet, callback);
   }
 
-  if (isAndroid) {
+  if (dontSendBlobs) {
     return encodeBlobAsArrayBuffer(packet, supportsBinary, callback);
   }
 
@@ -32251,14 +31795,20 @@ exports.encodeBase64Packet = function(packet, callback) {
  * @api private
  */
 
-exports.decodePacket = function (data, binaryType) {
+exports.decodePacket = function (data, binaryType, utf8decode) {
   // String data
   if (typeof data == 'string' || data === undefined) {
     if (data.charAt(0) == 'b') {
       return exports.decodeBase64Packet(data.substr(1), binaryType);
     }
 
-    data = utf8.decode(data);
+    if (utf8decode) {
+      try {
+        data = utf8.decode(data);
+      } catch (e) {
+        return err;
+      }
+    }
     var type = data.charAt(0);
 
     if (Number(type) != type || !packetslist[type]) {
@@ -32325,8 +31875,10 @@ exports.encodePayload = function (packets, supportsBinary, callback) {
     supportsBinary = null;
   }
 
-  if (supportsBinary) {
-    if (Blob && !isAndroid) {
+  var isBinary = hasBinary(packets);
+
+  if (supportsBinary && isBinary) {
+    if (Blob && !dontSendBlobs) {
       return exports.encodePayloadAsBlob(packets, callback);
     }
 
@@ -32342,7 +31894,7 @@ exports.encodePayload = function (packets, supportsBinary, callback) {
   }
 
   function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, supportsBinary, function(message) {
+    exports.encodePacket(packet, !isBinary ? false : supportsBinary, true, function(message) {
       doneCallback(null, setLengthHeader(message));
     });
   }
@@ -32418,7 +31970,7 @@ exports.decodePayload = function (data, binaryType, callback) {
       }
 
       if (msg.length) {
-        packet = exports.decodePacket(msg, binaryType);
+        packet = exports.decodePacket(msg, binaryType, true);
 
         if (err.type == packet.type && err.data == packet.data) {
           // parser error in individual packet - ignoring payload
@@ -32462,7 +32014,7 @@ exports.encodePayloadAsArrayBuffer = function(packets, callback) {
   }
 
   function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, function(data) {
+    exports.encodePacket(packet, true, true, function(data) {
       return doneCallback(null, data);
     });
   }
@@ -32520,7 +32072,7 @@ exports.encodePayloadAsArrayBuffer = function(packets, callback) {
 
 exports.encodePayloadAsBlob = function(packets, callback) {
   function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, function(encoded) {
+    exports.encodePacket(packet, true, true, function(encoded) {
       var binaryIdentifier = new Uint8Array(1);
       binaryIdentifier[0] = 1;
       if (typeof encoded === 'string') {
@@ -32573,14 +32125,25 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
   var bufferTail = data;
   var buffers = [];
 
+  var numberTooLong = false;
   while (bufferTail.byteLength > 0) {
     var tailArray = new Uint8Array(bufferTail);
     var isString = tailArray[0] === 0;
     var msgLength = '';
+
     for (var i = 1; ; i++) {
       if (tailArray[i] == 255) break;
+
+      if (msgLength.length > 310) {
+        numberTooLong = true;
+        break;
+      }
+
       msgLength += tailArray[i];
     }
+
+    if(numberTooLong) return callback(err, 0, 1);
+
     bufferTail = sliceBuffer(bufferTail, 2 + msgLength.length);
     msgLength = parseInt(msgLength);
 
@@ -32597,18 +32160,19 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
         }
       }
     }
+
     buffers.push(msg);
     bufferTail = sliceBuffer(bufferTail, msgLength);
   }
 
   var total = buffers.length;
   buffers.forEach(function(buffer, i) {
-    callback(exports.decodePacket(buffer, binaryType), i, total);
+    callback(exports.decodePacket(buffer, binaryType, true), i, total);
   });
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/keys.js","after":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/after/index.js","arraybuffer.slice":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/arraybuffer.slice/index.js","base64-arraybuffer":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/base64-arraybuffer/lib/base64-arraybuffer.js","blob":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/blob/index.js","utf8":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/utf8/utf8.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/keys.js":[function(require,module,exports){
+},{"./keys":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/keys.js","after":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/after/index.js","arraybuffer.slice":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/arraybuffer.slice/index.js","base64-arraybuffer":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/base64-arraybuffer/lib/base64-arraybuffer.js","blob":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/blob/index.js","has-binary":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/index.js","utf8":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/utf8/utf8.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/lib/keys.js":[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -32629,7 +32193,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/after/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/after/index.js":[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -32659,7 +32223,7 @@ function after(count, callback, err_cb) {
 
 function noop() {}
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/arraybuffer.slice/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/arraybuffer.slice/index.js":[function(require,module,exports){
 /**
  * An abstraction for slicing an arraybuffer even when
  * ArrayBuffer.prototype.slice is not supported
@@ -32690,7 +32254,7 @@ module.exports = function(arraybuffer, start, end) {
   return result.buffer;
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/base64-arraybuffer/lib/base64-arraybuffer.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/base64-arraybuffer/lib/base64-arraybuffer.js":[function(require,module,exports){
 /*
  * base64-arraybuffer
  * https://github.com/niklasvh/base64-arraybuffer
@@ -32751,7 +32315,7 @@ module.exports = function(arraybuffer, start, end) {
   };
 })("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/blob/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/blob/index.js":[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -32804,7 +32368,7 @@ module.exports = (function() {
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/utf8/utf8.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/engine.io-parser/node_modules/utf8/utf8.js":[function(require,module,exports){
 (function (global){
 /*! http://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
@@ -33047,7 +32611,7 @@ module.exports = (function() {
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/index.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -33072,7 +32636,7 @@ try {
   module.exports = false;
 }
 
-},{"global":"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/node_modules/global/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/node_modules/global/index.js":[function(require,module,exports){
+},{"global":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/node_modules/global/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/has-cors/node_modules/global/index.js":[function(require,module,exports){
 
 /**
  * Returns `this`. Execute this without a "context" (i.e. without it being
@@ -33082,7 +32646,7 @@ try {
 
 module.exports = (function () { return this; })();
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parsejson/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parsejson/index.js":[function(require,module,exports){
 (function (global){
 /**
  * JSON parse.
@@ -33117,7 +32681,7 @@ module.exports = function parsejson(data) {
   }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseqs/index.js":[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -33156,7 +32720,48 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/ws/lib/browser.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/parseuri/index.js":[function(require,module,exports){
+/**
+ * Parses an URI
+ *
+ * @author Steven Levithan <stevenlevithan.com> (MIT license)
+ * @api private
+ */
+
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+
+var parts = [
+    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+];
+
+module.exports = function parseuri(str) {
+    var src = str,
+        b = str.indexOf('['),
+        e = str.indexOf(']');
+
+    if (b != -1 && e != -1) {
+        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+    }
+
+    var m = re.exec(str || ''),
+        uri = {},
+        i = 14;
+
+    while (i--) {
+        uri[parts[i]] = m[i] || '';
+    }
+
+    if (b != -1 && e != -1) {
+        uri.source = src;
+        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
+        uri.ipv6uri = true;
+    }
+
+    return uri;
+};
+
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/engine.io-client/node_modules/ws/lib/browser.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -33201,8 +32806,9 @@ function ws(uri, protocols, opts) {
 
 if (WebSocket) ws.prototype = WebSocket.prototype;
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/has-binary-data/index.js":[function(require,module,exports){
-(function (global,Buffer){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/index.js":[function(require,module,exports){
+(function (global){
+
 /*
  * Module requirements.
  */
@@ -33226,10 +32832,10 @@ module.exports = hasBinary;
 
 function hasBinary(data) {
 
-  function recursiveCheckForBinary(obj) { 
+  function _hasBinary(obj) {
     if (!obj) return false;
 
-    if ( (global.Buffer && Buffer.isBuffer(obj)) ||
+    if ( (global.Buffer && global.Buffer.isBuffer(obj)) ||
          (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
          (global.Blob && obj instanceof Blob) ||
          (global.File && obj instanceof File)
@@ -33239,7 +32845,7 @@ function hasBinary(data) {
 
     if (isArray(obj)) {
       for (var i = 0; i < obj.length; i++) {
-          if (recursiveCheckForBinary(obj[i])) {
+          if (_hasBinary(obj[i])) {
               return true;
           }
       }
@@ -33249,7 +32855,7 @@ function hasBinary(data) {
       }
 
       for (var key in obj) {
-        if (recursiveCheckForBinary(obj[key])) {
+        if (obj.hasOwnProperty(key) && _hasBinary(obj[key])) {
           return true;
         }
       }
@@ -33258,16 +32864,16 @@ function hasBinary(data) {
     return false;
   }
 
-  return recursiveCheckForBinary(data);
+  return _hasBinary(data);
 }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":"/home/cv/coup/node_modules/browserify/node_modules/buffer/index.js","isarray":"/home/cv/coup/node_modules/socket.io-client/node_modules/has-binary-data/node_modules/isarray/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/has-binary-data/node_modules/isarray/index.js":[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"isarray":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/node_modules/isarray/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/node_modules/isarray/index.js":[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/indexof/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/indexof/index.js":[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -33278,7 +32884,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/object-component/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/object-component/index.js":[function(require,module,exports){
 
 /**
  * HOP ref.
@@ -33363,7 +32969,7 @@ exports.length = function(obj){
 exports.isEmpty = function(obj){
   return 0 == exports.length(obj);
 };
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/parseuri/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/parseuri/index.js":[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -33390,13 +32996,16 @@ module.exports = function parseuri(str) {
   return uri;
 };
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/binary.js":[function(require,module,exports){
-(function (global,Buffer){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/binary.js":[function(require,module,exports){
+(function (global){
+/*global Blob,File*/
+
 /**
- * Modle requirements
+ * Module requirements
  */
 
 var isArray = require('isarray');
+var isBuf = require('./is-buffer');
 
 /**
  * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -33408,39 +33017,38 @@ var isArray = require('isarray');
  * @api public
  */
 
-exports.deconstructPacket = function(packet) {
-    var buffers = [];
-    var packetData = packet.data;
+exports.deconstructPacket = function(packet){
+  var buffers = [];
+  var packetData = packet.data;
 
-    function deconstructBinPackRecursive(data) {
-        if (!data) return data;
+  function _deconstructPacket(data) {
+    if (!data) return data;
 
-        if ((global.Buffer && Buffer.isBuffer(data)) ||
-            (global.ArrayBuffer && data instanceof ArrayBuffer)) { // replace binary
-            var placeholder = {_placeholder: true, num: buffers.length};
-            buffers.push(data);
-            return placeholder;
-        } else if (isArray(data)) {
-            var newData = new Array(data.length);
-            for (var i = 0; i < data.length; i++) {
-                newData[i] = deconstructBinPackRecursive(data[i]);
-            }
-            return newData;
-        } else if ('object' == typeof data && !(data instanceof Date)) {
-            var newData = {};
-            for (var key in data) {
-                newData[key] = deconstructBinPackRecursive(data[key]);
-            }
-            return newData;
-        }
-        return data;
+    if (isBuf(data)) {
+      var placeholder = { _placeholder: true, num: buffers.length };
+      buffers.push(data);
+      return placeholder;
+    } else if (isArray(data)) {
+      var newData = new Array(data.length);
+      for (var i = 0; i < data.length; i++) {
+        newData[i] = _deconstructPacket(data[i]);
+      }
+      return newData;
+    } else if ('object' == typeof data && !(data instanceof Date)) {
+      var newData = {};
+      for (var key in data) {
+        newData[key] = _deconstructPacket(data[key]);
+      }
+      return newData;
     }
+    return data;
+  }
 
-    var pack = packet;
-    pack.data = deconstructBinPackRecursive(packetData);
-    pack.attachments = buffers.length; // number of binary 'attachments'
-    return {packet: pack, buffers: buffers};
-}
+  var pack = packet;
+  pack.data = _deconstructPacket(packetData);
+  pack.attachments = buffers.length; // number of binary 'attachments'
+  return {packet: pack, buffers: buffers};
+};
 
 /**
  * Reconstructs a binary packet from its placeholder packet and buffers
@@ -33451,31 +33059,31 @@ exports.deconstructPacket = function(packet) {
  * @api public
  */
 
- exports.reconstructPacket = function(packet, buffers) {
-    var curPlaceHolder = 0;
+exports.reconstructPacket = function(packet, buffers) {
+  var curPlaceHolder = 0;
 
-    function reconstructBinPackRecursive(data) {
-        if (data && data._placeholder) {
-            var buf = buffers[data.num]; // appropriate buffer (should be natural order anyway)
-            return buf;
-        } else if (isArray(data)) {
-            for (var i = 0; i < data.length; i++) {
-                data[i] = reconstructBinPackRecursive(data[i]);
-            }
-            return data;
-        } else if (data && 'object' == typeof data) {
-            for (var key in data) {
-                data[key] = reconstructBinPackRecursive(data[key]);
-            }
-            return data;
-        }
-        return data;
+  function _reconstructPacket(data) {
+    if (data && data._placeholder) {
+      var buf = buffers[data.num]; // appropriate buffer (should be natural order anyway)
+      return buf;
+    } else if (isArray(data)) {
+      for (var i = 0; i < data.length; i++) {
+        data[i] = _reconstructPacket(data[i]);
+      }
+      return data;
+    } else if (data && 'object' == typeof data) {
+      for (var key in data) {
+        data[key] = _reconstructPacket(data[key]);
+      }
+      return data;
     }
+    return data;
+  }
 
-    packet.data = reconstructBinPackRecursive(packet.data);
-    packet.attachments = undefined; // no longer useful
-    return packet;
- }
+  packet.data = _reconstructPacket(packet.data);
+  packet.attachments = undefined; // no longer useful
+  return packet;
+};
 
 /**
  * Asynchronously removes Blobs or Files from data via
@@ -33488,8 +33096,7 @@ exports.deconstructPacket = function(packet) {
  */
 
 exports.removeBlobs = function(data, callback) {
-
-  function removeBlobsRecursive(obj, curKey, containingObject) {
+  function _removeBlobs(obj, curKey, containingObject) {
     if (!obj) return obj;
 
     // convert any blob
@@ -33514,40 +33121,27 @@ exports.removeBlobs = function(data, callback) {
       };
 
       fileReader.readAsArrayBuffer(obj); // blob -> arraybuffer
-    }
-
-    if (isArray(obj)) { // handle array
+    } else if (isArray(obj)) { // handle array
       for (var i = 0; i < obj.length; i++) {
-        removeBlobsRecursive(obj[i], i, obj);
+        _removeBlobs(obj[i], i, obj);
       }
     } else if (obj && 'object' == typeof obj && !isBuf(obj)) { // and object
       for (var key in obj) {
-        removeBlobsRecursive(obj[key], key, obj);
+        _removeBlobs(obj[key], key, obj);
       }
     }
   }
 
   var pendingBlobs = 0;
   var bloblessData = data;
-  removeBlobsRecursive(bloblessData);
+  _removeBlobs(bloblessData);
   if (!pendingBlobs) {
     callback(bloblessData);
   }
-}
+};
 
-/**
- * Returns true if obj is a buffer or an arraybuffer.
- *
- * @api private
- */
-function isBuf(obj) {
-  return (global.Buffer && Buffer.isBuffer(obj)) ||
-         (global.ArrayBuffer && obj instanceof ArrayBuffer);
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":"/home/cv/coup/node_modules/browserify/node_modules/buffer/index.js","isarray":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js":[function(require,module,exports){
-(function (global,Buffer){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./is-buffer":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/is-buffer.js","isarray":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/index.js":[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -33556,8 +33150,9 @@ function isBuf(obj) {
 var debug = require('debug')('socket.io-parser');
 var json = require('json3');
 var isArray = require('isarray');
-var Emitter = require('emitter');
+var Emitter = require('component-emitter');
 var binary = require('./binary');
+var isBuf = require('./is-buffer');
 
 /**
  * Protocol version.
@@ -33565,7 +33160,7 @@ var binary = require('./binary');
  * @api public
  */
 
-exports.protocol = 3;
+exports.protocol = 4;
 
 /**
  * Packet types.
@@ -33639,14 +33234,29 @@ exports.BINARY_EVENT = 5;
 
 exports.BINARY_ACK = 6;
 
-exports.Encoder = Encoder
+/**
+ * Encoder constructor.
+ *
+ * @api public
+ */
+
+exports.Encoder = Encoder;
+
+/**
+ * Decoder constructor.
+ *
+ * @api public
+ */
+
+exports.Decoder = Decoder;
 
 /**
  * A socket.io Encoder instance
  *
  * @api public
  */
-function Encoder() {};
+
+function Encoder() {}
 
 /**
  * Encode a packet as a single string if non-binary, or as a
@@ -33741,8 +33351,6 @@ function encodeAsBinary(obj, callback) {
   binary.removeBlobs(obj, writeEncoding);
 }
 
-exports.Decoder = Decoder
-
 /**
  * A socket.io Decoder instance
  *
@@ -33783,9 +33391,7 @@ Decoder.prototype.add = function(obj) {
       this.emit('decoded', packet);
     }
   }
-  else if ((global.Buffer && Buffer.isBuffer(obj)) ||
-            (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
-            obj.base64) { // raw binary data
+  else if (isBuf(obj) || obj.base64) { // raw binary data
     if (!this.reconstructor) {
       throw new Error('got binary data when not reconstructing a packet');
     } else {
@@ -33799,7 +33405,7 @@ Decoder.prototype.add = function(obj) {
   else {
     throw new Error('Unknown type: ' + obj);
   }
-}
+};
 
 /**
  * Decode a packet String (JSON data)
@@ -33866,7 +33472,7 @@ function decodeString(str) {
 
   debug('decoded %s as %j', str, p);
   return p;
-};
+}
 
 /**
  * Deallocates a parser's resources
@@ -33878,7 +33484,7 @@ Decoder.prototype.destroy = function() {
   if (this.reconstructor) {
     this.reconstructor.finishedReconstruction();
   }
-}
+};
 
 /**
  * A manager of a binary event's 'buffer sequence'. Should
@@ -33913,7 +33519,7 @@ BinaryReconstructor.prototype.takeBinaryData = function(binData) {
     return packet;
   }
   return null;
-}
+};
 
 /**
  * Cleans up binary packet reconstruction variables.
@@ -33924,7 +33530,7 @@ BinaryReconstructor.prototype.takeBinaryData = function(binData) {
 BinaryReconstructor.prototype.finishedReconstruction = function() {
   this.reconPack = null;
   this.buffers = [];
-}
+};
 
 function error(data){
   return {
@@ -33933,174 +33539,26 @@ function error(data){
   };
 }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./binary":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/binary.js","buffer":"/home/cv/coup/node_modules/browserify/node_modules/buffer/index.js","debug":"/home/cv/coup/node_modules/socket.io-client/node_modules/debug/debug.js","emitter":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/emitter/index.js","isarray":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js","json3":"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/emitter/index.js":[function(require,module,exports){
+},{"./binary":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/binary.js","./is-buffer":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/is-buffer.js","component-emitter":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/component-emitter/index.js","debug":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/debug/debug.js","isarray":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js","json3":"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js"}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/is-buffer.js":[function(require,module,exports){
+(function (global){
+
+module.exports = isBuf;
 
 /**
- * Module dependencies.
- */
-
-var index = require('indexof');
-
-/**
- * Expose `Emitter`.
- */
-
-module.exports = Emitter;
-
-/**
- * Initialize a new `Emitter`.
+ * Returns true if obj is a buffer or an arraybuffer.
  *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
  * @api private
  */
 
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
+function isBuf(obj) {
+  return (global.Buffer && global.Buffer.isBuffer(obj)) ||
+         (global.ArrayBuffer && obj instanceof ArrayBuffer);
 }
 
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
-  function on() {
-    self.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  fn._off = on;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks[event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks[event];
-    return this;
-  }
-
-  // remove specific handler
-  var i = index(callbacks, fn._off || fn);
-  if (~i) callbacks.splice(i, 1);
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
-
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
-};
-
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
-
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
-
-},{"indexof":"/home/cv/coup/node_modules/socket.io-client/node_modules/indexof/index.js"}],"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js":[function(require,module,exports){
-arguments[4]["/home/cv/coup/node_modules/socket.io-client/node_modules/has-binary-data/node_modules/isarray/index.js"][0].apply(exports,arguments)
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js":[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/isarray/index.js":[function(require,module,exports){
+arguments[4]["/Users/cvializ/coup/node_modules/socket.io-client/node_modules/has-binary/node_modules/isarray/index.js"][0].apply(exports,arguments)
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/socket.io-parser/node_modules/json3/lib/json3.js":[function(require,module,exports){
 /*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
 ;(function (window) {
   // Convenience aliases.
@@ -34963,7 +34421,7 @@ arguments[4]["/home/cv/coup/node_modules/socket.io-client/node_modules/has-binar
   }
 }(this));
 
-},{}],"/home/cv/coup/node_modules/socket.io-client/node_modules/to-array/index.js":[function(require,module,exports){
+},{}],"/Users/cvializ/coup/node_modules/socket.io-client/node_modules/to-array/index.js":[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {

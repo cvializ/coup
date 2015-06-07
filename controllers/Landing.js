@@ -6,6 +6,15 @@ var Base = require('./Base'),
     io = require('../server').io;
 
 var LandingController = Base.extend({
+  constructor: function (options) {
+    this.initialize(options);
+
+    options = options || {};
+
+    this.serverEmitter = options.serverEmitter || emitter;
+    this.io = options.io || io;
+    this.games = options.games || games;
+  },
   events: {
     'create game': function createGame(data, callback) {
       data = data || {};
@@ -14,30 +23,32 @@ var LandingController = Base.extend({
         callback('missing title');
       } else if (!data.username) {
         callback('missing username');
-      } else if (games.gameExists(data.title)) {
+      } else if (this.games.gameExists(data.title)) {
         callback('game exists');
       } else {
         var newGame = new GameState({ title: data.title });
-        games[newGame.id] = newGame;
+        this.games[newGame.id] = newGame;
 
         callback(undefined, { username: data.username, id: newGame.id });
       }
     },
 
     'ready': function ready() {
-      var socket = this.emitter;
+      var self = this,
+          socket = self.emitter;
 
-      emitter.emit('push:game:collection', {
+      self.serverEmitter.emit('push:game:collection', {
         destination: socket,
-        games: games.getClientObject()
+        games: self.games.getClientObject()
       });
     },
 
     'join user': function joinUser(data, callback) {
       data = data || {};
 
-      var socket = this.emitter,
-          game = games[data.id];
+      var self = this,
+          socket = self.emitter,
+          game = self.games[data.id];
 
       // sanitize
       if (!data.username) {
@@ -50,7 +61,7 @@ var LandingController = Base.extend({
         // we store the player's data in the socket for later
         socket.player = new Player({ name: data.username, socket: socket });
 
-        socket.game = games[data.id];
+        socket.game = self.games[data.id];
         socket.join(data.id);
         socket.leave('landing');
 
@@ -61,18 +72,18 @@ var LandingController = Base.extend({
         socket.emit('user joined', { player: socket.player.getClientObject({ privileged: true }) });
 
         // Push the game to the player AFTER they've connected.
-        emitter.emit('push:game', {
-          destination: io.sockets.to(socket.game.id),
-          game: games[socket.game.id].getClientObject()
+        self.serverEmitter.emit('push:game', {
+          destination: self.io.sockets.to(socket.game.id),
+          game: self.games[socket.game.id].getClientObject()
         });
 
         // Inform the user of their success
         callback();
 
         // Let everyone know a user joined a game.
-        emitter.emit('push:game:collection', {
-          destination: io.sockets.to('landing'),
-          games: games.getClientObject()
+        self.serverEmitter.emit('push:game:collection', {
+          destination: self.io.sockets.to('landing'),
+          games: self.games.getClientObject()
         });
       }
     },
@@ -84,7 +95,8 @@ var LandingController = Base.extend({
 });
 
 function logout() {
-  var socket = this.emitter,
+  var self = this,
+      socket = self.emitter,
       game = socket.game;
 
   socket.join('landing');
@@ -106,9 +118,9 @@ function logout() {
     socket.leave(game.id);
     delete socket.game;
 
-    emitter.emit('push:game:collection', {
-      destination: io.sockets.to('landing'),
-      games: games.getClientObject()
+    self.serverEmitter.emit('push:game:collection', {
+      destination: self.io.sockets.to('landing'),
+      games: self.games.getClientObject()
     });
   }
 }

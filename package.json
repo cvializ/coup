@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "coverage": "istanbul cover $(which _mocha) -- tests/**/*.js",
     "test": "mocha tests/**/*.js",
     "start": "node app.js"
   },

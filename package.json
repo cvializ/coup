@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "coverage": "istanbul cover $(which _mocha) -- tests/**/*.js",
-    "test": "mocha tests/**/*.js",
+    "coverage": "istanbul cover $(which _mocha) -- --recursive tests",
+    "test": "mocha --recursive tests",
     "start": "node app.js"
   },
   "author": "",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "chai": "^1.9.1",
+    "chai-spies": "^0.6.0",
     "istanbul": "^0.3.14",
     "mocha": "^1.21.4"
   }

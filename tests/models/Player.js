@@ -20,8 +20,10 @@ describe('Player', function () {
   });
 
   describe('#chooseEliminatedCard', function () {
-    it('should offer the user a choice of which card to remove', function (done) {
-      var mockController = new MockController({
+    var mockController;
+
+    beforeEach(function () {
+      mockController = new MockController({
         emitter: emitter,
         events: {
           'select own influence': function selectInfluence(options, callback) {
@@ -40,10 +42,23 @@ describe('Player', function () {
           }
         }
       });
+    });
+
+    it('should offer the user a choice of which card to remove', function (done) {
+      player.chooseEliminatedCard(function (err) {
+        expect(err).to.not.exist;
+        expect(influences[0].eliminated).to.equal(true);
+        mockController.stop();
+        done();
+      });
+    });
+
+    it('should automatically remove the player\'s last card', function (done) {
+      influences[0].eliminated = true;
 
       player.chooseEliminatedCard(function (err) {
-        expect(err).to.equal(undefined);
-        expect(influences[0].eliminated).to.equal(true);
+        expect(err).to.not.exist;
+        expect(influences[1].eliminated).to.equal(true);
         mockController.stop();
         done();
       });

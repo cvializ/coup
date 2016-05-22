@@ -1,8 +1,7 @@
 var keyMirror = require('keymirror');
-var socket;
 
 // server to client and client to server events
-module.exports = client = keyMirror({
+module.exports = keyMirror({
   // used in landing controller
   LANDING_INIT: null,
   LANDING_GAME_CREATE: null,

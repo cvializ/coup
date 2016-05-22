@@ -1,48 +1,49 @@
-var SocketClient = require('../SocketClient');
-var ClientConstants = require('../constants/client');
-var PlayActions;
+'use strict';
 
-module.exports = PlayActions = {
-  init: function () {
+const SocketClient = require('../SocketClient');
+const ClientConstants = require('../constants/client');
+const PlayActions = {
+  init() {
     this.dispatch(ClientConstants.PLAY_INIT);
   },
 
-  receiveState: function (payload) {
+  receiveState(payload) {
     this.dispatch(ClientConstants.PLAY_RECEIVE_STATE, { game: payload });
   },
 
-  readyToStart: function () {
+  readyToStart() {
     // PLAY_START_READY
-
     socketClient.voteStart({
       // no payload
-    }).then(function (payload) {
+    }).then((payload) => {
       this.dispatch(ClientConstants.PLAY_START_READY_RECEIVED);
-    }).except(function (err) {
+    }).except((err) => {
       alert(err);
     });
   },
 
-  movePrimary: function (payload) {
+  movePrimary(payload) {
 
   },
 
-  movePrimaryChoice: function (payload) {
+  movePrimaryChoice(payload) {
     // PLAY_MOVE_PRIMARY_CHOICE
 
     var move = payload;
 
   },
 
-  moveSecondary: function () {
+  moveSecondary() {
     // PLAY_MOVE_SECONDARY
   },
 
-  moveTertiary: function () {
+  moveTertiary() {
     // PLAY_MOVE_TERTIARY
   },
 
-  playMoveSelectInfluence: function () {
+  playMoveSelectInfluence() {
     // PLAY_MOVE_SELECT_INFLUENCE
   }
 };
+
+module.exports = PlayActions;

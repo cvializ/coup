@@ -7,7 +7,7 @@ module.exports = React.createClass({
     Fluxxor.StoreWatchMixin('LandingStore')
   ],
 
-  getStateFromFlux: function() {
+  getStateFromFlux() {
     var store = this.getFlux().store('LandingStore');
 
     return {
@@ -15,12 +15,12 @@ module.exports = React.createClass({
     };
   },
 
-  componentDidMount: function () {
+  componentDidMount() {
     var landingActions = this.getFlux().actions.landing;
     landingActions.init();
   },
 
-  joinGame: function (event) {
+  joinGame(event) {
     var landingActions = this.getFlux().actions.landing;
     var join = this.refs['join'];
     var username = join.refs['username'].getDOMNode();
@@ -32,7 +32,7 @@ module.exports = React.createClass({
     });
   },
 
-  createGame: function (event) {
+  createGame(event) {
     // TODO: use the event instead of refs?
     var landingActions = this.getFlux().actions.landing;
     var create = this.refs['create'];
@@ -47,7 +47,7 @@ module.exports = React.createClass({
     });
   },
 
-  render: function () {
+  render() {
     return (
       <div className="c-landing">
         <div className="c-landing-join">
@@ -69,13 +69,13 @@ module.exports = React.createClass({
 });
 
 var JoinForm = React.createClass({
-  onSubmit: function () {
+  onSubmit() {
     if (this.props.onSubmit) {
       this.props.onSubmit.apply(this, arguments);
     }
   },
 
-  renderGame: function (item, index) {
+  renderGame(item, index) {
     var game = item;
 
     return (
@@ -88,7 +88,7 @@ var JoinForm = React.createClass({
           </h4>
           <ul className="c-game-players">
             {
-              game.players.map(function renderPlayer(player) {
+              game.players.map((player) => {
                 return <li>{player.name} - {player.coins}</li>;
               })
             }
@@ -98,7 +98,7 @@ var JoinForm = React.createClass({
     );
   },
 
-  render: function () {
+  render() {
     var props = this.props;
 
     return (
@@ -119,13 +119,13 @@ var JoinForm = React.createClass({
 });
 
 var CreateForm = React.createClass({
-  onSubmit: function () {
+  onSubmit() {
     if (this.props.onSubmit) {
       this.props.onSubmit.apply(this, arguments);
     }
   },
 
-  render: function () {
+  render() {
     return (
       <form>
         <div className="c-form-field">

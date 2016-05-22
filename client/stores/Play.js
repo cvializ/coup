@@ -3,7 +3,7 @@ var ClientConstants = require('../constants/client');
 var SocketClient = require('../SocketClient');
 
 module.exports = Fluxxor.createStore({
-  initialize: function() {
+  initialize() {
     this.gameState = {};
     this.isPlaying = false;
 
@@ -13,12 +13,12 @@ module.exports = Fluxxor.createStore({
     );
   },
 
-  onPlayInit: function (payload) {
+  onPlayInit(payload) {
     this.isPlaying = true;
     this.emit('change');
   },
 
-  onReceiveState: function (payload) {
+  onReceiveState(payload) {
     this.gameState = payload.game;
     this.emit('change');
   }

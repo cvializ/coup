@@ -3,7 +3,7 @@ var Player;
 var Influence;
 
 Influence = React.createClass({
-  render: function () {
+  render() {
     var model = this.props.model;
 
     return (
@@ -15,7 +15,7 @@ Influence = React.createClass({
 });
 
 module.exports = Player = React.createClass({
-  render: function () {
+  render() {
     var model = this.props.model;
     var coins = [];
     var influences;

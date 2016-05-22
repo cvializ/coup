@@ -9,7 +9,9 @@ var browserify = require('browserify');
 var bundler = watchify(browserify('./client/main.jsx', watchify.args));
 
 function bundle() {
-  return bundler.bundle()
+  return bundler
+  .transform("babelify", {presets: ['es2015', 'react']})
+  .bundle()
   // log errors if they happen
   .on('error', gutil.log.bind(gutil, 'Browserify Error'))
   .pipe(source('bundle.js'))

@@ -1,10 +1,19 @@
-var Base = require('./Base');
+'use strict';
 
-var PlayerController = Base.extend({
-  constants: require('../app/js/constants/server'),
-  events: {
-    SELECT_OWN_INFLUENCE: 'default'
+const BaseController = require('./Base'),
+      ServerConstants = require('../app/js/constants/server');
+
+class PlayerController extends BaseController {
+
+  get constants() {
+    return ServerConstants;
   }
-});
+
+  get events() {
+    return {
+      SELECT_OWN_INFLUENCE: 'default'
+    };
+  }
+}
 
 module.exports = PlayerController;

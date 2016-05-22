@@ -10,7 +10,7 @@ App = React.createClass({
     Fluxxor.StoreWatchMixin('PlayStore')
   ],
 
-  getStateFromFlux: function() {
+  getStateFromFlux() {
     var store = this.getFlux().store('PlayStore');
 
     return {
@@ -18,7 +18,7 @@ App = React.createClass({
     };
   },
 
-  render: function () {
+  render() {
     var view;
 
     if (this.state.isPlaying) {

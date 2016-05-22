@@ -9,7 +9,7 @@ module.exports = React.createClass({
     Fluxxor.StoreWatchMixin('PlayStore')
   ],
 
-  getStateFromFlux: function() {
+  getStateFromFlux() {
     var store = this.getFlux().store('PlayStore');
 
     return {
@@ -17,11 +17,11 @@ module.exports = React.createClass({
     };
   },
 
-  render: function () {
+  render() {
     var gameState = this.state.gameState;
     var players;
 
-    players = gameState.players.map(function (player, i) {
+    players = gameState.players.map((player, i) => {
       return <Player key={i} model={player} />;
     });
 

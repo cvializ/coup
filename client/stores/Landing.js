@@ -3,7 +3,7 @@ var ClientConstants = require('../constants/client');
 var SocketClient = require('../SocketClient');
 
 module.exports = Fluxxor.createStore({
-  initialize: function() {
+  initialize() {
     this.games = [];
 
     this.bindActions(
@@ -11,7 +11,7 @@ module.exports = Fluxxor.createStore({
     );
   },
 
-  onPushGames: function(payload) {
+  onPushGames(payload) {
     this.games = payload.games;
     this.emit('change');
   }

@@ -1,25 +1,15 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
+var keyMirror = require('keymirror');
 
-define(['keymirror'], function(keyMirror) {
-  //var keyMirror = require('keymirror');
-  var server;
+module.exports = keyMirror({
+  PUSH_GAME: null,
+  PUSH_GAME_COLLECTION: null,
+  PUSH_PLAYER: null,
 
-  // server to server events
-  server = keyMirror({
-    PUSH_GAME: null,
-    PUSH_GAME_COLLECTION: null,
-    PUSH_PLAYER: null,
+  GAME_OVER: null,
+  MY_TURN: null,
+  NEW_TURN: null,
 
-    GAME_OVER: null,
-    MY_TURN: null,
-    NEW_TURN: null,
+  SELECT_OWN_INFLUENCE: null,
 
-    SELECT_OWN_INFLUENCE: null,
-
-    MOCK: null
-  });
-
-  return server;
+  MOCK: null
 });

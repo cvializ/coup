@@ -5,22 +5,23 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha tests/**/*.js",
-    "start": "nodemon ./app & gulp watchify"
+    "start": "nodemon ./app & gulp watchify",
+    "debug": "DEBUG=* node app"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "class-extend": "^0.1.1",
+    "bluebird": "~2.9.3",
+    "classnames": "^2.2.5",
     "express": "^4.4.3",
     "extend": "^1.3.0",
-    "node-uuid": "~1.4.1",
-    "shuffle": "~0.2.1",
-    "socket.io": "^1.0.5",
-    "keymirror": "~0.1.1",
-    "amdefine": "~0.1.0",
     "fluxxor": "~1.5.1",
-    "bluebird": "~2.9.3",
-    "react": "~0.12.2"
+    "keymirror": "~0.1.1",
+    "node-uuid": "~1.4.1",
+    "react": "*",
+    "react-dom": "^15.1.0",
+    "shuffle": "~0.2.1",
+    "socket.io": "^1.0.5"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
@@ -29,9 +30,11 @@
     "browserify": "^8.1.3",
     "chai": "^1.9.1",
     "gulp": "~3.8.10",
+    "gulp-postcss": "^6.1.1",
     "gulp-sourcemaps": "~1.3.0",
     "gulp-util": "~3.0.2",
     "mocha": "^1.21.4",
+    "precss": "^1.4.0",
     "reactify": "~1.0.0",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.0.0",

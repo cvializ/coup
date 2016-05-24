@@ -1,8 +1,7 @@
-var SocketClient = require('../SocketClient');
-var ClientConstants = require('../constants/client');
-var LandingActions;
+import SocketClient from '../SocketClient';
+import ClientConstants from '../constants/client';
 
-module.exports = LandingActions = {
+const LandingActions = {
   init() {
     // LANDING_INIT
     return SocketClient.ready();
@@ -45,3 +44,5 @@ module.exports = LandingActions = {
     this.dispatch(ClientConstants.PLAY_END);
   }
 };
+
+export default LandingActions;

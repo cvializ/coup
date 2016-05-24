@@ -34,6 +34,7 @@ server.initialize(function () {
     socket.on('error', function (err) {
       console.log('ERROR!');
       console.log(err);
+      console.log(err.stack);
     });
   });
 });

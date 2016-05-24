@@ -1,8 +1,9 @@
-var keyMirror = require('keymirror');
-var socket;
+'use strict';
+
+import keyMirror from 'keymirror';
 
 // server to client and client to server events
-module.exports = socket = keyMirror({
+const SocketConstants = keyMirror({
   // socket.on (server to client)
   PUSH_GAME_COLLECTION: null,
   PUSH_GAMES: null,
@@ -41,3 +42,5 @@ module.exports = socket = keyMirror({
   REMOVE_USER: null,
   READY: null
 });
+
+export default SocketConstants;

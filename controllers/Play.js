@@ -1,11 +1,11 @@
 'use strict';
 
 const BaseController = require('./Base'),
-    Move = require('../models/Move'),
-    Influences = require('../models/Influences'),
-    emitter = require('../emitter'),
-    io = require('../server').io,
-    SocketConstants = require('../app/js/constants/socket');
+      Move = require('../models/Move'),
+      Influences = require('../models/Influences'),
+      emitter = require('../emitter'),
+      io = require('../server').io,
+      SocketConstants = require('../app/js/constants/socket');
 
 class PlayController extends BaseController {
 
@@ -15,9 +15,9 @@ class PlayController extends BaseController {
 
   get events() {
     return {
-      VOTE_START(callback) {
+      VOTE_START(_, callback) {
         const socket = this.emitter,
-            game = socket.game;
+              game = socket.game;
 
         if (game.userCount === 1) {
           callback('please wait until others have joined');
@@ -36,8 +36,8 @@ class PlayController extends BaseController {
 
       MAKE_MOVE(moveData, callback) {
         const socket = this.emitter,
-            game = socket.game,
-            player = socket.player;
+              game = socket.game,
+              player = socket.player;
         let move,
             ability,
             target;
@@ -92,14 +92,14 @@ class PlayController extends BaseController {
         }
       },
 
-      BLOCK_MOVE(data, callback) {
+      BLOCK_MOVE(_, callback) {
         const socket = this.emitter,
-            game = socket.game,
-            players = game.players,
-            myPlayer = socket.player,
-            move = game.getCurrentMove(),
-            ability = move.ability,
-            blockedPlayer = move.player;
+              game = socket.game,
+              players = game.players,
+              myPlayer = socket.player,
+              move = game.getCurrentMove(),
+              ability = move.ability,
+              blockedPlayer = move.player;
 
         if (myPlayer.eliminated) {
           callback('Eliminated players may not respond to moves.');
@@ -124,10 +124,10 @@ class PlayController extends BaseController {
 
       DOUBT_MOVE(data, callback) {
         const socket = this.emitter,
-            game = socket.game,
-            move = game.getCurrentMove(),
-            player = move.player,
-            detractor = socket.player;
+              game = socket.game,
+              move = game.getCurrentMove(),
+              player = move.player,
+              detractor = socket.player;
         let clientMove;
 
         if (detractor.eliminated) {
@@ -184,7 +184,7 @@ class PlayController extends BaseController {
         }
       },
 
-      ALLOW_MOVE(data, callback) {
+      ALLOW_MOVE(_, callback) {
         const socket = this.emitter,
               game = socket.game,
               move = game.getCurrentMove();
@@ -211,7 +211,7 @@ class PlayController extends BaseController {
         }
       },
 
-      BLOCKER_DOUBT(data) {
+      BLOCKER_DOUBT(_) {
         const socket = this.emitter,
               game = socket.game,
               move = game.getCurrentMove(),
@@ -254,7 +254,7 @@ class PlayController extends BaseController {
         }
       },
 
-      BLOCKER_SUCCESS(data) {
+      BLOCKER_SUCCESS(_, __) {
         const socket = this.emitter,
               game = socket.game;
 
@@ -263,8 +263,9 @@ class PlayController extends BaseController {
         game.nextTurn();
       },
 
-      PULL_GAME() {
-        const socket = this.emitter;
+      PULL_GAME(_, __) {
+        const socket = this.emitter,
+              player = socket.player;
 
         if (socket && socket.game) {
           emitter.emit(this.constants.PUSH_GAME, {

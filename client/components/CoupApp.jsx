@@ -1,31 +1,24 @@
-var React = require('react');
-var Fluxxor = require('fluxxor');
-var Landing = require('./Landing.jsx');
-var Play = require('./Play.jsx');
-var App;
+import React from 'react';
+import Fluxxor from 'fluxxor';
+import Landing from './Landing.jsx';
+import Play from './Play.jsx';
 
-App = React.createClass({
+const App = React.createClass({
   mixins: [
     Fluxxor.FluxMixin(React),
     Fluxxor.StoreWatchMixin('PlayStore')
   ],
 
   getStateFromFlux() {
-    var store = this.getFlux().store('PlayStore');
+    const { isPlaying } = this.getFlux().store('PlayStore');
 
     return {
-      isPlaying: store.isPlaying
+      isPlaying
     };
   },
 
   render() {
-    var view;
-
-    if (this.state.isPlaying) {
-      view = <Play />;
-    } else {
-      view = <Landing />;
-    }
+    const view = this.state.isPlaying ? <Play /> : <Landing />;
 
     return (
       <div className="coup-app">
@@ -35,4 +28,4 @@ App = React.createClass({
   }
 });
 
-module.exports = App;
+export default App;

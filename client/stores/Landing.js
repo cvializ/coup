@@ -1,8 +1,8 @@
-var Fluxxor   = require('fluxxor');
-var ClientConstants = require('../constants/client');
-var SocketClient = require('../SocketClient');
+import Fluxxor from 'fluxxor';
+import ClientConstants from '../constants/client';
+import SocketClient from '../SocketClient';
 
-module.exports = Fluxxor.createStore({
+const LandingStore = Fluxxor.createStore({
   initialize() {
     this.games = [];
 
@@ -16,3 +16,5 @@ module.exports = Fluxxor.createStore({
     this.emit('change');
   }
 });
+
+export default LandingStore;

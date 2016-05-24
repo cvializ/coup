@@ -1,4 +1,7 @@
-module.exports = {
-  landing: require('./landing'),
-  play: require('./play')
+import LandingActions from './landing';
+import PlayActions from './play';
+
+export default {
+  landing: LandingActions,
+  play: PlayActions
 };

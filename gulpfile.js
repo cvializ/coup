@@ -1,5 +1,5 @@
 var gulp = require('./gulp')([
-  'watchify'
+  'watchify',
 ]);
 
 gulp.task('build', ['watchify']);

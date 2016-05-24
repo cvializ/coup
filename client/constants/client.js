@@ -1,7 +1,9 @@
-var keyMirror = require('keymirror');
+'use strict';
+
+import keyMirror from 'keymirror';
 
 // server to client and client to server events
-module.exports = keyMirror({
+const ClientConstants = keyMirror({
   // used in landing controller
   LANDING_INIT: null,
   LANDING_GAME_CREATE: null,
@@ -11,7 +13,9 @@ module.exports = keyMirror({
 
   // used in play controller
   PLAY_INIT: null,
+  PLAY_FORCE_QUIT: null,
   PLAY_RECEIVE_STATE: null,
+  PLAY_RECEIVE_PLAYER: null,
   PLAY_START_READY: null,
   PLAY_START_READY_RECEIVED: null,
   PLAY_MOVE_PRIMARY: null,
@@ -20,3 +24,5 @@ module.exports = keyMirror({
   PLAY_MOVE_TERTIARY: null,
   PLAY_MOVE_SELECT_INFLUENCE: null
 });
+
+export default ClientConstants;

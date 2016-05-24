@@ -16,5 +16,6 @@ class Card {
     this.dummy = options.dummy || false;
   }
 }
+Card.TYPES = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
 
 module.exports = Card;

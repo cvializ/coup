@@ -7,14 +7,14 @@ const uuid = require('node-uuid').v4,
       io = require('../server').io,
       emitter = require('../emitter'),
       ServerConstants = require('../app/js/constants/server'),
-      influenceTypes = ['Ambassador', 'Assassin', 'Captain', 'Contessa', 'Duke'];
+      CARD_TYPES = Card.TYPES;
 
 class GameState {
   constructor(options) {
     options = options || {};
 
     const influenceDeck = [],
-          cardTypeCount = influenceTypes.length,
+          cardTypeCount = CARD_TYPES.length,
           cardsPerType = options.cardsPerType || 3;
 
     if (!options.title) {
@@ -36,7 +36,7 @@ class GameState {
 
     for (let i = 0; i < cardsPerType; i++) {
       for (let j = 0; j < cardTypeCount; j++) {
-        influenceDeck.push(new Card({ name: influenceTypes[j] }));
+        influenceDeck.push(new Card({ name: CARD_TYPES[j] }));
       }
     }
 
@@ -127,7 +127,9 @@ class GameState {
     }
   }
 
-  getClientObject() {
+  getClientObject(options) {
+    options = options || {};
+
     const clientObject = {
       id: this.id,
       title: this.title,

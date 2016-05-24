@@ -1,7 +1,7 @@
-var LandingStore = require('./Landing');
-var PlayStore = require('./Play');
+import LandingStore from './Landing';
+import PlayStore from './Play';
 
-module.exports = {
+export default {
   LandingStore: new LandingStore(),
   PlayStore: new PlayStore()
-};
+}

@@ -1,5 +1,5 @@
-var Fluxxor = require('fluxxor');
-var React = require('react');
+import Fluxxor from 'fluxxor';
+import React from 'react';
 
 module.exports = React.createClass({
   mixins: [
@@ -20,30 +20,22 @@ module.exports = React.createClass({
     landingActions.init();
   },
 
-  joinGame(event) {
-    var landingActions = this.getFlux().actions.landing;
-    var join = this.refs['join'];
-    var username = join.refs['username'].getDOMNode();
-    var gameId = join.getDOMNode().querySelector('input[type="radio"]:checked');
+  joinGame(username, gameId) {
+    const landingActions = this.getFlux().actions.landing;
 
     landingActions.joinGame({
-      id: gameId.value,
-      username: username.value
+      id: gameId,
+      username: username
     });
   },
 
-  createGame(event) {
-    // TODO: use the event instead of refs?
+  createGame(username, title, capacity) {
     var landingActions = this.getFlux().actions.landing;
-    var create = this.refs['create'];
-    var username = create.refs['username'].getDOMNode();
-    var title = create.refs['title'].getDOMNode();
-    var capacity = create.refs['capacity'].getDOMNode();
 
     landingActions.createGame({
-      username: username.value,
-      title: title.value,
-      capacity: capacity.value
+      username,
+      title,
+      capacity
     });
   },
 
@@ -52,16 +44,11 @@ module.exports = React.createClass({
       <div className="c-landing">
         <div className="c-landing-join">
           <h3>Join an existing game</h3>
-          <JoinForm
-            ref="join"
-            games={this.state.games}
-            onSubmit={this.joinGame} />
+          <JoinForm games={this.state.games} onSubmit={this.joinGame} />
         </div>
         <div className="c-landing-create">
           <h3>Create a new game</h3>
-          <CreateForm
-            ref="create"
-            onSubmit={this.createGame} />
+          <CreateForm onSubmit={this.createGame} />
         </div>
       </div>
     );
@@ -70,28 +57,30 @@ module.exports = React.createClass({
 
 var JoinForm = React.createClass({
   onSubmit() {
-    if (this.props.onSubmit) {
-      this.props.onSubmit.apply(this, arguments);
+    const propsOnSubmit = this.props.onSubmit;
+    const { username, gameId } = this.refs;
+    if (propsOnSubmit) {
+      propsOnSubmit.call(this, username.value, gameId.value);
     }
   },
 
-  renderGame(item, index) {
-    var game = item;
+  renderPlayers(players) {
+    return players.map((player, i) => <li key={i}>{player.name} - {player.coins}</li>);
+  },
 
+  renderGame(game, index) {
+    const { id, title, started } = game;
+    const players = this.renderPlayers(game.players);
     return (
       <div key={index} className="c-game-item">
-        <input type="radio" name="c-game-select" value={game.id} />
+        <input ref="gameId" type="radio" name="c-game-select" value={id} />
         <div className="c-game-card">
           <h4 className="c-game-title">
-            {game.title}
-            {game.started ? '(in progress)' : '(waiting for players)'}
+            {title}
+            {started ? '(in progress)' : '(waiting for players)'}
           </h4>
           <ul className="c-game-players">
-            {
-              game.players.map((player) => {
-                return <li>{player.name} - {player.coins}</li>;
-              })
-            }
+            {players}
           </ul>
         </div>
       </div>
@@ -99,7 +88,7 @@ var JoinForm = React.createClass({
   },
 
   render() {
-    var props = this.props;
+    const { games } = this.props;
 
     return (
       <form>
@@ -108,9 +97,7 @@ var JoinForm = React.createClass({
           <input ref="username" type="text" id="c-login-form-username" />
         </div>
         <div className="c-form-field c-login-games c-group">
-          {
-            props.games.map(this.renderGame)
-          }
+          {games.map(this.renderGame)}
         </div>
         <input type="button" value="Join" onClick={this.onSubmit} />
       </form>
@@ -120,8 +107,10 @@ var JoinForm = React.createClass({
 
 var CreateForm = React.createClass({
   onSubmit() {
-    if (this.props.onSubmit) {
-      this.props.onSubmit.apply(this, arguments);
+    const propsOnSubmit = this.props.onSubmit;
+    const { username, title, capacity } = this.refs;
+    if (propsOnSubmit) {
+      propsOnSubmit.call(this, username.value, title.value, capacity.value);
     }
   },
 

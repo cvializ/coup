@@ -1,36 +1,53 @@
-var React = require('react');
-var Player;
-var Influence;
+import React, { Component } from 'react';
+import cx from 'classnames';
 
-Influence = React.createClass({
+class Influence extends Component {
   render() {
-    var model = this.props.model;
+    const name = this.props.name;
 
     return (
       <div className="c-player-influence">
-        <span>{model.name}</span>
+        <span>{name}</span>
       </div>
     );
   }
-});
+}
 
-module.exports = Player = React.createClass({
+class Coin extends Component {
   render() {
-    var model = this.props.model;
-    var coins = [];
-    var influences;
+    return (
+      <span className="c-player-coin"></span>
+    );
+  }
+}
 
-    for (var i = 0; i < model.coins; i++) {
-      coins.push(<span key={i}>X</span>);
+export default class Player extends Component {
+  renderCoins(coins) {
+    const rendered = [];
+
+    for (let i = 0; i < coins; i++) {
+      rendered.push(<Coin key={i} />);
     }
 
-    influences = model.influences.map(function (influence, i) {
-      return <Influence key={i} model={influence} />;
+    return rendered;
+  }
+
+  renderInfluences(influences) {
+    return influences.map((influence, i) => <Influence key={i} model={influence} />);
+  }
+
+  render() {
+    const props = this.props;
+    const { name, active } = props;
+    const coins = this.renderCoins(props.coins);
+    const influences = this.renderInfluences(props.influences);
+    const classNames = cx('c-player', props.className, {
+      'c-player--active': active
     });
 
     return (
-      <div className="c-player">
-        <h2>{model.name}</h2>
+      <div className={classNames}>
+        <span className="c-player-name">{name}</span>
         <div className="c-player-influences">
           {influences}
         </div>
@@ -40,4 +57,4 @@ module.exports = Player = React.createClass({
       </div>
     );
   }
-});
+}

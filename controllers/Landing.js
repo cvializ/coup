@@ -1,13 +1,13 @@
 'use strict';
 
-var BaseController = require('./Base'),
-    GameState = require('../models/GameState'),
-    Player = require('../models/Player'),
-    games = require('../games'),
-    emitter = require('../emitter'),
-    ServerConstants = require('../app/js/constants/server'),
-    SocketConstants = require('../app/js/constants/socket'),
-    io = require('../server').io;
+const BaseController = require('./Base'),
+      GameState = require('../models/GameState'),
+      Player = require('../models/Player'),
+      games = require('../games'),
+      emitter = require('../emitter'),
+      ServerConstants = require('../app/js/constants/server'),
+      SocketConstants = require('../app/js/constants/socket'),
+      io = require('../server').io;
 
 class LandingController extends BaseController {
 
@@ -90,14 +90,15 @@ class LandingController extends BaseController {
       },
 
       REMOVE_USER() {
-        var socket = this.emitter,
-            game = socket.game;
+        const socket = this.emitter,
+              game = socket.game,
+              player = socket.player;
 
         socket.join('landing');
 
         // Only log out the user if they're part of a game.
         if (game) {
-          game.removeUser(socket.player);
+          game.removeUser(player);
 
           if (game.userCount <= 1) {
             socket.broadcast.to(game.id).emit(this.constants.FORCE_QUIT);
@@ -106,7 +107,8 @@ class LandingController extends BaseController {
 
           // tell the game's members that an opponent left
           socket.broadcast.to(game.id).emit(this.constants.USER_LEFT, {
-            username: socket.player.name
+            username: player.name,
+            id: player.id
           });
 
           socket.leave(game.id);

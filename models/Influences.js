@@ -1,9 +1,8 @@
 'use strict';
 
-const extend = require('extend'),
-      Ability = require('../models/Ability'),
+const Ability = require('../models/Ability'),
       influenceData = require('../app/js/models/action/influence/cards/'),
-      Influences = extend(true, {}, influenceData);
+      Influences = clone(influenceData);
 
 for (let key in Influences) {
   eachInfluence(Influences[key], key, Influences);
@@ -22,12 +21,16 @@ function eachInfluence(influence, i, arr) {
       influence: influence.name,
       action: actions[abilityDatum.name]
     };
-    options = extend(options, abilityDatum);
+    options = Object.assign(options, abilityDatum);
 
     abilities[abilityDatum.name] = new Ability(options);
   }
 
   influence.abilities = abilities;
+}
+
+function clone() {
+  return JSON.parse(JSON.stringify.apply(this, arguments));
 }
 
 module.exports = Influences;

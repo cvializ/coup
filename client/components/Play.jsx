@@ -36,7 +36,8 @@ const ReadyAction = React.createClass({
   }
 });
 
-module.exports = React.createClass({
+let Play;
+module.exports = Play = React.createClass({
 
   mixins: [
     Fluxxor.FluxMixin(React),
@@ -93,13 +94,12 @@ module.exports = React.createClass({
     return (
       <div className="c-play">
         <div className="c-play-players-area">
+          <PlayersCarousel>{players}</PlayersCarousel>
           <div className="c-play-inner-controls">
             {actions}
           </div>
-          <PlayersCarousel>{players}</PlayersCarousel>
         </div>
         <div className="c-play-actions-primary">
-
         </div>
       </div>
     );

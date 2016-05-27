@@ -1,15 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class PlayersCarousel extends Component {
-  renderItems(children) {
-    return React.Children.map(children, (c) => <div className="c-carousel-item">{c}</div>);
-  }
-
-  render() {
-    const props = this.props;
-    const items = this.renderItems(props.children);
-    return (
-      <div className="c-players-carousel">{items}</div>
-    );
-  }
+export default function PlayersCarousel(props) {
+  const items = React.Children.map(props.children, (c) => <div className="c-carousel-item">{c}</div>);
+  return (
+    <div className="c-players-carousel">{items}</div>
+  );
 }

@@ -1,18 +1,16 @@
-import ReactDOM from 'react-dom';
+import patch from './patch.js';
 import React from 'react';
-import Fluxxor from 'fluxxor';
-import SocketClient from './SocketClient';
-import actions from './actions';
-import stores from './stores';
-import Application from './components/CoupApp.jsx';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 
-const flux = new Fluxxor.Flux(stores, actions);
 
-// log dispatches
-flux.on('dispatch', function(type, payload) {
- console.log("[Dispatch]", type, payload);
-});
+import SocketClient from './SocketClient.js';
+import App from './containers/App.js';
+import rootReducer from './reducers';
+import store from './stores';
 
-SocketClient.init({ flux });
+const root = document.getElementById('app');
 
-ReactDOM.render(<Application flux={flux} />, document.getElementById('app'));
+SocketClient.init();
+
+render(<Provider store={store}><App /></Provider>, root);

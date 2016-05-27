@@ -39,7 +39,7 @@ class LandingController extends BaseController {
 
         socket.join('landing');
 
-        emitter.emit(this.constants.PUSH_GAME_COLLECTION, {
+        emitter.emit(ServerConstants.PUSH_GAME_COLLECTION, {
           destination: socket,
           games: games.getClientObject()
         });
@@ -69,8 +69,8 @@ class LandingController extends BaseController {
           // add the user to the game
           socket.game.addUser(socket.player);
 
-          // Give the user everything they need to know about themselves
-          socket.emit(this.constants.USER_JOINED, { player: socket.player.getClientObject({ privileged: true }) });
+          // Inform the user of their success
+          callback(null, { player: socket.player.getClientObject({ privileged: true }) });
 
           // Push the game to the player AFTER they've connected.
           emitter.emit(ServerConstants.PUSH_GAME, {
@@ -78,8 +78,6 @@ class LandingController extends BaseController {
             game: games[socket.game.id].getClientObject()
           });
 
-          // Inform the user of their success
-          callback();
 
           // Let everyone know a user joined a game.
           emitter.emit(ServerConstants.PUSH_GAME_COLLECTION, {

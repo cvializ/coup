@@ -5,6 +5,23 @@ import keyMirror from 'keymirror';
 // server to client and client to server events
 const ClientConstants = keyMirror({
   // used in landing controller
+  RECEIVE_SOCKET_READY: null,
+  ERROR_SOCKET_READY: null,
+  REQUEST_CREATE_GAME: null,
+  RECEIVE_CREATE_GAME: null,
+  ERROR_CREATE_GAME: null,
+  REQUEST_JOIN_GAME: null,
+  RECEIVE_JOIN_GAME: null,
+  ERROR_JOIN_GAME: null,
+  RECEIVE_UPDATE_GAMES: null,
+
+  // used in play controller
+  PLAY_RECEIVE_GAME: null,
+  PLAY_REQUEST_READY_START: null,
+  PLAY_RECEIVE_READY_START: null,
+  PLAY_ERROR_READY_START: null,
+
+  // used in landing controller
   LANDING_INIT: null,
   LANDING_GAME_CREATE: null,
   LANDING_GAME_JOIN: null,

@@ -1,51 +1,54 @@
 import Socket from 'socket.io-client';
 import Bluebird from 'bluebird';
-import SocketConstants from './constants/socket';
+import SocketConstants from './constants/socket.js';
+import store from './stores';
+import * as landingActions from './actions/landing.js';
+import * as playActions from './actions/play.js';
 
 class SocketClient {
-  constructor() {
-    this.pendingEvents = {};
-  }
+  // get listeners() {
+  //   const { play, landing } = this.flux.actions;
+  //   return {
+  //     [SocketConstants.PUSH_GAMES]: landing.updateGames,
+  //     [SocketConstants.PUSH_GAME]: play.receiveState,
+  //     [SocketConstants.MY_TURN]: play.myTurn,
+  //     [SocketConstants.PUSH_PLAYER]: play.receivePlayer,
+  //     [SocketConstants.FORCE_QUIT]: play.forceQuit,
+  //     [SocketConstants.USER_JOINED]: play.receivePlayer,
+  //     [SocketConstants.USER_LEFT]: play.userLeft
+  //   };
+  // }
 
   init(options) {
     options = options || {};
 
     this.socket = Socket();
-    this.flux = options.flux;
-
-    const actionContext = {
-      flux: this.flux,
-      dispatch: this.flux.dispatcher.dispatch
-    };
-    const actions = this.flux.actions;
-    const playActions = actions.play;
-    const landingActions = actions.landing;
-
-    // Pushing data into the app
-    this.socket.on(SocketConstants.PUSH_GAMES, landingActions.updateGames.bind(actionContext));
-    this.socket.on(SocketConstants.PUSH_GAME, playActions.receiveState.bind(actionContext));
-    this.socket.on(SocketConstants.PUSH_PLAYER, playActions.receivePlayer.bind(actionContext));
-    this.socket.on(SocketConstants.FORCE_QUIT, playActions.forceQuit.bind(actionContext));
-    this.socket.on(SocketConstants.USER_JOINED, playActions.receivePlayer.bind(actionContext));
-    this.socket.on(SocketConstants.USER_LEFT, playActions.userLeft.bind(actionContext));
+    this.socket.on('event', function () {
+      console.log.apply(console, arguments);
+    });
+    this.socket.on(SocketConstants.PUSH_GAMES, ({ games }) => {
+      store.dispatch(landingActions.receiveUpdateGames(games))
+    });
+    this.socket.on(SocketConstants.PUSH_GAME, ({ game }) => {
+      store.dispatch(playActions.receiveGame(game))
+    });
+    this.socket.on(SocketConstants.FORCE_QUIT, () => {
+      store.dispatch(playActions.forceQuit());
+    });
+    this.socket.on(SocketConstants.USER_LEFT, () => {
+      this.pullGame();
+    });
 
     // Lets us use Promises when using callbacks on socket.emit()
     this.socket.emit = Bluebird.promisify(this.socket.emit);
   }
 
-  createGame(payload) {
-    return this.socket.emit(SocketConstants.CREATE_GAME, {
-      username: payload.username,
-      title: payload.title,
-      capacity: payload.capacity
-    });
+  createGame(username, title, capacity) {
+    return this.socket.emit(SocketConstants.CREATE_GAME, { username, title, capacity });
   }
 
-  joinUser(payload) {
-    return this.socket.emit(SocketConstants.JOIN_USER, {
-      username: payload.username,
-      id: payload.id
-    });
+  joinUser(username, id) {
+    return this.socket.emit(SocketConstants.JOIN_USER, { username, id });
   }
 
   makeMove(payload) {
@@ -76,8 +79,8 @@ class SocketClient {
     return this.socket.emit(SocketConstants.BLOCKER_DOUBT, {});
   }
 
-  pullGame(payload) {
-    return this.socket.emit(SocketConstants.PULL_GAME, {});
+  pullGame() {
+    return this.socket.emit(SocketConstants.PULL_GAME);
   }
 
   pullPlayer(payload) {

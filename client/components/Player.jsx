@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
 
-class Influence extends Component {
-  render() {
-    const name = this.props.name;
-
-    return (
-      <div className="c-player-influence">
-        <span>{name}</span>
-      </div>
-    );
-  }
+function Influence(props) {
+  const name = props.name;
+  return (
+    <div className="c-player-influence">
+      <span>{name}</span>
+    </div>
+  );
 }
 
-class Coin extends Component {
-  render() {
-    return (
-      <span className="c-player-coin"></span>
-    );
-  }
+function Coin() {
+  return (
+    <span className="c-player-coin"></span>
+  );
 }
 
 export default class Player extends Component {
@@ -33,7 +28,7 @@ export default class Player extends Component {
   }
 
   renderInfluences(influences) {
-    return influences.map((influence, i) => <Influence key={i} model={influence} />);
+    return influences.map(({name}, i) => <Influence key={i} name={name} />);
   }
 
   render() {

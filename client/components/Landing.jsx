@@ -1,50 +1,41 @@
-import Fluxxor from 'fluxxor';
-import React from 'react';
+import React, { Component } from 'react';
 
-module.exports = React.createClass({
-  mixins: [
-    Fluxxor.FluxMixin(React),
-    Fluxxor.StoreWatchMixin('LandingStore')
-  ],
-
-  getStateFromFlux() {
-    var store = this.getFlux().store('LandingStore');
-
-    return {
-      games: store.games
-    };
-  },
+export default class Landing extends Component {
+  constructor(props) {
+    super(props);
+    this.joinGame = this.joinGame.bind(this);
+    this.createGame = this.createGame.bind(this);
+  }
 
   componentDidMount() {
-    var landingActions = this.getFlux().actions.landing;
-    landingActions.init();
-  },
+    const { onReady } = this.props;
+    if (onReady) {
+      onReady();
+    }
+  }
 
   joinGame(username, gameId) {
-    const landingActions = this.getFlux().actions.landing;
-
-    landingActions.joinGame({
-      id: gameId,
-      username: username
-    });
-  },
+    const { onJoin } = this.props;
+    if (onJoin) {
+      onJoin(username, gameId);
+    }
+  }
 
   createGame(username, title, capacity) {
-    var landingActions = this.getFlux().actions.landing;
-
-    landingActions.createGame({
-      username,
-      title,
-      capacity
-    });
-  },
+    const { onCreate } = this.props;
+    if (onCreate) {
+      onCreate(username, title, capacity);
+    }
+  }
 
   render() {
+    const { games } = this.props;
+
     return (
       <div className="c-landing">
         <div className="c-landing-join">
           <h3>Join an existing game</h3>
-          <JoinForm games={this.state.games} onSubmit={this.joinGame} />
+          <JoinForm games={games} onSubmit={this.joinGame} />
         </div>
         <div className="c-landing-create">
           <h3>Create a new game</h3>
@@ -53,24 +44,31 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
-var JoinForm = React.createClass({
+class JoinForm extends Component {
+  constructor(props) {
+    super(props);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.renderPlayers = this.renderPlayers.bind(this);
+    this.renderGame = this.renderGame.bind(this);
+  }
+
   onSubmit() {
-    const propsOnSubmit = this.props.onSubmit;
+    const { onSubmit } = this.props;
     const { username, gameId } = this.refs;
-    if (propsOnSubmit) {
-      propsOnSubmit.call(this, username.value, gameId.value);
+    if (onSubmit) {
+      onSubmit(username.value, gameId.value);
     }
-  },
+  }
 
   renderPlayers(players) {
-    return players.map((player, i) => <li key={i}>{player.name} - {player.coins}</li>);
-  },
+    return players.map(({ name, coins }, i) => <li key={i}>{name} - {coins}</li>);
+  }
 
   renderGame(game, index) {
-    const { id, title, started } = game;
-    const players = this.renderPlayers(game.players);
+    const { id, title, started, players } = game;
+    const renderedPlayers = this.renderPlayers(players);
     return (
       <div key={index} className="c-game-item">
         <input ref="gameId" type="radio" name="c-game-select" value={id} />
@@ -80,12 +78,12 @@ var JoinForm = React.createClass({
             {started ? '(in progress)' : '(waiting for players)'}
           </h4>
           <ul className="c-game-players">
-            {players}
+            {renderedPlayers}
           </ul>
         </div>
       </div>
     );
-  },
+  }
 
   render() {
     const { games } = this.props;
@@ -103,16 +101,21 @@ var JoinForm = React.createClass({
       </form>
     );
   }
-});
+}
 
-var CreateForm = React.createClass({
+class CreateForm extends Component {
+  constructor(props) {
+    super(props);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
   onSubmit() {
-    const propsOnSubmit = this.props.onSubmit;
+    const { onSubmit } = this.props;
     const { username, title, capacity } = this.refs;
-    if (propsOnSubmit) {
-      propsOnSubmit.call(this, username.value, title.value, capacity.value);
+    if (onSubmit) {
+      onSubmit(username.value, title.value, capacity.value);
     }
-  },
+  }
 
   render() {
     return (
@@ -139,4 +142,4 @@ var CreateForm = React.createClass({
       </form>
     );
   }
-})
+}

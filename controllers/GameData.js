@@ -16,7 +16,7 @@ class GameDataController extends BaseController {
         options = options || {};
 
         if (options.destination) {
-          options.destination.emit(SocketConstants.PUSH_GAME, options.game);
+          options.destination.emit(SocketConstants.PUSH_GAME, { game: options.game });
         }
       },
 
@@ -25,7 +25,6 @@ class GameDataController extends BaseController {
 
         if (options.destination) {
           options.destination.emit(SocketConstants.PUSH_GAMES, { games: options.games });
-          console.log('PUSH GAMES');
         }
       },
 

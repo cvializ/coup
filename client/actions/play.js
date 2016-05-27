@@ -3,66 +3,71 @@
 import SocketClient from '../SocketClient';
 import ClientConstants from '../constants/client';
 
-const PlayActions = {
-  init() {
-    this.dispatch(ClientConstants.PLAY_INIT);
-  },
+export function init() {
+  return {
+    type: ClientConstants.PLAY_INIT
+  };
+}
 
-  receiveState(payload) {
-    this.dispatch(ClientConstants.PLAY_RECEIVE_STATE, { game: payload });
-  },
+export function receiveGame(game) {
+  return {
+    type: ClientConstants.PLAY_RECEIVE_GAME,
+    payload: { game }
+  };
+}
 
-  receivePlayer(payload) {
-    this.dispatch(ClientConstants.PLAY_RECEIVE_PLAYER, payload);
-  },
+export function receivePlayer(player) {
+  return {
+    type: ClientConstants.PLAY_RECEIVE_PLAYER,
+    payload: { player }
+  };
+}
 
-  readyToStart() {
-    // PLAY_START_READY
-    SocketClient.voteStart({
-      // no payload
-    })
-    .then((payload) => {
-      this.dispatch(ClientConstants.PLAY_START_READY_RECEIVED);
-    })
-    .catch((err) => {
-      alert(err);
-    });
-  },
+export function postReadyStart() {
+  return (dispatch) => {
+    dispatch(requestReadyStart());
 
-  forceQuit() {
-    this.dispatch(ClientConstants.PLAY_FORCE_QUIT);
-  },
+    return SocketClient
+    .voteStart()
+    .then((payload) => dispatch(receiveReadyStart()))
+    .catch((err) => dispatch(errorReadyStart(err)));
+  };
+}
 
-  userJoined(payload) {
-    this.receivePlayer(payload);
-  },
+function requestReadyStart() {
+  return {
+    type: ClientConstants.PLAY_REQUEST_READY_START
+  };
+}
 
-  userLeft() {
-    SocketClient.pullGame();
-  },
+function receiveReadyStart() {
+  return {
+    type: ClientConstants.PLAY_RECEIVE_READY_START
+  };
+}
 
-  movePrimary(payload) {
+function errorReadyStart(error) {
+  return {
+    type: ClientConstants.PLAY_ERROR_READY_START,
+    error
+  };
+}
 
-  },
+export function myTurn() {
+  return {
+    type: ClientConstants.PLAY_MOVE_PRIMARY
+  };
+}
 
-  movePrimaryChoice(payload) {
-    // PLAY_MOVE_PRIMARY_CHOICE
+export function forceQuit() {
+  return {
+    type: ClientConstants.PLAY_FORCE_QUIT
+  };
+}
 
-    var move = payload;
-
-  },
-
-  moveSecondary() {
-    // PLAY_MOVE_SECONDARY
-  },
-
-  moveTertiary() {
-    // PLAY_MOVE_TERTIARY
-  },
-
-  playMoveSelectInfluence() {
-    // PLAY_MOVE_SELECT_INFLUENCE
+export function userLeft() {
+  SocketClient.pullGame();
+  return {
+    type: ClientConstants.USER_LEFT
   }
-};
-
-export default PlayActions;
+}

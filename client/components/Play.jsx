@@ -1,102 +1,64 @@
-import React from 'react';
-import Fluxxor from 'fluxxor';
+import React, { Component } from 'react';
 import Player from './Player.jsx';
+import ReadyAction from './actions/Ready.jsx';
 import PlayersCarousel from './PlayersCarousel.jsx';
 
-const ReadyAction = React.createClass({
-  onReady() {
-    const propsOnReady = this.props.onReady;
-    if (this.props.onReady) {
-      this.props.onReady.apply(this, arguments);
-    }
-  },
+export default class Play extends Component {
+  constructor(props) {
+    super(props);
 
-  render() {
-    const props = this.props;
-    const onReady = props.onReady;
-    const playerCount = props.playerCount;
-
-    const button = onReady && playerCount > 1 ? (
-      <button onClick={this.onReady}>Ready</button>
-    ) : null;
-    const message = playerCount < 2 ?
-      'Waiting for players' :
-      onReady ?
-        'Press "Ready" to begin' :
-        'Waiting til everyone is ready';
-
-    return (
-      <span className="c-play-controls-ready">
-        <span className="c-play-controls-voting-votes">
-          {message}
-        </span>
-        {button}
-      </span>
-    );
+    this.onReady = this.onReady.bind(this);
+    this.renderVotingActions = this.renderVotingActions.bind(this);
+    this.renderPlayers = this.renderPlayers.bind(this);
   }
-});
-
-let Play;
-module.exports = Play = React.createClass({
-
-  mixins: [
-    Fluxxor.FluxMixin(React),
-    Fluxxor.StoreWatchMixin('PlayStore')
-  ],
-
-  getStateFromFlux() {
-    const store = this.getFlux().store('PlayStore');
-
-    return {
-      gameState: store.gameState
-    };
-  },
 
   onReady() {
-    const playActions = this.getFlux().actions.play;
-    playActions.readyToStart();
-  },
+    const { onReady } = this.props;
+    if (onReady) {
+      onReady();
+    }
+  }
 
-  renderActions() {
-    const gameState = this.state.gameState;
-    if (!gameState.started) {
-      if (!gameState.startedAck) {
-        return (
-          <ReadyAction onReady={this.onReady} playerCount={gameState.players.length}/>
-        );
-      } else {
-        return (
-          <ReadyAction />
-        );
-      }
+  renderVotingActions(started, startedAck, playerCount, onReady) {
+    if (!started) {
+      return (
+        <ReadyAction
+          onReady={onReady}
+          acknowledged={startedAck}
+          playerCount={playerCount}
+        />
+      );
     } else {
       return (
         <div>You are playing</div>
       );
     }
-  },
+  }
 
   renderPlayers(players, activeId) {
-    return players.map((p, i) => <Player
+    return players.map(({ name, influences, coins, id}, i) => <Player
         key={i}
-        name={p.name}
-        influences={p.influences}
-        coins={p.coins}
-        active={p.id === activeId}
+        name={name}
+        influences={influences}
+        coins={coins}
+        active={id === activeId}
       />
     );
-  },
+  }
 
   render() {
-    const actions = this.renderActions();
-    const gameState = this.state.gameState;
-    const players = this.renderPlayers(gameState.players, gameState.currentPlayer && gameState.currentPlayer.id);
+    const { gameState, startedAck } = this.props;
+    const { players, currentPlayer, started } = gameState;
+
+    const renderedActions = this.renderVotingActions(started, startedAck, players.size, this.onReady);
+    const renderedPlayers = this.renderPlayers(players, currentPlayer && currentPlayer.id);
+
     return (
       <div className="c-play">
         <div className="c-play-players-area">
-          <PlayersCarousel>{players}</PlayersCarousel>
+          <PlayersCarousel>{renderedPlayers}</PlayersCarousel>
           <div className="c-play-inner-controls">
-            {actions}
+            {renderedActions}
           </div>
         </div>
         <div className="c-play-actions-primary">
@@ -104,4 +66,4 @@ module.exports = Play = React.createClass({
       </div>
     );
   }
-});
+}

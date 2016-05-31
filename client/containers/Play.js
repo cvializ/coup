@@ -3,10 +3,11 @@ import * as playActions from '../actions/play.js'
 import Play from '../components/Play.jsx'
 
 function mapStateToProps(state, ownProps) {
-  const { gameState, startedAck } = state;
+  const { gameState, startedAck, moveView } = state;
   return {
     gameState,
-    startedAck
+    startedAck,
+    moveView
   };
 }
 

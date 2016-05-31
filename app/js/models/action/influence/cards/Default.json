@@ -6,13 +6,15 @@
       "name": "Income",
       "verb": "take Income",
       "blockable": false,
-      "needsTarget": false
+      "needsTarget": false,
+      "cost": 0
     },
     {
       "name": "Foreign Aid",
       "verb": "take Foreign Aid",
       "blockable": true,
-      "needsTarget": false
+      "needsTarget": false,
+      "cost": 0
     },
     {
       "name": "Coup",

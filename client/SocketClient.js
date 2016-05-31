@@ -38,7 +38,15 @@ class SocketClient {
     this.socket.on(SocketConstants.USER_LEFT, () => {
       this.pullGame();
     });
-
+    this.socket.on(SocketConstants.MY_TURN, () => {
+      store.dispatch(playActions.myTurn());
+    });
+    this.socket.on(SocketConstants.NEW_TURN, ({ player }) => {
+      store.dispatch(playActions.newTurn(player));
+    });
+    this.socket.on(SocketConstants.MOVE_ATTEMPTED, ({ player, ability, target = null}) => {
+      store.dispatch(playActions.moveAttempted(player, ability, target));
+    });
     // Lets us use Promises when using callbacks on socket.emit()
     this.socket.emit = Bluebird.promisify(this.socket.emit);
   }

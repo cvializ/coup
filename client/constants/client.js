@@ -35,6 +35,7 @@ const ClientConstants = keyMirror({
   PLAY_RECEIVE_PLAYER: null,
   PLAY_START_READY: null,
   PLAY_START_READY_RECEIVED: null,
+  PLAY_MOVE_STANDBY: null,
   PLAY_MOVE_PRIMARY: null,
   PLAY_MOVE_PRIMARY_CHOICE: null,
   PLAY_MOVE_SECONDARY: null,

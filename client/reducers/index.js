@@ -1,11 +1,13 @@
 import Immutable from 'immutable';
 import ClientConstants from '../constants/client.js'
 import store from '../stores';
+
 const initialState = Immutable.fromJS({
   isPlaying: false,
   startedAck: false,
   privilegedPlayer: null,
   gameState: null,
+  moveView: null,
   games: []
 });
 
@@ -41,6 +43,15 @@ export default function rootReducer(state = initialState, action) {
     case ClientConstants.RECEIVE_JOIN_GAME: {
       const { player } = Immutable.fromJS(payload);
       return state.set('privilegedPlayer', player);
+    }
+    case ClientConstants.PLAY_FORCE_QUIT: {
+      return initialState;
+    }
+    case ClientConstants.PLAY_MOVE_PRIMARY: {
+      return state.set('moveView', 'primary');
+    }
+    case ClientConstants.PLAY_MOVE_STANDBY: {
+      return state.set('moveView', 'standby');
     }
     default:
       return state;

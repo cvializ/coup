@@ -59,6 +59,12 @@ export function myTurn() {
   };
 }
 
+export function newTurn() {
+  return {
+    type: ClientConstants.PLAY_MOVE_STANDBY
+  };
+}
+
 export function forceQuit() {
   return {
     type: ClientConstants.PLAY_FORCE_QUIT
